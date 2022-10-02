@@ -12,4 +12,8 @@ class GuardianController
     {
         require_once(VIEWS_PATH . "loginGuardian.php");
     }
+    public function registro()
+    {
+        require_once(VIEWS_PATH . "registroGuardian.php");
+    }
 }
