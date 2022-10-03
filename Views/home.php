@@ -1,5 +1,6 @@
-Registrarse como dueño o guardian.
-<div class="botonera">
-    <a href="RegistrarDueno.php"><button class="button">Regístrar Dueño</button></a>
-    <a href="RegistrarGUardian.php"><button class="button">Regístrar Guardián</button></a>
-</div>
+<form action="<?php echo FRONT_ROOT ?>Home/validarTipoDeUsuario" method="post"  style="background-color: #EAEDED;padding: 2rem !important;">
+          <input type="submit" class="btn" value="Guardian"  name="usuario"  style="background-color:#DC8E47;color:white;"/>
+        <input type="submit" class="btn" value="Dueño" name ="usuario"  style="background-color:#DC8E47;color:white;"/> 
+        <input type="submit" class="btn" value="Registrarse dueño" name ="usuario"  style="background-color:#DC8E47;color:white;"/> 
+        <input type="submit" class="btn" value="Registrarseguardian" name ="usuario"  style="background-color:#DC8E47;color:white;"/> 
+</form>

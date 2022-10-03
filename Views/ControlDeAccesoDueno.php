@@ -19,7 +19,7 @@ if ($_POST) {
         if ($username == $usuarios[$i]->getUsername() && $password == $usuarios[$i]->getPassword()) {
 
             $ingreso = false;
-            $loggedUser = new Dueno("", "");//////////
+            $loggedUser = new Dueno();
             $loggedUser->setUsername($username);
             $loggedUser->setPassword($password);
             $_SESSION["loggedUser"] = $loggedUser;
@@ -32,6 +32,5 @@ if ($_POST) {
 }
 
 if ($ingreso == true) {
-
-    // header("location:..\Home\index");
+     header("location:..\Home\index");
 }

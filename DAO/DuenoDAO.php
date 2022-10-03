@@ -3,7 +3,7 @@
 namespace DAO;
 
 use Models\Dueno as Dueno;
-echo "hola";
+
 class DuenoDAO
 {
     private $usuarioList = array();

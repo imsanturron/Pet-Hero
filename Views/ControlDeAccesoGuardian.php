@@ -3,13 +3,6 @@
 use DAO\GuardianDAO;
 use Models\Guardian as Guardian;
 
-/*
-$user1 = new ClientUser("SSoler", "cosme1234");
-$user2 = new ClientUser("AzarJ", "alAzar123");
-$user3 = new ClientUser("Mari123", "123456Mari");
-$usuarios = array($user1,$user2,$user3);
-*/
-
 if ($_POST) {
 
     $username = $_POST["username"];
