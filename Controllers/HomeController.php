@@ -18,7 +18,7 @@ class HomeController
             require_once(VIEWS_PATH . "homeDueno.php");
         } else if ($usuario == "Guardian"){
             require_once(VIEWS_PATH . "homeGuardian.php");
-        } else if($usuario == "Registrarse_guardian"){
+        } else if($usuario == "Registrarseguardian"){
             require_once(VIEWS_PATH . "registroGuardian.php");
         } else{
             require_once(VIEWS_PATH . "registroDueno.php");
