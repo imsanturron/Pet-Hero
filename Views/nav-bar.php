@@ -1,7 +1,7 @@
 <div class="wrapper row1">
   <header id="header" class="clear"> 
     <div id="logo" class="fl_left">
-      <h1>Cellphones</h1>
+      <h1>PETSHOP</h1>
     </div>
     <nav id="mainav" class="fl_right">
       <ul class="clear">
