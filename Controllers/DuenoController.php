@@ -18,7 +18,7 @@ class DuenoController
     {
         require_once(VIEWS_PATH . "ControlDeAccesoDueno.php");
     }
-
+//recibe la respuesta del form(loginDueno.php) y dependiendo cual sea la opcion seleccionada te redirecciona al php pertinente*/
     public function opcionMenuPrincipal($opcion)
     {
         $opcion = $_POST['opcion'];

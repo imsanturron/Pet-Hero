@@ -34,7 +34,7 @@ class MascotaController
     }
 
 
-
+/*agrega nueva mascota*/
     public function Add($nombre, $raza, $tamano, $observaciones = "")
     {
         $mascota = new Mascota();
