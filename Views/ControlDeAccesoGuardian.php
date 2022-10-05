@@ -14,7 +14,7 @@ if ($_POST) {
     for ($i = 0; $i < count($usuarios); $i++) {
 
         if ($username == $usuarios[$i]->getUsername() && $password == $usuarios[$i]->getPassword()) {
-
+        ///// error en login cuando no hay json.
             $ingreso = false;
             $loggedUser = new Guardian("", "");
             $loggedUser->setUsername($username);

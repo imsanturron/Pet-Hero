@@ -63,6 +63,7 @@ class DuenoDAO
 
             $valueArray["username"] = $dueno->getUsername();
             $valueArray["password"] = $dueno->getPassword();
+            $valueArray["dni"] = $dueno->getDni();
             array_push($arrayToEncode, $valueArray);
         }
         $jsonContent = json_encode($arrayToEncode, JSON_PRETTY_PRINT);
@@ -83,6 +84,7 @@ class DuenoDAO
                 $usuario = new Dueno("", "");
                 $usuario->setUsername($valueArray["username"]);
                 $usuario->setPassword($valueArray["password"]);
+                $usuario->setDni($valueArray["dni"]);
                 array_push($this->usuarioList, $usuario);
             }
         }

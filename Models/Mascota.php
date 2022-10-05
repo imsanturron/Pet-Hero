@@ -1,6 +1,7 @@
 <?php namespace Models;
 class Mascota{
 
+    private $dniDueno;
     private $nombre;
     private $raza;
     private $tamano;
@@ -14,6 +15,18 @@ class Mascota{
     public function setNombre($nombre): self
     {
         $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    public function getdniDueno()
+    {
+        return $this->dniDueno;
+    }
+
+    public function setdniDueno($dniDueno): self
+    {
+        $this->dniDueno = $dniDueno;
 
         return $this;
     }
