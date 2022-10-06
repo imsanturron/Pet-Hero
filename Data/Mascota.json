@@ -1,6 +1,12 @@
 [
     {
-        "nombre": "stock",
-        "raza": "ders"
+        "nombre": "124",
+        "raza": "41",
+        "dueno": null
+    },
+    {
+        "nombre": "123",
+        "raza": "555",
+        "dueno": "999"
     }
 ]

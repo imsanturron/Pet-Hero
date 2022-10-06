@@ -2,6 +2,7 @@
 class dueno{
 
 
+    private $mascotas;
     private $username;//////////////
     private $password;//////////////
     private $nombre;
@@ -9,6 +10,10 @@ class dueno{
     private $direccion;
     private $telefono;
 
+    function __construct()
+    {
+        $mascotas = array();
+    }
     
     public function getNombre()
     {

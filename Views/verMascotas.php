@@ -27,7 +27,8 @@ $listaMascotas = $mascotasDao->GetAll();
                               if(isset($listaMascotas) && !empty($listaMascotas)){
                                    
                                    foreach($listaMascotas as $mascota){
-                                   ?>
+                                   ?> 
+                                   <?php if($mascota->getdniDueno() == $_SESSION["loggedUser"]->getDni()){?>
                                         <tr> 
                                              <td><?php echo $mascota->getNombre(); ?></td>
                                              <td><?php echo "Raza: ".$mascota->getRaza(); ?></td>
@@ -38,7 +39,7 @@ $listaMascotas = $mascotasDao->GetAll();
                                              </td>
                                         </tr>
                                    <?php
-                                   }
+                                   }}
                               }
                          ?>
                          </form>

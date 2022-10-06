@@ -13,19 +13,20 @@ if ($_POST) {
     $ingreso = true;
     $repositorioUsers = new DuenoDAO();
     $usuarios = $repositorioUsers->getAll();
-    print_r($usuarios[1]->getUsername());
+    //print_r($usuarios[1]->getUserName());
     for ($i = 0; $i < count($usuarios); $i++) {
 
-        if ($username == $usuarios[$i]->getUsername() && $password == $usuarios[$i]->getPassword()) {
+        if ($username == $usuarios[$i]->getUserName() && $password == $usuarios[$i]->getPassword()) {
 
             $ingreso = false;
             $loggedUser = new Dueno();
-            $loggedUser->setUsername($username);
+            $loggedUser->setUserName($username);
             $loggedUser->setPassword($password);
+            $loggedUser->setDni($usuarios[$i]->getDni());
             $_SESSION["loggedUser"] = $loggedUser;
 
             echo "Entro" . "<br>";
-            echo $usuarios[1]->getPassword() . "<br>";
+            //echo $usuarios[1]->getPassword() . "<br>";
             header("location:..\Dueno\login");
         }
     }
