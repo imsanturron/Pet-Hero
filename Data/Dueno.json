@@ -1,7 +1,17 @@
 [
     {
+        "username": "a",
+        "password": "1",
+        "dni": "1234566"
+    },
+    {
         "username": "s",
         "password": "1",
-        "dni": "999"
+        "dni": "757654"
+    },
+    {
+        "username": "d",
+        "password": "1",
+        "dni": "2q582"
     }
 ]

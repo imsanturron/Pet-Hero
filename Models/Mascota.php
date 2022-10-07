@@ -19,12 +19,12 @@ class Mascota{
         return $this;
     }
 
-    public function getdniDueno()
+    public function getDniDueno()
     {
         return $this->dniDueno;
     }
 
-    public function setdniDueno($dniDueno): self
+    public function setDniDueno($dniDueno): self
     {
         $this->dniDueno = $dniDueno;
 

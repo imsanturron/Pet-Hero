@@ -14,11 +14,6 @@ class DuenoController
         $this->duenoDAO = new DuenoDAO();
     }
 
-    public function verificar($username, $password)
-    {
-        require_once(VIEWS_PATH . "ControlDeAccesoDueno.php");
-    }
-
     public function opcionMenuPrincipal($opcion)
     {
         $opcion = $_POST['opcion'];
@@ -34,6 +29,11 @@ class DuenoController
 
     public function home()
     {
+        require_once(VIEWS_PATH . "home.php");
+    }
+
+    public function ElegirG(){
+        //require_once(VIEWS_PATH . "ver como seguirlo.php");
         require_once(VIEWS_PATH . "home.php");
     }
 

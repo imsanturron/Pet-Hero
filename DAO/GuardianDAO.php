@@ -30,6 +30,18 @@ class GuardianDAO
 
         $this->SaveData();
     }
+
+    public function getByUsername($user) 
+    {
+      $this->retrieveData();
+      foreach($this->usuarioList as $item) 
+      {
+        if($item->getUsername() == $user)
+          return $item;
+      }
+      return null;
+    }
+
     /**BUsca factura por numero y tipo  en archivo retorna true o false */
     public function search(Guardian $user)
     {
@@ -38,7 +50,7 @@ class GuardianDAO
 
         foreach ($this->usuarioList as $element) {
 
-            if ($user->getUsername == $element->getUsername()) {
+            if ($user->getUsername() == $element->getUsername()) {
 
                 $encontrado = true;
             }
