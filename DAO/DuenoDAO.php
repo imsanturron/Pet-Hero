@@ -43,12 +43,24 @@ class DuenoDAO
 
         foreach ($this->usuarioList as $element) {
 
-            if ($user->getUsername == $element->getUsername()) {
+            if ($user->getUsername() == $element->getUsername()) {
 
                 $encontrado = true;
             }
         }
         return $encontrado;
+    }
+
+    
+    public function getByUsername($user) 
+    {
+      $this->retrieveData();
+      foreach($this->usuarioList as $item) 
+      {
+        if($item->getUsername() == $user)
+          return $item;
+      }
+      return null;
     }
 
     public function getAll(){
@@ -81,7 +93,7 @@ class DuenoDAO
 
             foreach ($arrayToEncode as $valueArray) {
 
-                $usuario = new Dueno("", "");
+                $usuario = new Dueno;
                 $usuario->setUsername($valueArray["username"]);
                 $usuario->setPassword($valueArray["password"]);
                 $usuario->setDni($valueArray["dni"]);

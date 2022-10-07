@@ -38,7 +38,7 @@ class MascotaController
     public function Add($nombre, $raza, $tamano, $observaciones = "")
     {
         $mascota = new Mascota();
-        $mascota->setdniDueno($_SESSION["loggedUser"]->getDni()); 
+        $mascota->setDniDueno($_SESSION["loggedUser"]->getDni()); 
         $mascota->setNombre($nombre);
         $mascota->setRaza($raza);
         $mascota->setTamano($tamano);
