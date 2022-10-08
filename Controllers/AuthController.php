@@ -4,6 +4,7 @@ namespace Controllers;
 
 use DAO\GuardianDAO as GuardianDao;
 use DAO\DuenoDAO as DuenoDAO;
+use DAO\UserDAO as UserDAO;
 use Models\Guardian as Guardian;
 use Models\Dueno as Dueno;
 
@@ -41,6 +42,21 @@ class AuthController
 
     if ($bool = false)
       require_once(VIEWS_PATH . "home.php");
+  }
+
+  public static function ValidarUsuario($username, $dni, $email)
+  {
+    $users = new UserDAO;
+    if($users->getAll() != null){
+    $a = $users->getByDni($dni);
+    $b = $users->getByUsername($username);
+    $c = $users->getByEmail($email);
+    if ($a != null || $b != null || $c != null)
+      return false;
+    else
+      return true;
+    }
+    return true;
   }
 
   public function Logout()

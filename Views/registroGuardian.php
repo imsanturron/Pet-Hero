@@ -1,6 +1,5 @@
 <?php 
     include_once('header.php');
-    echo "okkk";
 ?>
 
   <div class="div-login"><br>
@@ -12,6 +11,8 @@
     <input class="input-login" type="text" name="username" placeholder="Nombre Usuario" required>
         <input class="input-login" type="password" name="password" placeholder="Contraseña" required >
         <input class="input-login" type="text" name="nombre" placeholder="Nombre" required >
+        <input class="input-login" type="text" name="dni" placeholder="Dni" required >
+        <input class="input-login" type="email" name="email" placeholder="Email" required >
         <input class="input-login" type="text" name="cuil" placeholder="Cuil" required >
         <input class="input-login" type="text" name="direccion" placeholder="Direccion" required >
         <input class="input-login" type="text" name="disponibilidad" placeholder="Disponibilidad" required >

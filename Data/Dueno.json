@@ -2,16 +2,15 @@
     {
         "username": "a",
         "password": "1",
-        "dni": "1234566"
+        "dni": "1245123",
+        "email": "kasdk@h",
+        "tipo": "d"
     },
     {
-        "username": "s",
+        "username": "r",
         "password": "1",
-        "dni": "757654"
-    },
-    {
-        "username": "d",
-        "password": "1",
-        "dni": "2q582"
+        "dni": "g3f2cc",
+        "email": "vv2v3@1",
+        "tipo": "d"
     }
 ]

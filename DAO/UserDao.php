@@ -1,29 +1,25 @@
-<?php
+<?php namespace DAO;
 
-namespace DAO;
-
-use Models\Dueno as Dueno;
-
-class DuenoDAO
+use Models\User as User;
+class UserDAO
 {
     private $usuarioList = array();
     private $filename;
 
     public function __construct()
     {
-        $this->filename = dirname(__DIR__) . "\Data\Dueno" . ".json";
+        $this->filename = dirname(__DIR__) . "\Data\Users" . ".json";
     }
 
-    public function add(Dueno $user)
+    public function add(User $user)
     {
         $this->retrieveData();
         array_push($this->usuarioList, $user);
         $this->SaveData();
     }
 
-    public function remove(Dueno $user)
+    public function remove(User $user)
     {
-
         $this->retrieveData();
 
         if (($clave = array_search($user, $this->usuarioList)) !== false) {
@@ -31,13 +27,55 @@ class DuenoDAO
             unset($this->usuarioList[$clave]);
         }
 
-
         $this->SaveData();
     }
-    /**Busca factura por numero y tipo  en archivo retorna true o false */
-    public function search(Dueno $user)
-    {
 
+    public function getByUsername($user) 
+    {
+      $this->retrieveData();
+      foreach($this->usuarioList as $item) 
+      {
+        if($item->getUsername() == $user)
+          return $item;
+      }
+      return null;
+    }
+
+    public function getByDni($dni) 
+    {
+      $this->retrieveData();
+      foreach($this->usuarioList as $item) 
+      {
+        if($item->getDni() == $dni)
+          return $dni;
+      }
+      return null;
+    }
+
+    /*public function getByPais($dni) 
+    {
+      $this->retrieveData();
+      foreach($this->usuarioList as $item) 
+      {
+        if($item->getPais() == $dni)
+          return $dni;
+      }
+      return null;
+    }*/
+
+    public function getByEmail($email) 
+    {
+      $this->retrieveData();
+      foreach($this->usuarioList as $item) 
+      {
+        if($item->getEmail() == $email)
+          return $email;
+      }
+      return null;
+    }
+
+    public function search(User $user)
+    {
         $this->retrieveData();
         $encontrado = false;
 
@@ -51,41 +89,30 @@ class DuenoDAO
         return $encontrado;
     }
 
-    
-    public function getByUsername($user) 
+    public function getAll()
     {
-      $this->retrieveData();
-      foreach($this->usuarioList as $item) 
-      {
-        if($item->getUsername() == $user)
-          return $item;
-      }
-      return null;
-    }
-
-    public function getAll(){
         $this->retrieveData();
         return $this->usuarioList;
     }
 
-    public function saveData(){
+    public function saveData()
+    {
         $arrayToEncode = array();
 
-        foreach ($this->usuarioList as $dueno) {
+        foreach ($this->usuarioList as $user) {
 
-            $valueArray["username"] = $dueno->getUsername();
-            $valueArray["password"] = $dueno->getPassword();
-            $valueArray["dni"] = $dueno->getDni();
-            $valueArray["email"] = $dueno->getEmail();
-            $valueArray["tipo"] = $dueno->getTipo();
+            $valueArray["username"] = $user->getUsername();
+            $valueArray["password"] = $user->getPassword();
+            $valueArray["dni"] = $user->getDni();
+            $valueArray["email"] = $user->getEmail();
             array_push($arrayToEncode, $valueArray);
         }
         $jsonContent = json_encode($arrayToEncode, JSON_PRETTY_PRINT);
         file_put_contents($this->filename, $jsonContent);
     }
 
-    private function retrieveData(){
-
+    private function retrieveData()
+    {
         $this->usuarioList = array();
 
         if (file_exists($this->filename)) {
@@ -95,18 +122,18 @@ class DuenoDAO
 
             foreach ($arrayToEncode as $valueArray) {
 
-                $usuario = new Dueno;
+                $usuario = new User;
                 $usuario->setUsername($valueArray["username"]);
                 $usuario->setPassword($valueArray["password"]);
                 $usuario->setDni($valueArray["dni"]);
                 $usuario->setEmail($valueArray["email"]);
-                $usuario->setTipo($valueArray["tipo"]);
                 array_push($this->usuarioList, $usuario);
             }
         }
     }
 
-    public function getUsuarioList(){
+    public function getUsuarioList()
+    {
         return $this->usuarioList;
     }
 }
