@@ -8,7 +8,9 @@ class User
     protected $password; 
     protected $nombre;
     protected $dni;
+    protected $email;
     protected $direccion;
+    //protected $pais;
     protected $tipo; //char = "g" || "d"
 
     public function getUserName()
@@ -41,6 +43,17 @@ class User
     public function setNombre($nombre): self
     {
         $this->nombre = $nombre;
+
+        return $this;
+    }
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    public function setEmail($email): self
+    {
+        $this->email = $email;
 
         return $this;
     }

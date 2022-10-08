@@ -3,7 +3,7 @@
 </div>
 <div class="wrapper row6">
   <div id="copyright" class="clear" align="center"> 
-    <p >Copyright &copy; <?php echo date('Y'); ?> - All Rights Reserved - PetShop</p>
+    <p >Copyright &copy; <?php echo date('Y'); ?> - All Rights Reserved - PetHero</p>
   </div>
 </div>
 <!-- JAVASCRIPTS -->
