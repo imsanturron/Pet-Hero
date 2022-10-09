@@ -4,11 +4,12 @@ namespace Controllers;
 
 use Models\Guardian;
 use DAO\GuardianDAO as GuardianDAO;
+use DAO\UserDAO as UserDAO;
 
 class GuardianController
 {
     private $guardianDAO;
-    
+
     public function __construct()
     {
         $this->guardianDAO = new GuardianDAO();
@@ -17,11 +18,6 @@ class GuardianController
     public function home()
     {
         require_once(VIEWS_PATH . "home.php");
-    }
-
-    public function verificar($username, $password)
-    {
-        require_once(VIEWS_PATH . "ControlDeAccesoGuardian.php");
     }
 
     public function login()
@@ -33,20 +29,42 @@ class GuardianController
         require_once(VIEWS_PATH . "registroGuardian.php");
     }
 
-    public function Add($username, $password, $nombre, $cuil, $disponibilidad, $direccion, $precio)
+    public function opcionMenuPrincipal($opcion)
     {
-        $guardian = new Guardian();
-        $guardian->setUserName($username);
-        $guardian->setPassword($password);
-        $guardian->setNombre($nombre);
-        $guardian->setCuil($cuil);
-        $guardian->setDireccion($direccion);
-        $guardian->setDisponibilidad($disponibilidad);
-        $guardian->setPrecio($precio);
+        $opcion = $_POST['opcion'];
 
-        $this->guardianDAO->Add($guardian);
+        if ($opcion == "indicarDispEstd") {
+            require_once(VIEWS_PATH . "indicarDispEstd.php");
+        } else if ($opcion == "verListadReservas") {
+            require_once(VIEWS_PATH . "agregarMascotas.php");
+        } else if ($opcion == "verg") {
+            require_once(VIEWS_PATH . "verGuardianes.php");
+        }
+    }
 
-        $this->home();
+    public function Add($username, $password, $nombre, $dni, $email, $cuil, $disponibilidad, $direccion, $precio)
+    {
+        $valid = AuthController::ValidarUsuario($username, $dni, $email);
+        if ($valid) {
+            $guardian = new Guardian();
+            $guardian->setUserName($username);
+            $guardian->setPassword($password);
+            $guardian->setNombre($nombre);
+            $guardian->setDni($dni);
+            $guardian->setCuil($cuil);
+            $guardian->setEmail($email);
+            $guardian->setDireccion($direccion);
+            $guardian->setDisponibilidad($disponibilidad);
+            $guardian->setPrecio($precio);
+
+            $this->guardianDAO->Add($guardian);
+            $userDAO = new UserDAO;
+            $userDAO->Add($guardian);
+            $this->home();
+        } else {
+            ///alerta-----------
+            $this->home();
+        }
     }
 
     public function Remove($dni)
