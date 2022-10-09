@@ -42,6 +42,13 @@ class GuardianController
         }
     }
 
+    public function elegirDisponibilidad($desde,$hasta){
+
+        
+
+
+    }
+
     public function Add($username, $password, $nombre, $dni, $email, $cuil, $disponibilidad, $direccion, $precio)
     {
         $valid = AuthController::ValidarUsuario($username, $dni, $email);
