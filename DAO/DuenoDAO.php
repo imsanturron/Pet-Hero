@@ -18,7 +18,7 @@ class DuenoDAO
     {
         $this->retrieveData();
         array_push($this->usuarioList, $user);
-        $this->SaveData();
+        $this->saveData();
     }
 
     public function remove(Dueno $user)

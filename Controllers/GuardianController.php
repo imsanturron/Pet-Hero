@@ -32,7 +32,6 @@ class GuardianController
     public function opcionMenuPrincipal($opcion)
     {
         $opcion = $_POST['opcion'];
-
         if ($opcion == "indicarDispEstd") {
             require_once(VIEWS_PATH . "indicarDispEstd.php");
         } else if ($opcion == "verListadReservas") {
@@ -44,12 +43,16 @@ class GuardianController
 
     public function elegirDisponibilidad($desde,$hasta){
 
-        
-
+        $guardian= new Guardian();
+        $guardian= $_SESSION["loggedUser"] ;
+        $guardian->setDisponibilidadInicio($desde);
+        $guardian->setDisponibilidadFin($hasta);
+        $_SESSION["loggedUser"] =$guardian;
+        require_once(VIEWS_PATH . "loginGuardian.php");
 
     }
 
-    public function Add($username, $password, $nombre, $dni, $email, $cuil, $disponibilidad, $direccion, $precio)
+    public function Add($username, $password, $nombre, $dni, $email, $cuil, $disponibilidadInicio,$disponibilidadFin, $direccion, $precio)
     {
         $valid = AuthController::ValidarUsuario($username, $dni, $email);
         if ($valid) {
@@ -61,7 +64,8 @@ class GuardianController
             $guardian->setCuil($cuil);
             $guardian->setEmail($email);
             $guardian->setDireccion($direccion);
-            $guardian->setDisponibilidad($disponibilidad);
+            $guardian->setDisponibilidadInicio($disponibilidadInicio);
+            $guardian->setDisponibilidadFin($disponibilidadFin);
             $guardian->setPrecio($precio);
 
             $this->guardianDAO->Add($guardian);

@@ -19,7 +19,8 @@ $listaguardianes = $guardianDao->GetAll();
                 <thead>
                     <th>Nombre</th>
                     <th>Usuario</th>
-                    <th>Disponibilidad</th>
+                    <th>Disponibilidad desde:</th>
+                    <th>Hasta:</th>
                     <th>Precio</th>
                     <th>Direccion</th>
                     <th>Reputacion (falta)</th>
@@ -34,7 +35,8 @@ $listaguardianes = $guardianDao->GetAll();
                                 <tr>
                                     <td><?php echo $guardianx->getNombre(); ?></td>
                                     <td><?php echo $guardianx->getUserName(); ?></td>
-                                    <td><?php echo $guardianx->getDisponibilidad(); ?></td>
+                                    <td><?php echo $guardianx->getDisponibilidadInicio(); ?></td>
+                                    <td><?php echo $guardianx->getDisponibilidadFin(); ?></td>
                                     <td><?php echo $guardianx->getPrecio(); ?></td>
                                     <td><?php echo $guardianx->getDireccion(); ?></td>
                                     <td><?php //php echo $guardianx->getReputacion(); ?></td>

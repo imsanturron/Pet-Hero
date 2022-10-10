@@ -3,5 +3,10 @@
         "nombre": "teo",
         "raza": "cocker",
         "dueno": "1245123"
+    },
+    {
+        "nombre": "aaa",
+        "raza": "aaa",
+        "dueno": "1245123"
     }
 ]
