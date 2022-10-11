@@ -1,2 +1,2 @@
 # Pet-Hero
-Cambiar alertas a view despues o otro lado
+Cambiar alertas a view despues u otro lado
