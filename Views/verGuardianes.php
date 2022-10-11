@@ -7,7 +7,7 @@ use Models\Guardian as Guardian;
 Autoload::Start();
 
 $guardianDao = new GuardianDAO();
-$listaguardianes = $guardianDao->GetAll();
+$listaguardianes = $guardianDao->getAll();
 
 ?>
 <main class="py-5">
@@ -35,7 +35,7 @@ $listaguardianes = $guardianDao->GetAll();
                                 <tr>
                                     <td><?php echo $guardianx->getNombre(); ?></td>
                                     <td><?php echo $guardianx->getUserName(); ?></td>
-                                    <td><?php echo $guardianx->getDisponibilidadInicio(); ?></td>
+                                    <td><?php echo $guardianx->getDisponibilidadInicio(); ?></td> 
                                     <td><?php echo $guardianx->getDisponibilidadFin(); ?></td>
                                     <td><?php echo $guardianx->getPrecio(); ?></td>
                                     <td><?php echo $guardianx->getDireccion(); ?></td>

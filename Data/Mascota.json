@@ -8,5 +8,10 @@
         "nombre": "aaa",
         "raza": "aaa",
         "dueno": "1245123"
+    },
+    {
+        "nombre": "juan",
+        "raza": "rottwailer",
+        "dueno": "1245123"
     }
 ]

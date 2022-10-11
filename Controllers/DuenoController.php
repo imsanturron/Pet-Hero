@@ -24,6 +24,7 @@ class DuenoController
         } else if ($opcion == "agregarm") {
             require_once(VIEWS_PATH . "agregarMascotas.php");
         } else if ($opcion == "verg") {
+            //$listaguardianes=$this->duenoDAO->getAll();
             require_once(VIEWS_PATH . "verGuardianes.php");
         }
     }

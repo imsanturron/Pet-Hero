@@ -25,12 +25,7 @@ class Guardian extends User{
 
 
 
-    public function setDisponibilidad($disponibilidad): self
-    {
-        $this->disponibilidad = $disponibilidad;
 
-        return $this;
-    }
 
     public function getPrecio()
     {
