@@ -37,6 +37,7 @@ class MascotaController
 
     public function Add($nombre, $raza, $tamano, $observaciones = "")
     {
+        ///preguntar si nombre o algo asi
         $mascota = new Mascota();
         $mascota->setDniDueno($_SESSION["loggedUser"]->getDni()); 
         $mascota->setNombre($nombre);
@@ -45,14 +46,16 @@ class MascotaController
         $mascota->setObservaciones($observaciones);
 
         $this->mascotaDAO->Add($mascota);
-
+        //$mascota->setDniDueno($_SESSION["loggedUser"]->addMascota($mascota)); y guardar 
+        ///alerta buena
         $this->loginDueno();
     }
 
     public function Remove($id)
     {
-        $this->mascotaDAO->Remove($id);
-
+        $this->mascotaDAO->Remove($id);//modificar funcion
+        ///y remover de dueño si la tiene
+        ///alerta buena
         $this->loginDueno();
     }
 }

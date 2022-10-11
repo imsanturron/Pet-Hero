@@ -5,10 +5,12 @@ class Guardian extends User{
     private $disponibilidadInicio;
     private $disponibilidadFin;
     private $precio;
+    private $reservas;
 
     function __construct()
     {
         $this->tipo = 'g';
+        $this->reservas = array();
     }
 
     public function getCuil()
@@ -31,6 +33,18 @@ class Guardian extends User{
     public function setPrecio($precio): self
     {
         $this->precio = $precio;
+
+        return $this;
+    }
+
+    public function getReservas()
+    {
+        return $this->reservas;
+    }
+
+    public function setReservas($reservas): self
+    {
+        $this->reservas = $reservas;
 
         return $this;
     }

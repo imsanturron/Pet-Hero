@@ -15,8 +15,6 @@
         <input class="input-login" type="email" name="email" placeholder="Email" required >
         <input class="input-login" type="text" name="cuil" placeholder="Cuil" required >
         <input class="input-login" type="text" name="direccion" placeholder="Direccion" required >
-        <input class="input-login" type="date" name="disponibilidadInicio" placeholder="Disponibilidad desde" required >
-        <input class="input-login" type="date" name="disponibilidadFin" placeholder="hasta" required >
         <input class="input-login" type="text" name="precio" placeholder="Precio" required >
         <button class="btn-login btn" type="submit">Ingresar</button>
      
