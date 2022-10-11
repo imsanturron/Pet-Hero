@@ -32,8 +32,8 @@ class GuardianController
     public function opcionMenuPrincipal($opcion)
     {
         $opcion = $_POST['opcion'];
-        if ($opcion == "indicarDispEstd") {
-            require_once(VIEWS_PATH . "indicarDispEstd.php");
+        if ($opcion == "indicarDisponibilidad") {
+            require_once(VIEWS_PATH . "indicarDisponibilidad.php");
         } else if ($opcion == "verListadReservas") {
             require_once(VIEWS_PATH . "agregarMascotas.php");
         } else if ($opcion == "verg") {

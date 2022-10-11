@@ -9,7 +9,7 @@
         "tipo": "g",
         "direccion": "velez 550",
         "FechaInicio": "23-08-2022",
-        "FechaFin": "23-010-2022"
+        "FechaFin": "23-10-2022"
     },
     {
         "username": "m",
@@ -20,7 +20,7 @@
         "email": "mauro@hotmail.com",
         "tipo": "g",
         "direccion": "perez 123",
-        "FechaInicio": "2022-10-13",
-        "FechaFin": "2022-10-21"
+        "FechaInicio": "13-10-2022",
+        "FechaFin": "21-10-2022"
     }
 ]

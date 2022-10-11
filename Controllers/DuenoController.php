@@ -19,11 +19,11 @@ class DuenoController
     {
         $opcion = $_POST['opcion'];
 
-        if ($opcion == "verm") {
+        if ($opcion == "verMascotas") {
             require_once(VIEWS_PATH . "verMascotas.php");
-        } else if ($opcion == "agregarm") {
+        } else if ($opcion == "agregarMascota") {
             require_once(VIEWS_PATH . "agregarMascotas.php");
-        } else if ($opcion == "verg") {
+        } else if ($opcion == "verGuardianes") {
             //$listaguardianes=$this->duenoDAO->getAll();
             require_once(VIEWS_PATH . "verGuardianes.php");
         }
