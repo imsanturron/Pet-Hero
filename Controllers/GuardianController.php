@@ -32,9 +32,8 @@ class GuardianController
     public function opcionMenuPrincipal($opcion)
     {
         $opcion = $_POST['opcion'];
-
-        if ($opcion == "indicarDispEstd") {
-            require_once(VIEWS_PATH . "indicarDispEstd.php");
+        if ($opcion == "indicarDisponibilidad") {
+            require_once(VIEWS_PATH . "indicarDisponibilidad.php");
         } else if ($opcion == "verListadReservas") {
             require_once(VIEWS_PATH . "agregarMascotas.php");
         } else if ($opcion == "verg") {
@@ -42,7 +41,30 @@ class GuardianController
         }
     }
 
-    public function Add($username, $password, $nombre, $dni, $email, $cuil, $disponibilidad, $direccion, $precio)
+    public function elegirDisponibilidad($desde, $hasta)
+    {
+        $valid = AuthController::ValidarFecha($desde, $hasta);//arreglar
+        if ($valid) {
+            $guardian = new Guardian();
+            $guardian = $_SESSION["loggedUser"];
+            $guardian->setDisponibilidadInicio($desde);
+            $guardian->setDisponibilidadFin($hasta);
+            $bien = $this->guardianDAO->updateDisponibilidad($_SESSION["loggedUser"]->getDni(), $desde, $hasta);
+            $_SESSION["loggedUser"] = $guardian;
+            if($bien){
+            ///alerta buena
+            }
+            else{
+            ///alerta mala
+            }
+            require_once(VIEWS_PATH . "loginGuardian.php");
+        } else {
+            ///alerta mala
+            require_once(VIEWS_PATH . "loginGuardian.php");
+        }
+    }
+
+    public function Add($username, $password, $nombre, $dni, $email, $cuil, $direccion, $precio)
     {
         $valid = AuthController::ValidarUsuario($username, $dni, $email);
         if ($valid) {
@@ -54,15 +76,15 @@ class GuardianController
             $guardian->setCuil($cuil);
             $guardian->setEmail($email);
             $guardian->setDireccion($direccion);
-            $guardian->setDisponibilidad($disponibilidad);
             $guardian->setPrecio($precio);
 
             $this->guardianDAO->Add($guardian);
             $userDAO = new UserDAO;
             $userDAO->Add($guardian);
+            echo '<script>alert("Usuario creado")</script>';
             $this->home();
         } else {
-            ///alerta-----------
+            echo '<script>alert("Usuario ya existente")</script>';
             $this->home();
         }
     }

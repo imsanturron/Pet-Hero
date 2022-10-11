@@ -19,11 +19,12 @@ class DuenoController
     {
         $opcion = $_POST['opcion'];
 
-        if ($opcion == "verm") {
+        if ($opcion == "verMascotas") {
             require_once(VIEWS_PATH . "verMascotas.php");
-        } else if ($opcion == "agregarm") {
+        } else if ($opcion == "agregarMascota") {
             require_once(VIEWS_PATH . "agregarMascotas.php");
-        } else if ($opcion == "verg") {
+        } else if ($opcion == "verGuardianes") {
+            //$listaguardianes=$this->duenoDAO->getAll();
             require_once(VIEWS_PATH . "verGuardianes.php");
         }
     }
@@ -33,7 +34,7 @@ class DuenoController
         require_once(VIEWS_PATH . "home.php");
     }
 
-    public function ElegirG()
+    public function ElegirGuardian()
     {
         //require_once(VIEWS_PATH . "ver como seguirlo.php");
         require_once(VIEWS_PATH . "home.php");
@@ -65,9 +66,10 @@ class DuenoController
             $this->duenoDAO->Add($dueno);
             $userDAO = new UserDAO;
             $userDAO->Add($dueno);
+            ///alerta buena
             $this->home();
         } else {
-            ///alerta
+            ///alerta mala
             $this->home();
         }
     }
@@ -76,7 +78,7 @@ class DuenoController
     public function Remove($dni)
     {
         $this->duenoDAO->Remove($dni);
-
+        ///alerta buena
         $this->home();
     }
 }

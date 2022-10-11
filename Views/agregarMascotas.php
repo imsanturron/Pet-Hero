@@ -1,11 +1,11 @@
-<?php 
- include('header.php');
- include('nav-bar.php');
+<?php
+include('header.php');
+include('nav-bar.php');
 ?>
 <!-- ################################################################################################ -->
 <div class="wrapper row2 bgded" style="background-image:url('../images/demo/backgrounds/1.png');">
   <div class="overlay">
-    <div id="breadcrumb" class="clear"> 
+    <div id="breadcrumb" class="clear">
       <ul>
         <li><a href="#">Home</a></li>
         <li><a href="#">Add</a></li>
@@ -16,12 +16,12 @@
 </div>
 <!-- ################################################################################################ -->
 <div class="wrapper row4">
-<main class="container clear"> 
-    <div class="content"> 
-      <div id="comments" >
+  <main class="container clear">
+    <div class="content">
+      <div id="comments">
         <h2>Agregar mascota</h2>
-        <form action="<?php echo FRONT_ROOT ?>Mascota/Add" method="post"  style="background-color: #EAEDED;padding: 2rem !important;">
-          <table> 
+        <form action="<?php echo FRONT_ROOT ?>Mascota/Add" method="post" style="background-color: #EAEDED;padding: 2rem !important;">
+          <table>
             <thead>
               <tr>
                 <th>nombre</th>
@@ -40,15 +40,15 @@
                 </td>
                 <td>
                   <input type="text" name="tamano" required>
-                </td>     
+                </td>
                 <td>
                   <input type="text" name="observaciones">
-                </td>         
+                </td>
               </tr>
-              </tbody>
+            </tbody>
           </table>
           <div>
-            <input type="submit" class="btn" value="Agregar" style="background-color:#DC8E47;color:white;"/>
+            <input type="submit" class="btn" value="Agregar" style="background-color:#DC8E47;color:white;" />
           </div>
         </form>
       </div>
@@ -57,6 +57,6 @@
 </div>
 <!-- ################################################################################################ -->
 
-<?php 
-  include('footer.php');
+<?php
+include('footer.php');
 ?>

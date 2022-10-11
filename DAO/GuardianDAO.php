@@ -15,7 +15,7 @@ class GuardianDAO
     {
         $this->retrieveData();
         array_push($this->usuarioList, $user);
-        $this->SaveData();
+        $this->saveData();
     }
 
 
@@ -40,6 +40,22 @@ class GuardianDAO
           return $item;
       }
       return null;
+    }
+
+    public function updateDisponibilidad($dni, $fini, $ffin)
+    {
+      $this->retrieveData();
+      foreach($this->usuarioList as $item) 
+      {
+        if($item->getDni() == $dni)
+        {
+          $item->setDisponibilidadInicio($fini);
+          $item->setDisponibilidadFin($ffin);
+          $this->SaveData();
+          return true;
+        }
+      }
+      return false;
     }
 
     /**BUsca factura por numero y tipo  en archivo retorna true o false */
@@ -73,8 +89,14 @@ class GuardianDAO
             $valueArray["username"] = $guardian->getUsername();
             $valueArray["password"] = $guardian->getPassword();
             $valueArray["dni"] = $guardian->getDni();
+            $valueArray["precio"] = $guardian->getPrecio();
+            $valueArray["nombre"] = $guardian->getNombre();
             $valueArray["email"] = $guardian->getEmail();
             $valueArray["tipo"] = $guardian->getTipo();
+            $valueArray["reservas"] = $guardian->getReservas();
+            $valueArray["direccion"] = $guardian->getDireccion();
+            $valueArray["FechaInicio"] = $guardian->getDisponibilidadInicio();
+            $valueArray["FechaFin"] = $guardian->getDisponibilidadFin();
             array_push($arrayToEncode, $valueArray);
         }
         $jsonContent = json_encode($arrayToEncode, JSON_PRETTY_PRINT);
@@ -92,12 +114,18 @@ class GuardianDAO
 
             foreach ($arrayToEncode as $valueArray) {
 
-                $usuario = new Guardian;
+                $usuario = new Guardian();
                 $usuario->setUsername($valueArray["username"]);
+                $usuario->setNombre($valueArray["nombre"]);
                 $usuario->setPassword($valueArray["password"]);
+                $usuario->setPrecio($valueArray["precio"]);
                 $usuario->setDni($valueArray["dni"]);
                 $usuario->setEmail($valueArray["email"]);
+                $usuario->setDireccion($valueArray["direccion"]);
                 $usuario->setTipo($valueArray["tipo"]);
+                $usuario->setReservas($valueArray["reservas"]);
+                $usuario->setDisponibilidadInicio($valueArray["FechaInicio"]);
+                $usuario->setDisponibilidadFin($valueArray["FechaFin"]);
                 array_push($this->usuarioList, $usuario);
             }
         }

@@ -2,8 +2,14 @@
     {
         "username": "s",
         "password": "1",
-        "dni": "c23",
-        "email": "llqqd@21",
-        "tipo": "g"
+        "dni": "124125",
+        "precio": "2462",
+        "nombre": "a",
+        "email": "fsaf@f",
+        "tipo": "g",
+        "reservas": [],
+        "direccion": "asfeg32",
+        "FechaInicio": "2022-10-15",
+        "FechaFin": "2022-10-25"
     }
 ]

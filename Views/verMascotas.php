@@ -5,12 +5,12 @@ use DAO\MascotaDAO;
 
 Autoload::Start();
 
-$mascotasDao = new MascotaDAO();     
+$mascotasDao = new MascotaDAO();
 $listaMascotas = $mascotasDao->GetAll();
 
 ?>
 <main class="py-5">
-     
+
      <section id="listado" class="mb-5">
           <div class="container">
                <h2 class="mb-4">Listado de mascotas</h2>
@@ -22,26 +22,27 @@ $listaMascotas = $mascotasDao->GetAll();
                          <th>Observaciones</th>
                     </thead>
                     <tbody>
-                         <form action="<?php echo FRONT_ROOT ?>Mascota/Remove" method="POST" >
-                         <?php 
-                              if(isset($listaMascotas) && !empty($listaMascotas)){
-                                   
-                                   foreach($listaMascotas as $mascota){
-                                   ?> 
-                                   <?php if($mascota->getdniDueno() == $_SESSION["loggedUser"]->getDni()){?>
-                                        <tr> 
-                                             <td><?php echo $mascota->getNombre(); ?></td>
-                                             <td><?php echo "Raza: ".$mascota->getRaza(); ?></td>
-                                             <td><?php echo $mascota->getTamano(); ?></td>
-                                             <td><?php echo $mascota->getObservaciones(); ?></td>
-                                             <td>
-                                                  <button type="submit" name="btnRemove" class="btn btn-danger" value="123"> Eliminar </button>
-                                             </td>
-                                        </tr>
-                                   <?php
-                                   }}
+                         <form action="<?php echo FRONT_ROOT ?>Mascota/Remove" method="POST">
+                              <?php
+                              if (isset($listaMascotas) && !empty($listaMascotas)) {
+
+                                   foreach ($listaMascotas as $mascota) {
+                              ?>
+                                        <?php if ($mascota->getdniDueno() == $_SESSION["loggedUser"]->getDni()) { ?>
+                                             <tr>
+                                                  <td><?php echo $mascota->getNombre(); ?></td>
+                                                  <td><?php echo "Raza: " . $mascota->getRaza(); ?></td>
+                                                  <td><?php echo $mascota->getTamano(); ?></td>
+                                                  <td><?php echo $mascota->getObservaciones(); ?></td>
+                                                  <td>
+                                                       <button type="submit" class="btn btn-danger" value="<?php echo $mascota->getId(); ?>"> Eliminar </button>
+                                                  </td>
+                                             </tr>
+                              <?php
+                                        }
+                                   }
                               }
-                         ?>
+                              ?>
                          </form>
                     </tbody>
                </table>
@@ -61,4 +62,3 @@ $listaMascotas = $mascotasDao->GetAll();
           </div>
      </div>
 </main>
-

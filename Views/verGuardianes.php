@@ -23,9 +23,10 @@ $listaguardianes = $guardianDao->GetAll();
                     <th>Precio</th>
                     <th>Direccion</th>
                     <th>Reputacion (falta)</th>
+                    <th>Opcion</th>
                 </thead>
                 <tbody>
-                    <form action="<?php echo FRONT_ROOT ?>Dueno/ElegirG" method="POST">
+                    <form action="<?php echo FRONT_ROOT ?>Dueno/ElegirGuardian" method="POST">
                         <?php
                         if (isset($listaguardianes) && !empty($listaguardianes)) {
 
@@ -34,13 +35,26 @@ $listaguardianes = $guardianDao->GetAll();
                                 <tr>
                                     <td><?php echo $guardianx->getNombre(); ?></td>
                                     <td><?php echo $guardianx->getUserName(); ?></td>
-                                    <td><?php echo $guardianx->getDisponibilidad(); ?></td>
+                                    <td>
+                                        <?php if ($guardianx->getDisponibilidadInicio()) {
+                                            echo $guardianx->getDisponibilidadInicio() .
+                                                " hasta " . $guardianx->getDisponibilidadFin();
+                                        } else {
+                                            echo "no disponible";
+                                        } ?>
+                                    </td>
                                     <td><?php echo $guardianx->getPrecio(); ?></td>
                                     <td><?php echo $guardianx->getDireccion(); ?></td>
                                     <td><?php //php echo $guardianx->getReputacion(); ?></td>
-                                    <td>
-                                        <button type="submit" name="btnRemove" class="btn btn-danger" value="123"> Elegir </button>
-                                    </td>
+                                    <?php if ($guardianx->getDisponibilidadInicio()) { ?>
+                                        <td>
+                                            <button type="submit" class="btn btn-danger" value="123"> Elegir </button>
+                                        </td>
+                                    <?php } else { ?>
+                                        <td>
+                                            <label> No disponible </label>
+                                        </td>
+                                    <?php } ?>
                                 </tr>
                         <?php
                             }
