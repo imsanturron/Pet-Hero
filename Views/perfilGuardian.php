@@ -1,0 +1,47 @@
+<?php
+include('nav-bar.php');
+?>
+<main class="py-5">
+
+    <section id="listado" class="mb-5">
+        <div class="container">
+            <h2 class="mb-4">Mi perfil</h2>
+            <small>Click en valor para cambiarlo</small>
+            <table class="table bg-light-alpha">
+                <thead>
+                    <th>Nombre</th>
+                    <th>User</th>
+                    <th>Password</th>
+                    <th>Email</th>
+                    <th>Direccion</th>
+                    <th>Cuil</th>
+                    <th>Disponibilidad actual</th>
+                    <th>Precio</th>
+                    <th>Reservas</th>
+                </thead>
+                <tbody>
+                    <form action="<?php echo FRONT_ROOT ?>Home/cambiarPerfil" method="POST">
+                        <?php if (isset($_SESSION["loggedUser"])) { ?>
+                            <td>
+                                <?php echo $_SESSION["loggedUser"]->getNombre() . "<br>"; ?>
+                                <button type="submit" class="btn btn-danger" value="nombre"> Cambiar </button>
+                            </td>
+                            <td><?php echo $_SESSION["loggedUser"]->getUserName(); ?></td>
+                            <td><?php echo "***"; ?></td>
+                            <td><?php echo $_SESSION["loggedUser"]->getEmail(); ?></td>
+                            <td><?php echo $_SESSION["loggedUser"]->getDireccion(); ?></td>
+                            <td><?php echo $_SESSION["loggedUser"]->getCuil(); ?></td>
+                            <td><?php if ($_SESSION["loggedUser"]->getDisponibilidadInicio()) {
+                                    echo $_SESSION["loggedUser"]->getDisponibilidadInicio() .
+                                        " hasta " . $_SESSION["loggedUser"]->getDisponibilidadFin();
+                                } else {
+                                    echo "no ha seleccionado disponibilidad";
+                                } ?> </td>
+                            <td><?php echo $_SESSION["loggedUser"]->getPrecio(); ?></td>
+                            </tr>
+                        <?php } ?>
+                    </form>
+                </tbody>
+            </table>
+        </div>
+    </section>

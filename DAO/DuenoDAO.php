@@ -18,7 +18,7 @@ class DuenoDAO
     {
         $this->retrieveData();
         array_push($this->usuarioList, $user);
-        $this->saveData();
+        $this->SaveData();
     }
 
     public function remove(Dueno $user)
@@ -77,6 +77,7 @@ class DuenoDAO
             $valueArray["password"] = $dueno->getPassword();
             $valueArray["dni"] = $dueno->getDni();
             $valueArray["email"] = $dueno->getEmail();
+            $valueArray["mascotas"] = $dueno->getMascotas();
             $valueArray["tipo"] = $dueno->getTipo();
             array_push($arrayToEncode, $valueArray);
         }
@@ -100,6 +101,7 @@ class DuenoDAO
                 $usuario->setPassword($valueArray["password"]);
                 $usuario->setDni($valueArray["dni"]);
                 $usuario->setEmail($valueArray["email"]);
+                $usuario->setMascotas($valueArray["mascotas"]);
                 $usuario->setTipo($valueArray["tipo"]);
                 array_push($this->usuarioList, $usuario);
             }

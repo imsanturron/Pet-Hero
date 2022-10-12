@@ -1,3 +1,7 @@
+
+<?php 
+  include('nav-bar.php');
+?>
 <form action="<?php echo FRONT_ROOT ?>Guardian/opcionMenuPrincipal" method="post" style="background-color: #EAEDED;padding: 2rem !important;">
 
     <input type="submit" class="btn" value="indicarDisponibilidad" name="opcion" placeholder="Ver mis mascotas" style="background-color:#DC8E47;color:white;" />

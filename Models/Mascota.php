@@ -2,6 +2,7 @@
 class Mascota{
 
     private $dniDueno;
+    private $id;
     private $nombre;
     private $raza;
     private $tamano;
@@ -15,6 +16,18 @@ class Mascota{
     public function setNombre($nombre): self
     {
         $this->nombre = $nombre;
+
+        return $this;
+    }
+    
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setId($id): self
+    {
+        $this->id = $id;
 
         return $this;
     }

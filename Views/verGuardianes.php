@@ -1,3 +1,7 @@
+
+<?php 
+  include('nav-bar.php');
+?>
 <?php
 
 use Config\Autoload as Autoload;
@@ -7,7 +11,7 @@ use Models\Guardian as Guardian;
 Autoload::Start();
 
 $guardianDao = new GuardianDAO();
-$listaguardianes = $guardianDao->getAll();
+$listaguardianes = $guardianDao->GetAll();
 
 ?>
 <main class="py-5">
@@ -19,14 +23,14 @@ $listaguardianes = $guardianDao->getAll();
                 <thead>
                     <th>Nombre</th>
                     <th>Usuario</th>
-                    <th>Disponibilidad desde:</th>
-                    <th>Hasta:</th>
+                    <th>Disponibilidad</th>
                     <th>Precio</th>
                     <th>Direccion</th>
                     <th>Reputacion (falta)</th>
+                    <th>Opcion</th>
                 </thead>
                 <tbody>
-                    <form action="<?php echo FRONT_ROOT ?>Dueno/ElegirG" method="POST">
+                    <form action="<?php echo FRONT_ROOT ?>Dueno/ElegirGuardian" method="POST">
                         <?php
                         if (isset($listaguardianes) && !empty($listaguardianes)) {
 
@@ -35,14 +39,26 @@ $listaguardianes = $guardianDao->getAll();
                                 <tr>
                                     <td><?php echo $guardianx->getNombre(); ?></td>
                                     <td><?php echo $guardianx->getUserName(); ?></td>
-                                    <td><?php echo $guardianx->getDisponibilidadInicio(); ?></td> 
-                                    <td><?php echo $guardianx->getDisponibilidadFin(); ?></td>
+                                    <td>
+                                        <?php if ($guardianx->getDisponibilidadInicio()) {
+                                            echo $guardianx->getDisponibilidadInicio() .
+                                                " hasta " . $guardianx->getDisponibilidadFin();
+                                        } else {
+                                            echo "no disponible";
+                                        } ?>
+                                    </td>
                                     <td><?php echo $guardianx->getPrecio(); ?></td>
                                     <td><?php echo $guardianx->getDireccion(); ?></td>
                                     <td><?php //php echo $guardianx->getReputacion(); ?></td>
-                                    <td>
-                                        <button type="submit" name="btnRemove" class="btn btn-danger" value="123"> Elegir </button>
-                                    </td>
+                                    <?php if ($guardianx->getDisponibilidadInicio()) { ?>
+                                        <td>
+                                            <button type="submit" class="btn btn-danger" value="123"> Elegir </button>
+                                        </td>
+                                    <?php } else { ?>
+                                        <td>
+                                            <label> No disponible </label>
+                                        </td>
+                                    <?php } ?>
                                 </tr>
                         <?php
                             }

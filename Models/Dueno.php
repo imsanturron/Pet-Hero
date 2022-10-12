@@ -1,7 +1,7 @@
 <?php namespace Models;
 class dueno extends User{
     private $mascotas;
-    private $telefono;
+    private $telefono;////user
 
     function __construct()
     {
@@ -24,6 +24,17 @@ class dueno extends User{
     public function getMascotas()
     {
         return $this->mascotas;
+    }
+
+    public function setMascotas($mascotas): self
+    {
+        $this->mascotas = $mascotas;
+
+        return $this;
+    }
+    
+    public function addMascota($msc){
+        array_push($this->mascotas, $msc);
     }
 }
 ?>

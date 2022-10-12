@@ -34,7 +34,7 @@ class DuenoController
         require_once(VIEWS_PATH . "home.php");
     }
 
-    public function ElegirG()
+    public function ElegirGuardian()
     {
         //require_once(VIEWS_PATH . "ver como seguirlo.php");
         require_once(VIEWS_PATH . "home.php");
@@ -66,9 +66,10 @@ class DuenoController
             $this->duenoDAO->Add($dueno);
             $userDAO = new UserDAO;
             $userDAO->Add($dueno);
+            ///alerta buena
             $this->home();
         } else {
-            ///alerta
+            ///alerta mala
             $this->home();
         }
     }
@@ -77,7 +78,7 @@ class DuenoController
     public function Remove($dni)
     {
         $this->duenoDAO->Remove($dni);
-
+        ///alerta buena
         $this->home();
     }
 }
