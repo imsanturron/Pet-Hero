@@ -73,10 +73,13 @@ class DuenoDAO
 
         foreach ($this->usuarioList as $dueno) {
 
+            $valueArray["nombre"] = $dueno->getNombre();
             $valueArray["username"] = $dueno->getUsername();
             $valueArray["password"] = $dueno->getPassword();
             $valueArray["dni"] = $dueno->getDni();
             $valueArray["email"] = $dueno->getEmail();
+            $valueArray["direccion"] = $dueno->getDireccion();
+            $valueArray["telefono"] = $dueno->getTelefono();
             $valueArray["mascotas"] = $dueno->getMascotas();
             $valueArray["tipo"] = $dueno->getTipo();
             array_push($arrayToEncode, $valueArray);
@@ -97,10 +100,13 @@ class DuenoDAO
             foreach ($arrayToEncode as $valueArray) {
 
                 $usuario = new Dueno;
+                $usuario->setNombre($valueArray["nombre"]);
                 $usuario->setUsername($valueArray["username"]);
                 $usuario->setPassword($valueArray["password"]);
                 $usuario->setDni($valueArray["dni"]);
                 $usuario->setEmail($valueArray["email"]);
+                $usuario->setDireccion($valueArray["direccion"]);
+                $usuario->setTelefono($valueArray["telefono"]);
                 $usuario->setMascotas($valueArray["mascotas"]);
                 $usuario->setTipo($valueArray["tipo"]);
                 array_push($this->usuarioList, $usuario);

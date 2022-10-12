@@ -26,6 +26,9 @@ class DuenoController
         } else if ($opcion == "verGuardianes") {
             //$listaguardianes=$this->duenoDAO->getAll();
             require_once(VIEWS_PATH . "verGuardianes.php");
+        }else if ($opcion == "verPerfil") {
+            ///sin terminar
+            require_once(VIEWS_PATH . "perfilDueno.php");
         }
     }
 

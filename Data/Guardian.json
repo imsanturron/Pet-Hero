@@ -1,0 +1,16 @@
+[
+    {
+        "username": "123",
+        "password": "1234",
+        "dni": "123455",
+        "cuil": null,
+        "precio": "2",
+        "nombre": "aksma",
+        "email": "asndajnd@jfqn",
+        "tipo": "g",
+        "reservas": [],
+        "direccion": "g3rf25r",
+        "FechaInicio": "2022-10-28",
+        "FechaFin": "2022-10-28"
+    }
+]
