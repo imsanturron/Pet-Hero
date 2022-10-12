@@ -1,3 +1,7 @@
+
+<?php 
+  include('nav-bar.php');
+?>
 <?php
 
 use Config\Autoload as Autoload;
