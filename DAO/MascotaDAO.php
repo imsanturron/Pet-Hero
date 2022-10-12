@@ -61,6 +61,8 @@ class MascotaDAO
             $valueArray["nombre"] = $mascota->getNombre();
             $valueArray["raza"] = $mascota->getRaza();
             $valueArray["dueno"] = $mascota->getDniDueno();
+            $valueArray["tamaño"] = $mascota->getTamano();
+            $valueArray["observaciones"] = $mascota->getObservaciones();
             array_push($arrayToEncode, $valueArray);
         }
         $jsonContent = json_encode($arrayToEncode, JSON_PRETTY_PRINT);
@@ -82,6 +84,8 @@ class MascotaDAO
                 $usuario->setNombre($valueArray["nombre"]);
                 $usuario->setRaza($valueArray["raza"]);
                 $usuario->setDniDueno($valueArray["dueno"]);
+                $usuario->setTamano($valueArray["tamaño"]);
+                $usuario->setObservaciones($valueArray["observaciones"]);
                 array_push($this->usuarioList, $usuario);
             }
         }

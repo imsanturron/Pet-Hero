@@ -65,7 +65,17 @@ class AuthController
   }
 
   public static function ValidarFecha($finic, $ffin = null)
-  {/*
+  {
+    $fini = explode("-", $finic);
+    if ($ffin)
+      $ff = explode("-", $ffin);
+
+    if ($fini[0] <= $ff[0] && $fini[1] <= $ff[1] && $fini[2] <= $ff[2]) {
+      return true;
+    } else
+      return false;
+  }
+  /*
     $fini = date("Y-m-d", strtotime($finic));
     if ($ffin)
       $ff = date("Y-m-d", strtotime($ffin));
@@ -77,10 +87,6 @@ class AuthController
       return false;
     }
     return false;
-  }*/
-  return true;
-}
-
 
   /*  --- NO BORRAR ---
   if($ffin != null){
@@ -89,12 +95,10 @@ class AuthController
         else
       return false;
   }
-
     if (strtotime($finic) < strtotime('now'))
       return true;
     else
       return false;
-
   */
 
 
