@@ -11,7 +11,7 @@
             <?php if($_SESSION['loggedUser']->getTipo() == 'd') { ?>
             <li><a href="<?php echo FRONT_ROOT ?>Dueno/login">Home</a></li>
             <?php } else{ ?>
-            <li><a href="<?php echo FRONT_ROOT ?>Guardain/login">Home</a></li>
+            <li><a href="<?php echo FRONT_ROOT ?>Guardian/login">Home</a></li>
             <?php } ?>
             <!--<li><a href="<?php // echo FRONT_ROOT ?>Service/List">LIST</a></li>-->
             <li><a href="<?php echo FRONT_ROOT ?>Auth/Logout">LOGOUT</a></li>

@@ -35,9 +35,10 @@ class GuardianController
         if ($opcion == "indicarDisponibilidad") {
             require_once(VIEWS_PATH . "indicarDisponibilidad.php");
         } else if ($opcion == "verListadReservas") {
-            require_once(VIEWS_PATH . "agregarMascotas.php");
-        } else if ($opcion == "verg") {
-            require_once(VIEWS_PATH . "verGuardianes.php");
+            require_once(VIEWS_PATH . "loginGuardian.php");
+        } else if ($opcion == "verPerfil") {
+            ///sin terminar
+            require_once(VIEWS_PATH . "perfilGuardian.php");
         }
     }
 
