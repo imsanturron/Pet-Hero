@@ -1,4 +1,5 @@
 <?php namespace Models;
+<<<<<<< HEAD
 class Guardian{
 
     private $username;//////////
@@ -53,6 +54,20 @@ class Guardian{
         $this->direccion = $direccion;
 
         return $this;
+=======
+class Guardian extends User{
+
+    private $cuil;
+    private $disponibilidadInicio;
+    private $disponibilidadFin;
+    private $precio;
+    private $reservas;
+
+    function __construct()
+    {
+        $this->tipo = 'g';
+        $this->reservas = array();
+>>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
     }
 
     public function getCuil()
@@ -67,6 +82,7 @@ class Guardian{
         return $this;
     }
 
+<<<<<<< HEAD
     public function getDisponibilidad()
     {
         return $this->disponibilidad;
@@ -79,6 +95,8 @@ class Guardian{
         return $this;
     }
 
+=======
+>>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
     public function getPrecio()
     {
         return $this->precio;
@@ -90,4 +108,54 @@ class Guardian{
 
         return $this;
     }
+<<<<<<< HEAD
 }
+=======
+
+    public function getReservas()
+    {
+        return $this->reservas;
+    }
+
+    public function setReservas($reservas): self
+    {
+        $this->reservas = $reservas;
+
+        return $this;
+    }
+ 
+    public function getDisponibilidadFin()
+    {
+        return $this->disponibilidadFin;
+    }
+
+    /**
+     * Set the value of disponibilidadFin
+     *
+     * @return  self
+     */ 
+    public function setDisponibilidadFin($disponibilidadFin)
+    {
+        $this->disponibilidadFin = $disponibilidadFin;
+
+        return $this;
+    }
+
+    public function getDisponibilidadInicio()
+    {
+        return $this->disponibilidadInicio;
+    }
+
+    /**
+     * Set the value of disponibilidadInicio
+     *
+     * @return  self
+     */ 
+    public function setDisponibilidadInicio($disponibilidadInicio)
+    {
+        $this->disponibilidadInicio = $disponibilidadInicio;
+
+        return $this;
+    }
+}
+>>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7

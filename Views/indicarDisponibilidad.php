@@ -1,0 +1,16 @@
+<?php
+include('nav-bar.php');
+//echo date("Y-m-d", strtotime("now"));
+?>
+<form action="<?php echo FRONT_ROOT ?>Guardian/elegirDisponibilidad" method="post" style="background-color: #EAEDED;padding: 2rem !important;">
+  <B>
+    <FONT COLOR="black">Desde: </FONT>
+    <input type="date" class="btn" name="desde" min="<?php echo date("Y-m-d") ?>" style="background-color:#DC8E47;color:white;" required />
+    <br> <br>
+    <B>
+      <FONT COLOR="black">Hasta: </FONT>
+      <input type="date" class="btn" name="hasta" min="<?php echo date("Y-m-d") ?>" style="background-color:#DC8E47;color:white;" required />
+      <br> <br>
+      <button type="submit" class="btn" style="background-color:#DC8E47;color:white;">Enviar</button>
+
+</form>

@@ -1,6 +1,11 @@
 <?php namespace Models;
 class Mascota{
 
+<<<<<<< HEAD
+=======
+    private $dniDueno;
+    private $id;
+>>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
     private $nombre;
     private $raza;
     private $tamano;
@@ -17,6 +22,33 @@ class Mascota{
 
         return $this;
     }
+<<<<<<< HEAD
+=======
+    
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setId($id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    public function getDniDueno()
+    {
+        return $this->dniDueno;
+    }
+
+    public function setDniDueno($dniDueno): self
+    {
+        $this->dniDueno = $dniDueno;
+
+        return $this;
+    }
+>>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
 
     public function getRaza()
     {

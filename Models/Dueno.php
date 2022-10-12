@@ -1,4 +1,5 @@
 <?php namespace Models;
+<<<<<<< HEAD
 class dueno{
 
 
@@ -66,6 +67,16 @@ class dueno{
         $this->direccion = $direccion;
 
         return $this;
+=======
+class dueno extends User{
+    private $mascotas;
+    private $telefono;////user
+
+    function __construct()
+    {
+        $this->tipo = 'd';
+        $this->mascotas = array();
+>>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
     }
 
     public function getTelefono()
@@ -79,5 +90,24 @@ class dueno{
 
         return $this;
     }
+<<<<<<< HEAD
+=======
+
+    public function getMascotas()
+    {
+        return $this->mascotas;
+    }
+
+    public function setMascotas($mascotas): self
+    {
+        $this->mascotas = $mascotas;
+
+        return $this;
+    }
+    
+    public function addMascota($msc){
+        array_push($this->mascotas, $msc);
+    }
+>>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
 }
 ?>
