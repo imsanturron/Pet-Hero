@@ -89,6 +89,7 @@ class GuardianDAO
             $valueArray["username"] = $guardian->getUsername();
             $valueArray["password"] = $guardian->getPassword();
             $valueArray["dni"] = $guardian->getDni();
+            $valueArray["cuil"] = $guardian->getCuil();
             $valueArray["precio"] = $guardian->getPrecio();
             $valueArray["nombre"] = $guardian->getNombre();
             $valueArray["email"] = $guardian->getEmail();
@@ -121,6 +122,7 @@ class GuardianDAO
                 $usuario->setPrecio($valueArray["precio"]);
                 $usuario->setDni($valueArray["dni"]);
                 $usuario->setEmail($valueArray["email"]);
+                $usuario->setCuil($valueArray["cuil"]);
                 $usuario->setDireccion($valueArray["direccion"]);
                 $usuario->setTipo($valueArray["tipo"]);
                 $usuario->setReservas($valueArray["reservas"]);
