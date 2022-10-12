@@ -56,24 +56,42 @@ class Mascota{
         return $this;
     }
 
+  
+
+    /**
+     * Get the value of tamano
+     */ 
     public function getTamano()
     {
         return $this->tamano;
     }
 
-    public function setTamano($tamano): self
+    /**
+     * Set the value of tamano
+     *
+     * @return  self
+     */ 
+    public function setTamano($tamano)
     {
         $this->tamano = $tamano;
 
         return $this;
     }
 
+    /**
+     * Get the value of observaciones
+     */ 
     public function getObservaciones()
     {
         return $this->observaciones;
     }
 
-    public function setObservaciones($observaciones): self
+    /**
+     * Set the value of observaciones
+     *
+     * @return  self
+     */ 
+    public function setObservaciones($observaciones)
     {
         $this->observaciones = $observaciones;
 
