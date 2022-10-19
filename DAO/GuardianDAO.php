@@ -1,8 +1,12 @@
 <?php namespace DAO;
 
 use Models\Guardian as Guardian;
+use DAO\Connection as Connection;
+use \Exception as Exception;
 class GuardianDAO
 {
+    //private $connection;
+    //private $tableName = "students";
     private $usuarioList = array();
     private $filename;
 

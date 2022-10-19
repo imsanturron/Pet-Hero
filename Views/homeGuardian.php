@@ -1,7 +1,7 @@
 <?php 
     include_once('header.php');
 ?>
-
+<a href="<?php echo FRONT_ROOT ?>Home/Index">Volver al home</a>
 
   <div class="div-login"><br>
     <h1 class="text-login">Login Guardian</h1>

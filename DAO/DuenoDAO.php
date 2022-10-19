@@ -3,9 +3,13 @@
 namespace DAO;
 
 use Models\Dueno as Dueno;
+use DAO\Connection as Connection;
+use \Exception as Exception;
 
 class DuenoDAO
 {
+    //private $connection;
+    //private $tableName = "students";
     private $usuarioList = array();
     private $filename;
 
@@ -51,24 +55,25 @@ class DuenoDAO
         return $encontrado;
     }
 
-    
-    public function getByUsername($user) 
+
+    public function getByUsername($user)
     {
-      $this->retrieveData();
-      foreach($this->usuarioList as $item) 
-      {
-        if($item->getUsername() == $user)
-          return $item;
-      }
-      return null;
+        $this->retrieveData();
+        foreach ($this->usuarioList as $item) {
+            if ($item->getUsername() == $user)
+                return $item;
+        }
+        return null;
     }
 
-    public function getAll(){
+    public function getAll()
+    {
         $this->retrieveData();
         return $this->usuarioList;
     }
 
-    public function saveData(){
+    public function saveData()
+    {
         $arrayToEncode = array();
 
         foreach ($this->usuarioList as $dueno) {
@@ -88,7 +93,8 @@ class DuenoDAO
         file_put_contents($this->filename, $jsonContent);
     }
 
-    private function retrieveData(){
+    private function retrieveData()
+    {
 
         $this->usuarioList = array();
 
@@ -114,7 +120,8 @@ class DuenoDAO
         }
     }
 
-    public function getUsuarioList(){
+    public function getUsuarioList()
+    {
         return $this->usuarioList;
     }
 }

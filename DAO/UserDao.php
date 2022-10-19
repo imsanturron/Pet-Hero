@@ -1,8 +1,12 @@
 <?php namespace DAO;
 
 use Models\User as User;
+use DAO\Connection as Connection;
+use \Exception as Exception;
 class UserDAO
 {
+    //private $connection;
+    //private $tableName = "students";
     private $usuarioList = array();
     private $filename;
 
