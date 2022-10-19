@@ -18,7 +18,6 @@ class MascotaController
     /*public function opcionMenuPrincipal($opcion)
     {
         $opcion = $_POST['opcion'];
-
         if ($opcion == "verm") {
             require_once(VIEWS_PATH . "verMascotas.php");
         } else if ($opcion == "agregarm"){
