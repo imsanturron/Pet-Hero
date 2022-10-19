@@ -1,16 +1,16 @@
 [
     {
-        "username": "123",
+        "username": "pepe argento",
         "password": "1234",
-        "dni": "123455",
-        "cuil": null,
-        "precio": "2",
-        "nombre": "aksma",
-        "email": "asndajnd@jfqn",
+        "dni": "3242481",
+        "cuil": "12893218",
+        "precio": "1234",
+        "nombre": "santi",
+        "email": "adnsjan@kdmas",
         "tipo": "g",
         "reservas": [],
-        "direccion": "g3rf25r",
-        "FechaInicio": "2022-10-28",
-        "FechaFin": "2022-10-28"
+        "direccion": "askmksda 124",
+        "FechaInicio": "2022-10-27",
+        "FechaFin": "2022-10-30"
     }
 ]

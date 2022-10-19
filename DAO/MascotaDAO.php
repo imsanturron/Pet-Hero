@@ -1,8 +1,12 @@
 <?php namespace DAO;
 
 use Models\Mascota as Mascota;
+use DAO\Connection as Connection;
+use \Exception as Exception;
 class MascotaDAO
 {
+    //private $connection;
+    //private $tableName = "students";
     private $usuarioList = array();
     private $filename;
 
@@ -61,7 +65,7 @@ class MascotaDAO
             $valueArray["nombre"] = $mascota->getNombre();
             $valueArray["raza"] = $mascota->getRaza();
             $valueArray["dueno"] = $mascota->getDniDueno();
-            $valueArray["tamaño"] = $mascota->getTamano();
+            $valueArray["tamano"] = $mascota->getTamano();
             $valueArray["observaciones"] = $mascota->getObservaciones();
             array_push($arrayToEncode, $valueArray);
         }
@@ -84,7 +88,7 @@ class MascotaDAO
                 $usuario->setNombre($valueArray["nombre"]);
                 $usuario->setRaza($valueArray["raza"]);
                 $usuario->setDniDueno($valueArray["dueno"]);
-                $usuario->setTamano($valueArray["tamaño"]);
+                $usuario->setTamano($valueArray["tamano"]);
                 $usuario->setObservaciones($valueArray["observaciones"]);
                 array_push($this->usuarioList, $usuario);
             }

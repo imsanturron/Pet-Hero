@@ -1,9 +1,12 @@
 [
     {
-        "username": "321",
-        "password": "4321",
-        "dni": "4345435",
-        "email": "mqweq@fkk",
+        "nombre": "moni",
+        "username": "moni argento",
+        "password": "12345",
+        "dni": "14812841",
+        "email": "jasndjas@dkak",
+        "direccion": "dnasnj134",
+        "telefono": "143232523",
         "mascotas": [],
         "tipo": "d"
     }
