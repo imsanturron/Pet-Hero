@@ -1,8 +1,12 @@
 <?php namespace DAO;
 
 use Models\User as User;
+use DAO\Connection as Connection;
+use \Exception as Exception;
 class UserDAO
 {
+    //private $connection;
+    //private $tableName = "students";
     private $usuarioList = array();
     private $filename;
 
@@ -37,6 +41,17 @@ class UserDAO
       {
         if($item->getUsername() == $user)
           return $item;
+      }
+      return null;
+    }
+
+    public function getTipoByUsername($user) 
+    {
+      $this->retrieveData();
+      foreach($this->usuarioList as $item) 
+      {
+        if($item->getUsername() == $user)
+          return $item->getTipo();///////////
       }
       return null;
     }
@@ -105,6 +120,7 @@ class UserDAO
             $valueArray["password"] = $user->getPassword();
             $valueArray["dni"] = $user->getDni();
             $valueArray["email"] = $user->getEmail();
+            $valueArray["tipo"] = $user->getTipo();
             array_push($arrayToEncode, $valueArray);
         }
         $jsonContent = json_encode($arrayToEncode, JSON_PRETTY_PRINT);
@@ -127,6 +143,7 @@ class UserDAO
                 $usuario->setPassword($valueArray["password"]);
                 $usuario->setDni($valueArray["dni"]);
                 $usuario->setEmail($valueArray["email"]);
+                $usuario->setTipo($valueArray["tipo"]);
                 array_push($this->usuarioList, $usuario);
             }
         }

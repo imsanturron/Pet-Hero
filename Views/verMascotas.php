@@ -24,6 +24,7 @@ $listaMascotas = $mascotasDao->GetAll();
                          <th>Raza</th>
                          <th>Tamaño</th>
                          <th>Observaciones</th>
+                         <th>Foto</th>
                     </thead>
                     <tbody>
                          <form action="<?php echo FRONT_ROOT ?>Mascota/Remove" method="POST">
@@ -35,9 +36,10 @@ $listaMascotas = $mascotasDao->GetAll();
                                         <?php if ($mascota->getdniDueno() == $_SESSION["loggedUser"]->getDni()) { ?>
                                              <tr>
                                                   <td><?php echo $mascota->getNombre(); ?></td>
-                                                  <td><?php echo "Raza: " . $mascota->getRaza(); ?></td>
+                                                  <td><?php echo $mascota->getRaza(); ?></td>
                                                   <td><?php echo $mascota->getTamano(); ?></td>
                                                   <td><?php echo $mascota->getObservaciones(); ?></td>
+                                                  <td><img src="<?php echo IMG_PATH . $mascota->getFotoMascota() ?>"></td>
                                                   <td>
                                                        <button type="submit" class="btn btn-danger" value="<?php echo $mascota->getId(); ?>"> Eliminar </button>
                                                   </td>

@@ -3,9 +3,13 @@
 namespace DAO;
 
 use Models\Dueno as Dueno;
+use DAO\Connection as Connection;
+use \Exception as Exception;
 
 class DuenoDAO
 {
+    //private $connection;
+    //private $tableName = "students";
     private $usuarioList = array();
     private $filename;
 
@@ -51,24 +55,25 @@ class DuenoDAO
         return $encontrado;
     }
 
-    
-    public function getByUsername($user) 
+
+    public function getByUsername($user)
     {
-      $this->retrieveData();
-      foreach($this->usuarioList as $item) 
-      {
-        if($item->getUsername() == $user)
-          return $item;
-      }
-      return null;
+        $this->retrieveData();
+        foreach ($this->usuarioList as $item) {
+            if ($item->getUsername() == $user)
+                return $item;
+        }
+        return null;
     }
 
-    public function getAll(){
+    public function getAll()
+    {
         $this->retrieveData();
         return $this->usuarioList;
     }
 
-    public function saveData(){
+    public function saveData()
+    {
         $arrayToEncode = array();
 
         foreach ($this->usuarioList as $dueno) {
@@ -88,7 +93,8 @@ class DuenoDAO
         file_put_contents($this->filename, $jsonContent);
     }
 
-    private function retrieveData(){
+    private function retrieveData()
+    {
 
         $this->usuarioList = array();
 
@@ -114,7 +120,74 @@ class DuenoDAO
         }
     }
 
-    public function getUsuarioList(){
+    public function getUsuarioList()
+    {
         return $this->usuarioList;
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////FUNCIONES BASE DE DATOS/////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /*public function Add(Dueno $dueno)
+    {
+        try
+        {
+            $query = "INSERT INTO ".$this->tableName." (nombre, username, password, dni, email, direccion, telefono, mascotas, tipo)
+             VALUES (:nombre, :username, :password, :dni, :email, :direccion, :telefono, :mascotas, :tipo);";
+            
+              $parameters["nombre"] = $dueno->getNombre();
+              $parameters["username"] = $dueno->getUsername();
+              $parameters["password"] = $dueno->getPassword();
+              $parameters["dni"] = $dueno->getDni();
+              $parameters["email"] = $dueno->getEmail();
+              $parameters["direccion"] = $dueno->getDireccion();
+              $parameters["telefono"] = $dueno->getTelefono();
+              $parameters["mascotas"] = $dueno->getMascotas();
+              $parameters["tipo"] = $dueno->getTipo();
+
+            $this->connection = Connection::GetInstance();
+
+            $this->connection->ExecuteNonQuery($query, $parameters);
+        }
+        catch(Exception $ex)
+        {
+            throw $ex;
+        }
+    }*/
+
+   /* public function GetAll()
+        {
+            try
+            {
+                $duenoList = array();
+
+                $query = "SELECT * FROM ".$this->tableName;
+
+                $this->connection = Connection::GetInstance();
+
+                $resultSet = $this->connection->Execute($query);
+                
+                foreach ($resultSet as $row)
+                {                
+                    $dueno = new Dueno();
+                    $dueno->setNombre($valueArray["nombre"]);
+                    $dueno->setUsername($valueArray["username"]);
+                    $dueno->setPassword($valueArray["password"]);
+                    $dueno->setDni($valueArray["dni"]);
+                    $dueno->setEmail($valueArray["email"]);
+                    $dueno->setDireccion($valueArray["direccion"]);
+                    $dueno->setTelefono($valueArray["telefono"]);
+                    $dueno->setMascotas($valueArray["mascotas"]);
+                    $dueno->setTipo($valueArray["tipo"]);
+
+                    array_push($duenoList, $dueno);
+                }
+
+                return $duenoList;
+            }
+            catch(Exception $ex)
+            {
+                throw $ex;
+            }
+        }*/
 }

@@ -1,16 +1,16 @@
 [
     {
-        "username": "123",
+        "username": "gua1",
         "password": "1234",
-        "dni": "123455",
-        "cuil": null,
-        "precio": "2",
-        "nombre": "aksma",
-        "email": "asndajnd@jfqn",
+        "dni": "39124912",
+        "cuil": "983488238",
+        "precio": "123",
+        "nombre": "pepe",
+        "email": "guar@kasdnkasd",
         "tipo": "g",
         "reservas": [],
-        "direccion": "g3rf25r",
-        "FechaInicio": "2022-10-28",
+        "direccion": "mdp 123",
+        "FechaInicio": "2022-10-26",
         "FechaFin": "2022-10-28"
     }
 ]
