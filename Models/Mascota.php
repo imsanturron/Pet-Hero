@@ -7,6 +7,9 @@ class Mascota{
     private $raza;
     private $tamano;
     private $observaciones;
+    private $fotoMascota;
+    private $video;
+    private $planVacunacion;
     
     public function getNombre()
     {
@@ -57,10 +60,6 @@ class Mascota{
     }
 
   
-
-    /**
-     * Get the value of tamano
-     */ 
     public function getTamano()
     {
         return $this->tamano;
@@ -78,9 +77,6 @@ class Mascota{
         return $this;
     }
 
-    /**
-     * Get the value of observaciones
-     */ 
     public function getObservaciones()
     {
         return $this->observaciones;
@@ -94,6 +90,54 @@ class Mascota{
     public function setObservaciones($observaciones)
     {
         $this->observaciones = $observaciones;
+
+        return $this;
+    }
+    public function getFotoMascota()
+    {
+        return $this->fotoMascota;
+    }
+
+    /**
+     * Set the value of observaciones
+     *
+     * @return  self
+     */ 
+    public function setFotoMascota($fotoMascota)
+    {
+        $this->fotoMascota = $fotoMascota;
+
+        return $this;
+    }
+    public function getVideo()
+    {
+        return $this->video;
+    }
+
+    /**
+     * Set the value of observaciones
+     *
+     * @return  self
+     */ 
+    public function setVideo($video)
+    {
+        $this->video = $video;
+
+        return $this;
+    }
+    public function getPlanVacunacion()
+    {
+        return $this->planVacunacion;
+    }
+
+    /**
+     * Set the value of observaciones
+     *
+     * @return  self
+     */ 
+    public function setPlanVacunacion($planVacunacion)
+    {
+        $this->planVacunacion = $planVacunacion;
 
         return $this;
     }

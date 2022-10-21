@@ -1,16 +1,16 @@
 [
     {
-        "username": "pepe argento",
+        "username": "gua1",
         "password": "1234",
-        "dni": "3242481",
-        "cuil": "12893218",
-        "precio": "1234",
-        "nombre": "santi",
-        "email": "adnsjan@kdmas",
+        "dni": "39124912",
+        "cuil": "983488238",
+        "precio": "123",
+        "nombre": "pepe",
+        "email": "guar@kasdnkasd",
         "tipo": "g",
         "reservas": [],
-        "direccion": "askmksda 124",
-        "FechaInicio": "2022-10-27",
-        "FechaFin": "2022-10-30"
+        "direccion": "mdp 123",
+        "FechaInicio": "2022-10-26",
+        "FechaFin": "2022-10-28"
     }
 ]

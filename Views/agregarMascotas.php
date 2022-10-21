@@ -20,14 +20,15 @@ include('nav-bar.php');
     <div class="content">
       <div id="comments">
         <h2>Agregar mascota</h2>
-        <form action="<?php echo FRONT_ROOT ?>Mascota/Add" method="post" style="background-color: #EAEDED;padding: 2rem !important;">
+        <form action="<?php echo FRONT_ROOT ?>Mascota/Add" method="post" style="background-color: #EAEDED;padding: 2rem !important;" enctype="multipart/form-data">
           <table>
             <thead>
               <tr>
                 <th>nombre</th>
                 <th>Raza</th>
                 <th>Tamaño</th>
-                <th>observaciones</th>
+                <th>Imagen</th>
+                <th>Observaciones</th>
               </tr>
             </thead>
             <tbody align="center">
@@ -40,6 +41,9 @@ include('nav-bar.php');
                 </td>
                 <td>
                   <input type="text" name="tamano" required>
+                </td>
+                <td>
+                  <input type="file" name="fotoM" required>
                 </td>
                 <td>
                   <input type="text" name="observaciones">

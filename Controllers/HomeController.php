@@ -14,13 +14,11 @@ class HomeController
     {
         $usuario = $_POST['usuario'];
 
-        if ($usuario == "Dueño") {
-            require_once(VIEWS_PATH . "homeDueno.php");
-        } else if ($usuario == "Guardian"){
-            require_once(VIEWS_PATH . "homeGuardian.php");
-        } else if($usuario == "Registrarseguardian"){
+        if ($usuario == "login") {
+            require_once(VIEWS_PATH . "login.php");
+        } else if ($usuario == "Registrarseguardian") {
             require_once(VIEWS_PATH . "registroGuardian.php");
-        } else{
+        } else {
             require_once(VIEWS_PATH . "registroDueno.php");
         }
     }

@@ -67,6 +67,7 @@ class MascotaDAO
             $valueArray["dueno"] = $mascota->getDniDueno();
             $valueArray["tamano"] = $mascota->getTamano();
             $valueArray["observaciones"] = $mascota->getObservaciones();
+            $valueArray["fotoMascota"] = $mascota->getFotoMascota();
             array_push($arrayToEncode, $valueArray);
         }
         $jsonContent = json_encode($arrayToEncode, JSON_PRETTY_PRINT);
@@ -90,6 +91,7 @@ class MascotaDAO
                 $usuario->setDniDueno($valueArray["dueno"]);
                 $usuario->setTamano($valueArray["tamano"]);
                 $usuario->setObservaciones($valueArray["observaciones"]);
+                $usuario->setFotoMascota($valueArray["fotoMascota"]);
                 array_push($this->usuarioList, $usuario);
             }
         }

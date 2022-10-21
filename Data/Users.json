@@ -1,14 +1,16 @@
 [
     {
-        "username": "pepe argento",
+        "username": "due1",
         "password": "1234",
-        "dni": "3242481",
-        "email": "adnsjan@kdmas"
+        "dni": "41381283",
+        "email": "duen@asmmsd",
+        "tipo": "d"
     },
     {
-        "username": "moni argento",
-        "password": "12345",
-        "dni": "14812841",
-        "email": "jasndjas@dkak"
+        "username": "gua1",
+        "password": "1234",
+        "dni": "39124912",
+        "email": "guar@kasdnkasd",
+        "tipo": "g"
     }
 ]
