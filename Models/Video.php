@@ -4,11 +4,37 @@ namespace Models;
 
 class Video
 {
-    private $peso;
+    private $id;
+    private $nombre;
+    /*private $peso;
     private $extension;
-    private $duracion;
+    private $duracion;*/
 
-    public function getPeso()
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setId($id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    public function setNombre($nombre): self
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+    
+    /*public function getPeso()
     {
         return $this->peso;
     }
@@ -42,5 +68,5 @@ class Video
         $this->duracion = $duracion;
 
         return $this;
-    }
+    }*/
 }

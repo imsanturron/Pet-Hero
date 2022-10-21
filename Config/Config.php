@@ -5,7 +5,8 @@ define("FRONT_ROOT", "/Pet-Hero/");
 define("VIEWS_PATH", "Views/");
 define("CSS_PATH", FRONT_ROOT.VIEWS_PATH . "layout/styles/");
 define("JS_PATH", FRONT_ROOT.VIEWS_PATH . "js/");
-define("IMG_PATH", VIEWS_PATH . "img/");
+define("IMG_PATH", FRONT_ROOT . VIEWS_PATH . "img/");
+define("VIDEO_PATH", FRONT_ROOT . VIEWS_PATH . "video/");
 
 define("DB_HOST", "localhost");
 define("DB_NAME", "PetHero");

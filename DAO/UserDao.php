@@ -45,6 +45,17 @@ class UserDAO
       return null;
     }
 
+    public function getTipoByUsername($user) 
+    {
+      $this->retrieveData();
+      foreach($this->usuarioList as $item) 
+      {
+        if($item->getUsername() == $user)
+          return $item->getTipo();///////////
+      }
+      return null;
+    }
+
     public function getByDni($dni) 
     {
       $this->retrieveData();
@@ -109,6 +120,7 @@ class UserDAO
             $valueArray["password"] = $user->getPassword();
             $valueArray["dni"] = $user->getDni();
             $valueArray["email"] = $user->getEmail();
+            $valueArray["tipo"] = $user->getTipo();
             array_push($arrayToEncode, $valueArray);
         }
         $jsonContent = json_encode($arrayToEncode, JSON_PRETTY_PRINT);
@@ -131,6 +143,7 @@ class UserDAO
                 $usuario->setPassword($valueArray["password"]);
                 $usuario->setDni($valueArray["dni"]);
                 $usuario->setEmail($valueArray["email"]);
+                $usuario->setTipo($valueArray["tipo"]);
                 array_push($this->usuarioList, $usuario);
             }
         }

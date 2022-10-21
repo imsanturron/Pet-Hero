@@ -7,46 +7,56 @@ use DAO\DuenoDAO as DuenoDAO;
 use DAO\UserDAO as UserDAO;
 use Models\Guardian as Guardian;
 use Models\Dueno as Dueno;
+use Models\Alert as Alert;////////////
 
 class AuthController
 {
   private $bool;
 
-  public function Login($username, $password, $tipo)
-  {
-    $bool = false;
-
-    if ($tipo == 'g') {
-      $guardianes = new GuardianDAO;
-      $guardianx = new Guardian;
-      $guardianx = $guardianes->getByUsername($username);
-      if ($guardianx && $guardianx->getPassword() == $password) {
-        $bool = true;
-        $_SESSION["loggedUser"] = $guardianx;
-        ///alerta buena
-        require_once(VIEWS_PATH . "loginGuardian.php");
-      } else {
-        ///alerta mala
+  public function Index($message = "")
+    {
         require_once(VIEWS_PATH . "home.php");
-      }
-    } else {
-      $duenos = new DuenoDAO;
-      $duenox = new Dueno;
-      $duenox = $duenos->getByUsername($username);
-      if ($duenox && $duenox->getPassword() == $password) {
-        $bool = true;
-        $_SESSION["loggedUser"] = $duenox;
-        ///alerta buena
-        require_once(VIEWS_PATH . "loginDueno.php");
-      } else {
-        ///alerta mala
-        require_once(VIEWS_PATH . "home.php");
-      }
     }
 
-    if ($bool = false)
+  public function Login($username, $password)
+  {
+    $users = new UserDAO;
+    $tipo = $users->getTipoByUsername($username);
+    $bool = false;
+   
+    if ($tipo) {
+      if ($tipo == 'g') {
+        $guardianes = new GuardianDAO;
+        $guardianx = new Guardian;
+        $guardianx = $guardianes->getByUsername($username);
+        if ($guardianx && $guardianx->getPassword() == $password) {
+          $bool = true;
+          $_SESSION["loggedUser"] = $guardianx;
+          ///alerta buena
+          require_once(VIEWS_PATH . "loginGuardian.php");
+        } else {
+          ///alerta mala
+          require_once(VIEWS_PATH . "home.php");
+        }
+      } else {
+        $duenos = new DuenoDAO;
+        $duenox = new Dueno;
+        $duenox = $duenos->getByUsername($username);
+        if ($duenox && $duenox->getPassword() == $password) {
+          $bool = true;
+          $_SESSION["loggedUser"] = $duenox;
+          ///alerta buena
+          require_once(VIEWS_PATH . "loginDueno.php");
+        } else {
+          ///alerta mala
+          require_once(VIEWS_PATH . "home.php");
+        }
+      }
+    }
+    if ($bool == false) {
       ///alerta mala
       require_once(VIEWS_PATH . "home.php");
+    }
   }
 
   public static function ValidarUsuario($username, $dni, $email)

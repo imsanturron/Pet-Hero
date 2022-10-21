@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Models\Dueno as Dueno;
+use Models\Alert as Alert;
 use DAO\DuenoDAO as DuenoDAO;
 use DAO\UserDAO as UserDAO;
 
@@ -13,6 +14,11 @@ class DuenoController
     public function __construct()
     {
         $this->duenoDAO = new DuenoDAO();
+    }
+
+    public function Index($message = "")
+    {
+        require_once(VIEWS_PATH . "home.php");
     }
 
     public function opcionMenuPrincipal($opcion)
@@ -32,7 +38,7 @@ class DuenoController
         }
     }
 
-    public function home()
+    public function home(Alert $alert = null)
     {
         require_once(VIEWS_PATH . "home.php");
     }
@@ -43,12 +49,12 @@ class DuenoController
         require_once(VIEWS_PATH . "home.php");
     }
 
-    public function login()
+    public function login(Alert $alert = null)
     {
         require_once(VIEWS_PATH . "loginDueno.php");
     }
 
-    public function registro()
+    public function registro(Alert $alert = null)
     {
         require_once(VIEWS_PATH . "registroDueno.php");
     }
@@ -69,8 +75,10 @@ class DuenoController
             $this->duenoDAO->Add($dueno);
             $userDAO = new UserDAO;
             $userDAO->Add($dueno);
-            ///alerta buena
-            $this->home();
+            $alert = new Alert();
+            $alert->setTipo("success");
+            $alert->setMensaje("logueado correctaametn");
+            $this->home($alert);
         } else {
             ///alerta mala
             $this->home();

@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Models\Guardian;
+use Models\Alert as Alert;
 use DAO\GuardianDAO as GuardianDAO;
 use DAO\UserDAO as UserDAO;
 
@@ -15,16 +16,21 @@ class GuardianController
         $this->guardianDAO = new GuardianDAO();
     }
 
-    public function home()
+    public function Index($message = "")
     {
         require_once(VIEWS_PATH . "home.php");
     }
 
-    public function login()
+    public function home(Alert $alert = null)
+    {
+        require_once(VIEWS_PATH . "home.php");
+    }
+
+    public function login(Alert $alert = null)
     {
         require_once(VIEWS_PATH . "loginGuardian.php");
     }
-    public function registro()
+    public function registro(Alert $alert = null)
     {
         require_once(VIEWS_PATH . "registroGuardian.php");
     }
@@ -44,7 +50,7 @@ class GuardianController
 
     public function elegirDisponibilidad($desde, $hasta)
     {
-        $valid = AuthController::ValidarFecha($desde, $hasta);//arreglar
+        $valid = AuthController::ValidarFecha($desde, $hasta); //arreglar
         if ($valid) {
             $guardian = new Guardian();
             $guardian = $_SESSION["loggedUser"];
@@ -52,11 +58,10 @@ class GuardianController
             $guardian->setDisponibilidadFin($hasta);
             $bien = $this->guardianDAO->updateDisponibilidad($_SESSION["loggedUser"]->getDni(), $desde, $hasta);
             $_SESSION["loggedUser"] = $guardian;
-            if($bien){
-            ///alerta buena
-            }
-            else{
-            ///alerta mala
+            if ($bien) {
+                ///alerta buena
+            } else {
+                ///alerta mala
             }
             require_once(VIEWS_PATH . "loginGuardian.php");
         } else {

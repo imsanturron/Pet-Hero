@@ -2,11 +2,38 @@
 
 class Imagen
 {
-    private $peso;
+    private $id;
+    private $nombre;
+    /*private $peso;
     private $formato;
     private $extension;
-    private $url;
+    private $url;*/
 
+    
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setId($id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    public function setNombre($nombre): self
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+/*
     public function getPeso()
     {
         return $this->peso;
@@ -53,5 +80,5 @@ class Imagen
         $this->url = $url;
 
         return $this;
-    }
+    }*/
 }

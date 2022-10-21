@@ -1,9 +1,26 @@
 [
     {
-        "nombre": "fatiga",
-        "raza": "labrador",
-        "dueno": "14812841",
-        "tamano": "mediano",
-        "observaciones": "marroncito"
+        "nombre": "asd",
+        "raza": "fasf",
+        "dueno": "41381283",
+        "tamano": "qwf",
+        "observaciones": "3244",
+        "fotoMascota": "\/Pet-Hero\/Views\/img\/10-21-202216:24:35.464200jpg"
+    },
+    {
+        "nombre": "asd",
+        "raza": "fasf",
+        "dueno": "41381283",
+        "tamano": "qwf",
+        "observaciones": "3244",
+        "fotoMascota": "\/Pet-Hero\/Views\/img\/10-21-202216:25:50.434300jpg"
+    },
+    {
+        "nombre": "wjjd",
+        "raza": "fwqf",
+        "dueno": "41381283",
+        "tamano": "fwqf",
+        "observaciones": "",
+        "fotoMascota": "\/Pet-Hero\/Views\/img\/10-21-202216:26:12.810500webp"
     }
 ]
