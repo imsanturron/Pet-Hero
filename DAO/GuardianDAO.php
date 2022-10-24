@@ -35,6 +35,8 @@ class GuardianDAO
         $this->SaveData();
     }
 
+
+
     public function getByUsername($user) 
     {
       $this->retrieveData();
@@ -46,6 +48,19 @@ class GuardianDAO
       return null;
     }
 
+    public function getByDni($dni) 
+    {
+      $this->retrieveData();
+      foreach($this->usuarioList as $item) 
+      {
+        if($item->getDni() == $dni)
+          return $item;
+      }
+      return null;
+    }
+
+
+  
     public function updateDisponibilidad($dni, $fini, $ffin)
     {
       $this->retrieveData();
@@ -102,6 +117,7 @@ class GuardianDAO
             $valueArray["direccion"] = $guardian->getDireccion();
             $valueArray["FechaInicio"] = $guardian->getDisponibilidadInicio();
             $valueArray["FechaFin"] = $guardian->getDisponibilidadFin();
+            $valueArray["solicitudes"] =$guardian->getSolicitudes();
             array_push($arrayToEncode, $valueArray);
         }
         $jsonContent = json_encode($arrayToEncode, JSON_PRETTY_PRINT);
@@ -132,6 +148,7 @@ class GuardianDAO
                 $usuario->setReservas($valueArray["reservas"]);
                 $usuario->setDisponibilidadInicio($valueArray["FechaInicio"]);
                 $usuario->setDisponibilidadFin($valueArray["FechaFin"]);
+                $usuario->setSolicitudes($valueArray["solicitudes"]);
                 array_push($this->usuarioList, $usuario);
             }
         }

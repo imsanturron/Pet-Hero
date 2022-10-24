@@ -45,6 +45,9 @@ class GuardianController
         } else if ($opcion == "verPerfil") {
             ///sin terminar
             require_once(VIEWS_PATH . "perfilGuardian.php");
+        } else if ($opcion == "verSolicitudes") {
+        
+            require_once(VIEWS_PATH . "verSolicitudes.php");
         }
     }
 
@@ -84,7 +87,7 @@ class GuardianController
             $guardian->setDireccion($direccion);
             $guardian->setPrecio($precio);
 
-            $this->guardianDAO->Add($guardian);
+            $this->guardianDAO->add($guardian);
             $userDAO = new UserDAO;
             $userDAO->Add($guardian);
             echo '<script>alert("Usuario creado")</script>';

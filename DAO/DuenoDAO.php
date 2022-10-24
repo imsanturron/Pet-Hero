@@ -120,6 +120,9 @@ class DuenoDAO
         }
     }
 
+
+
+
     public function getUsuarioList()
     {
         return $this->usuarioList;

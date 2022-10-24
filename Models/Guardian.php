@@ -1,16 +1,21 @@
 <?php namespace Models;
+use Models\Dueno as Dueno;
+use Models\Solicitud as solicitud;
+
 class Guardian extends User{
 
     private $cuil;
     private $disponibilidadInicio;
     private $disponibilidadFin;
     private $precio;
-    private $reservas;
+    private $solicitudes;
+ 
 
     function __construct()
     {
         $this->tipo = 'g';
         $this->reservas = array();
+        $this->solicitudes = array();
     }
 
     public function getCuil()
@@ -37,17 +42,6 @@ class Guardian extends User{
         return $this;
     }
 
-    public function getReservas()
-    {
-        return $this->reservas;
-    }
-
-    public function setReservas($reservas): self
-    {
-        $this->reservas = $reservas;
-
-        return $this;
-    }
  
     public function getDisponibilidadFin()
     {
@@ -81,5 +75,33 @@ class Guardian extends User{
         $this->disponibilidadInicio = $disponibilidadInicio;
 
         return $this;
+    }
+
+    /**
+     * Get the value of solicitudes
+     */ 
+    public function getSolicitudes()
+    {
+       
+        return $this->solicitudes;
+    }
+
+    /**
+     * Set the value of solicitudes
+     *
+     * @return  self
+     */ 
+    public function setSolicitudes($solicitudes)
+    {
+        $this->solicitudes = $solicitudes;
+
+        return $this;
+    } 
+    
+    public function addSolicitud($solicitud)
+    { 
+            array_push($this->solicitudes,$solicitud);
+          
+    
     }
 }

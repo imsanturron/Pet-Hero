@@ -3,8 +3,11 @@
 namespace Controllers;
 
 use Models\Dueno as Dueno;
+use Models\Solicitud as Solicitud;
+use Models\Guardian as Guardian;
 use Models\Alert as Alert;
 use DAO\DuenoDAO as DuenoDAO;
+use DAO\GuardianDAO as GuardianDAO;
 use DAO\UserDAO as UserDAO;
 
 class DuenoController
@@ -30,12 +33,20 @@ class DuenoController
         } else if ($opcion == "agregarMascota") {
             require_once(VIEWS_PATH . "agregarMascotas.php");
         } else if ($opcion == "verGuardianes") {
+           
             //$listaguardianes=$this->duenoDAO->getAll();
-            require_once(VIEWS_PATH . "verGuardianes.php");
+            require_once(VIEWS_PATH . "filtrarPorFecha.php");
         }else if ($opcion == "verPerfil") {
             ///sin terminar
             require_once(VIEWS_PATH . "perfilDueno.php");
         }
+    }
+
+    public function filtrarFechas($desde, $hasta){
+ 
+      
+        require_once(VIEWS_PATH . "verGuardianes.php");
+
     }
 
     public function home(Alert $alert = null)
@@ -43,10 +54,17 @@ class DuenoController
         require_once(VIEWS_PATH . "home.php");
     }
 
-    public function ElegirGuardian()
+    public function ElegirGuardian($dni)
     {
-        //require_once(VIEWS_PATH . "ver como seguirlo.php");
-        require_once(VIEWS_PATH . "home.php");
+        $guardianes = new GuardianDAO();
+        $guardian = new Guardian();
+        $guardian = $guardianes->getByDni($dni);
+        $guardianes->remove($guardian);// DESCOMENTAR CUANDO PUEDA RETORNAR SOLICITUDES
+        $solicitud = new Solicitud();
+        $guardian->addSolicitud($solicitud);
+        $solicitudes=$guardian->getSolicitudes();//ME CREA ARREGLOS VACIOS DENTRO DEL ARREGLO
+        $guardianes->add($guardian);
+        $this->login();
     }
 
     public function login(Alert $alert = null)
@@ -74,12 +92,15 @@ class DuenoController
 
             $this->duenoDAO->Add($dueno);
             $userDAO = new UserDAO;
-            $userDAO->Add($dueno);
+            $userDAO->add($dueno);
             $alert = new Alert();
             $alert->setTipo("success");
             $alert->setMensaje("logueado correctaametn");
             $this->home($alert);
         } else {
+            $alert = new Alert();
+            $alert->setTipo("success");
+            $alert->setMensaje("no se guardo");
             ///alerta mala
             $this->home();
         }

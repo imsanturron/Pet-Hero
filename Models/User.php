@@ -12,6 +12,7 @@ class User
     protected $direccion;
     //protected $pais;
     protected $tipo; //char = "g" || "d"
+    private $reservas;
 
     public function getUserName()
     {
@@ -90,6 +91,26 @@ class User
     public function setTipo($tipo): self
     {
         $this->tipo = $tipo;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of reservas
+     */ 
+    public function getReservas()
+    {
+        return $this->reservas;
+    }
+
+    /**
+     * Set the value of reservas
+     *
+     * @return  self
+     */ 
+    public function setReservas($reservas)
+    {
+        $this->reservas = $reservas;
 
         return $this;
     }
