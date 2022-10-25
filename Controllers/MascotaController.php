@@ -4,6 +4,7 @@ namespace Controllers;
 
 use DAO\MascotaDAO as MascotaDAO;
 use DateTime;
+use Models\Alert;
 use Models\Mascota as Mascota;
 
 class MascotaController
@@ -70,15 +71,18 @@ class MascotaController
 
         $this->mascotaDAO->Add($mascota);
         //$mascota->setDniDueno($_SESSION["loggedUser"]->addMascota($mascota)); y guardar 
-        ///alerta buena
-        $this->loginDueno();
+        $alert = new Alert("success", "Mascota agregada");
+        $this->loginDueno($alert);
     }
 
     public function Remove($id)
     {
-        $this->mascotaDAO->Remove($id); //modificar funcion
+        $bien = $this->mascotaDAO->Remove($id); //modificar funcion
         ///y remover de dueño si la tiene
-        ///alerta buena
-        $this->loginDueno();
+        if ($bien)
+            $alert = new Alert("success", "Mascota borrada exitosamente");
+        else
+            $alert = new Alert("warning", "Error borrando la mascota");
+        $this->loginDueno($alert);
     }
 }

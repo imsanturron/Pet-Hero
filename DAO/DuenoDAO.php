@@ -9,7 +9,7 @@ use \Exception as Exception;
 class DuenoDAO
 {
     //private $connection;
-    //private $tableName = "students";
+    //private $tableName = "duenos";
     private $usuarioList = array();
     private $filename;
 
@@ -120,6 +120,9 @@ class DuenoDAO
         }
     }
 
+
+
+
     public function getUsuarioList()
     {
         return $this->usuarioList;
@@ -144,9 +147,7 @@ class DuenoDAO
               $parameters["telefono"] = $dueno->getTelefono();
               $parameters["mascotas"] = $dueno->getMascotas();
               $parameters["tipo"] = $dueno->getTipo();
-
             $this->connection = Connection::GetInstance();
-
             $this->connection->ExecuteNonQuery($query, $parameters);
         }
         catch(Exception $ex)
@@ -160,11 +161,8 @@ class DuenoDAO
             try
             {
                 $duenoList = array();
-
                 $query = "SELECT * FROM ".$this->tableName;
-
                 $this->connection = Connection::GetInstance();
-
                 $resultSet = $this->connection->Execute($query);
                 
                 foreach ($resultSet as $row)
@@ -179,10 +177,8 @@ class DuenoDAO
                     $dueno->setTelefono($valueArray["telefono"]);
                     $dueno->setMascotas($valueArray["mascotas"]);
                     $dueno->setTipo($valueArray["tipo"]);
-
                     array_push($duenoList, $dueno);
                 }
-
                 return $duenoList;
             }
             catch(Exception $ex)

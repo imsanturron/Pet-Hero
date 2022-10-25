@@ -1,6 +1,5 @@
-
-<?php 
-  include('nav-bar.php');
+<?php
+include('nav-bar.php');
 ?>
 <?php
 
@@ -54,7 +53,9 @@ $listaMascotas = $mascotasDao->GetAll();
                </table>
           </div>
      </section>
-
+     <div class="alert alert-<?php echo $alert->getTipo() ?>">
+          <?php echo $alert->getMensaje() ?>
+     </div>
      <div class="container">
           <div class="bg-light-alpha p-1">
                <div class="row">

@@ -10,4 +10,7 @@
         <button class="btn-login btn" type="submit" name="">Ingresar</button>
       </form>
   </div>
+  <div class="alert alert-<?php echo $alert->getTipo() ?>">
+    <?php echo $alert->getMensaje() ////no lo esta haciendo ?>
+  </div>
 </div>

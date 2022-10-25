@@ -2,15 +2,22 @@
     {
         "username": "due1",
         "password": "1234",
-        "dni": "41381283",
-        "email": "duen@asmmsd",
+        "dni": "1239219",
+        "email": "due@ksmd",
         "tipo": "d"
     },
     {
         "username": "gua1",
         "password": "1234",
-        "dni": "39124912",
-        "email": "guar@kasdnkasd",
+        "dni": "3892823",
+        "email": "gua@fmake",
+        "tipo": "g"
+    },
+    {
+        "username": "121e21",
+        "password": "1234",
+        "dni": "12412124",
+        "email": "kamsdmsk@qdw",
         "tipo": "g"
     }
 ]

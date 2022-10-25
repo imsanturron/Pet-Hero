@@ -7,23 +7,23 @@ use DAO\DuenoDAO as DuenoDAO;
 use DAO\UserDAO as UserDAO;
 use Models\Guardian as Guardian;
 use Models\Dueno as Dueno;
-use Models\Alert as Alert;////////////
+use Models\Alert as Alert; ////////////
 
 class AuthController
 {
   private $bool;
 
-  public function Index($message = "")
-    {
-        require_once(VIEWS_PATH . "home.php");
-    }
+  public function Index(Alert $alert = null)
+  {
+    require_once(VIEWS_PATH . "home.php");
+  }
 
   public function Login($username, $password)
   {
     $users = new UserDAO;
     $tipo = $users->getTipoByUsername($username);
     $bool = false;
-   
+
     if ($tipo) {
       if ($tipo == 'g') {
         $guardianes = new GuardianDAO;
@@ -35,8 +35,8 @@ class AuthController
           ///alerta buena
           require_once(VIEWS_PATH . "loginGuardian.php");
         } else {
-          ///alerta mala
-          require_once(VIEWS_PATH . "home.php");
+          $alert = new Alert("warning", "Fecha invalida");
+          $this->Index($alert);
         }
       } else {
         $duenos = new DuenoDAO;
@@ -48,14 +48,14 @@ class AuthController
           ///alerta buena
           require_once(VIEWS_PATH . "loginDueno.php");
         } else {
-          ///alerta mala
-          require_once(VIEWS_PATH . "home.php");
+          $alert = new Alert("warning", "Fecha invalida");
+          $this->Index($alert);
         }
       }
     }
     if ($bool == false) {
-      ///alerta mala
-      require_once(VIEWS_PATH . "home.php");
+      $alert = new Alert("warning", "Fecha invalida");
+      $this->Index($alert);
     }
   }
 
@@ -115,6 +115,6 @@ class AuthController
   public function Logout()
   {
     session_destroy();
-    require_once(VIEWS_PATH . "home.php");
+    $this->Index();
   }
 }
