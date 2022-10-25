@@ -1,16 +1,20 @@
-<?php namespace Models;
-class Guardian extends User{
+<?php
+
+namespace Models;
+
+class Guardian extends User
+{
 
     private $cuil;
     private $disponibilidadInicio;
     private $disponibilidadFin;
     private $precio;
-    private $reservas;
+    private $TamanoACuidar;
 
     function __construct()
     {
+        parent::__construct();
         $this->tipo = 'g';
-        $this->reservas = array();
     }
 
     public function getCuil()
@@ -37,18 +41,6 @@ class Guardian extends User{
         return $this;
     }
 
-    public function getReservas()
-    {
-        return $this->reservas;
-    }
-
-    public function setReservas($reservas): self
-    {
-        $this->reservas = $reservas;
-
-        return $this;
-    }
- 
     public function getDisponibilidadFin()
     {
         return $this->disponibilidadFin;
@@ -58,7 +50,7 @@ class Guardian extends User{
      * Set the value of disponibilidadFin
      *
      * @return  self
-     */ 
+     */
     public function setDisponibilidadFin($disponibilidadFin)
     {
         $this->disponibilidadFin = $disponibilidadFin;
@@ -75,10 +67,22 @@ class Guardian extends User{
      * Set the value of disponibilidadInicio
      *
      * @return  self
-     */ 
+     */
     public function setDisponibilidadInicio($disponibilidadInicio)
     {
         $this->disponibilidadInicio = $disponibilidadInicio;
+
+        return $this;
+    }
+
+    public function getTamanoACuidar()
+    {
+        return $this->TamanoACuidar;
+    }
+
+    public function setTamanoACuidar($TamanoACuidar): self
+    {
+        $this->TamanoACuidar = $TamanoACuidar;
 
         return $this;
     }

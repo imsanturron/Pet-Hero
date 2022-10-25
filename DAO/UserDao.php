@@ -19,7 +19,7 @@ class UserDAO
     {
         $this->retrieveData();
         array_push($this->usuarioList, $user);
-        $this->SaveData();
+        $this->saveData();
     }
 
     public function remove(User $user)
@@ -31,7 +31,7 @@ class UserDAO
             unset($this->usuarioList[$clave]);
         }
 
-        $this->SaveData();
+        $this->saveData();
     }
 
     public function getByUsername($user) 

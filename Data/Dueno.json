@@ -1,12 +1,12 @@
 [
     {
-        "nombre": "juan",
+        "nombre": "carlos",
         "username": "due1",
         "password": "1234",
-        "dni": "41381283",
-        "email": "duen@asmmsd",
-        "direccion": "asjndjsn 1234",
-        "telefono": "1341253",
+        "dni": "1239219",
+        "email": "due@ksmd",
+        "direccion": "casalles 9393",
+        "telefono": "543434532",
         "mascotas": [],
         "tipo": "d"
     }

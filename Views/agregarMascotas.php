@@ -1,5 +1,4 @@
 <?php
-include('header.php');
 include('nav-bar.php');
 ?>
 <!-- ################################################################################################ -->
@@ -60,7 +59,6 @@ include('nav-bar.php');
   </main>
 </div>
 <!-- ################################################################################################ -->
-
-<?php
-include('footer.php');
-?>
+<div class="alert alert-<?php echo $alert->getTipo() ?>">
+  <?php echo $alert->getMensaje() ?>
+</div>
