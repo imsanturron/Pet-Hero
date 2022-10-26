@@ -62,14 +62,30 @@ class DuenoController
     {
         $guardianes = new GuardianDAO();
         //$guardian = new Guardian(); /////////////
-        //$guardian = $guardianes->getByDni($dni);
+        $guardian = $guardianes->getByDni($dni);
+        require_once("solicitarCuidadoMasc.php");
         //$guardianes->remove($guardian);// DESCOMENTAR CUANDO PUEDA RETORNAR SOLICITUDES
-        $solicitud = new Solicitud($desde, $hasta);
-        $guardianes->addSolicitudDao($solicitud, $dni); //*****************//
+        //$solicitud = new Solicitud($desde, $hasta);
+        //$guardianes->addSolicitudDao($solicitud, $dni); //*****************//
         //$guardian->addSolicitud($solicitud);
         //$solicitudes=$guardian->getSolicitudes();//ME CREA ARREGLOS VACIOS DENTRO DEL ARREGLO
         //$guardianes->add($guardian);
-        $this->login();
+        //$this->login();
+    }
+
+    public function ElegirGuardianFinal($animales, $dni, $desde, $hasta)
+    {
+        $valid = AuthController::ValidarMismaRaza($animales); //arreglar
+        if ($valid) {
+            $guardianes = new GuardianDAO();
+            $solicitud = new Solicitud($animales, $desde, $hasta);
+            $guardianes->addSolicitudDao($solicitud, $dni); //*****************//
+            $alert = new Alert("success", "Solicitud enviada!");
+            $this->login($alert);
+        } else {
+            $alert = new Alert("warning", "Hubo un error");
+            $this->login($alert);
+        }
     }
 
     public function login(Alert $alert = null)

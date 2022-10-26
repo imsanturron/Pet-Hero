@@ -5,7 +5,7 @@ class Reserva
     private $fechaDeInicio;
     private $fechaFinal;
     private $horarios;
-    private $estado;
+    private $estado; ///finalizado, actual, proximo
 
     public function getFechaDeInicio()
     {

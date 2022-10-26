@@ -73,6 +73,16 @@ class GuardianController
         }
     }
 
+    public function operarSolicitud(/**/)
+    {
+        if($operacion == "aceptar"){
+            ///
+        } else if($operacion == "rechazar"){
+            ///
+        }
+        $this->login();
+    }
+
     public function Add($username, $password, $nombre, $dni, $email, $cuil, $direccion, $precio, $tamanoMasc)
     {
         $valid = AuthController::ValidarUsuario($username, $dni, $email);

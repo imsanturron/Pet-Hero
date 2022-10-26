@@ -55,9 +55,9 @@ $listaguardianes = $guardianDao->GetAll();
                                             ?></td>
                                         <?php if ($guardianx->getDisponibilidadInicio()) { ?>
                                             <td>
-                                                <input type="hidden" name="dni" value="<?php echo $guardianx->getDni(); ?>">
-                                                <input type="hidden" name="desde" value="<?php echo $desde; ?>">
-                                                <input type="hidden" name="hasta" value="<?php echo $hasta; ?>">
+                                                <input type="hidden" name="dni" value="<?php $guardianx->getDni(); ?>">
+                                                <input type="hidden" name="desde" value="<?php $desde; ?>">
+                                                <input type="hidden" name="hasta" value="<?php $hasta; ?>">
                                                 <button type="submit" class="btn btn-danger">Elegir </button>
                                             </td>
                                     <?php }

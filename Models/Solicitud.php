@@ -5,6 +5,7 @@ namespace Models;
 class Solicitud
 {
 
+    private $animales;
     private $fechaInicio;
     private $fechaFin;
     private $nombreDueno;
@@ -14,8 +15,9 @@ class Solicitud
     private $direccion;
 
 
-    public function  __construct($desde, $hasta)
+    public function  __construct($animales, $desde, $hasta)
     {
+        $this->animales = $animales;
         $this->fechaInicio = $desde;
         $this->fechaFin = $hasta;
         if (isset($_SESSION['loggedUser'])) {
@@ -54,19 +56,25 @@ class Solicitud
         return $this;
     }
 
-    /**
-     * Get the value of nombreDueno
-     */
     public function getNombreDueno()
     {
         return $this->nombreDueno;
     }
 
-    /**
-     * Get the value of direccion
-     */
     public function getDireccion()
     {
         return $this->direccion;
+    }
+
+    public function getAnimales()
+    {
+        return $this->animales;
+    }
+
+    public function setAnimales($animales): self
+    {
+        $this->animales = $animales;
+
+        return $this;
     }
 }

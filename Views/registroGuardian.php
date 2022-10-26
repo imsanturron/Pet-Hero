@@ -1,6 +1,3 @@
-<?php
-include_once('header.php');
-?>
 <a href="<?php echo FRONT_ROOT ?>Home/Index">Volver al home</a>
 
 <div class="div-login"><br>
@@ -28,7 +25,3 @@ include_once('header.php');
   </form>
 </div>
 </div>
-
-<?php
-include('footer.php');
-?>

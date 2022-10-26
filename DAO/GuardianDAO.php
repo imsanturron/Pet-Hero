@@ -1,9 +1,12 @@
-<?php namespace DAO;
+<?php
+
+namespace DAO;
 
 use Models\Guardian as Guardian;
 use Models\Solicitud as Solicitud;
 use DAO\Connection as Connection;
 use \Exception as Exception;
+
 class GuardianDAO
 {
     //private $connection;
@@ -36,57 +39,51 @@ class GuardianDAO
         $this->SaveData();
     }
 
-    public function getByUsername($user) 
+    public function getByUsername($user)
     {
-      $this->retrieveData();
-      foreach($this->usuarioList as $item) 
-      {
-        if($item->getUsername() == $user)
-          return $item;
-      }
-      return null;
+        $this->retrieveData();
+        foreach ($this->usuarioList as $item) {
+            if ($item->getUsername() == $user)
+                return $item;
+        }
+        return null;
     }
 
-    public function getByDni($dni) 
+    public function getByDni($dni)
     {
-      $this->retrieveData();
-      foreach($this->usuarioList as $item) 
-      {
-        if($item->getDni() == $dni)
-          return $item;
-      }
-      return null;
+        $this->retrieveData();
+        foreach ($this->usuarioList as $item) {
+            if ($item->getDni() == $dni)
+                return $item;
+        }
+        return null;
     }
 
     public function addSolicitudDao(Solicitud $solicitud, $dni)
     {
-      $this->retrieveData();
-      foreach($this->usuarioList as $item) 
-      {
-        if($item->getDni() == $dni)
-        {
-          $item->addSolicitud($solicitud);
-          $this->SaveData();
-          return true;
+        $this->retrieveData();
+        foreach ($this->usuarioList as $item) {
+            if ($item->getDni() == $dni) {
+                $item->addSolicitud($solicitud);
+                $this->SaveData();
+                return true;
+            }
         }
-      }
-      return false;
+        return false;
     }
-  
+
     public function updateDisponibilidad($dni, $fini, $ffin)
     {
-      $this->retrieveData();
-      foreach($this->usuarioList as $item) 
-      {
-        if($item->getDni() == $dni)
-        {
-          $item->setDisponibilidadInicio($fini);
-          $item->setDisponibilidadFin($ffin);
-          $this->SaveData();
-          return true;
+        $this->retrieveData();
+        foreach ($this->usuarioList as $item) {
+            if ($item->getDni() == $dni) {
+                $item->setDisponibilidadInicio($fini);
+                $item->setDisponibilidadFin($ffin);
+                $this->SaveData();
+                return true;
+            }
         }
-      }
-      return false;
+        return false;
     }
 
     /**BUsca factura por numero y tipo  en archivo retorna true o false */
@@ -129,8 +126,8 @@ class GuardianDAO
             $valueArray["direccion"] = $guardian->getDireccion();
             $valueArray["FechaInicio"] = $guardian->getDisponibilidadInicio();
             $valueArray["FechaFin"] = $guardian->getDisponibilidadFin();
-            $valueArray["solicitudes"] =$guardian->getSolicitudes();
-            $valueArray["tamanoMasc"] =$guardian->getTamanoACuidar();
+            $valueArray["solicitudes"] = $guardian->getSolicitudes();
+            $valueArray["tamanoMasc"] = $guardian->getTamanoACuidar();
             array_push($arrayToEncode, $valueArray);
         }
         $jsonContent = json_encode($arrayToEncode, JSON_PRETTY_PRINT);
@@ -173,7 +170,7 @@ class GuardianDAO
         return $this->usuarioList;
     }
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////FUNCIONES BASE DE DATOS/////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /*public function Add(Guardian $guardian)
@@ -240,7 +237,7 @@ class GuardianDAO
             }
         }*/
 
-        /*function GetByDni($dni)
+    /*function GetByDni($dni)
         {
             try
             {

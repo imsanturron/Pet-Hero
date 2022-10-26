@@ -6,8 +6,6 @@ include('nav-bar.php');
 use Config\Autoload as Autoload;
 use DAO\MascotaDAO;
 
-Autoload::Start();
-
 $mascotasDao = new MascotaDAO();
 $listaMascotas = $mascotasDao->GetAll();
 
