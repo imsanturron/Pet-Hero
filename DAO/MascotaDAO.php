@@ -1,8 +1,11 @@
-<?php namespace DAO;
+<?php
+
+namespace DAO;
 
 use Models\Mascota as Mascota;
 use DAO\Connection as Connection;
 use \Exception as Exception;
+
 class MascotaDAO
 {
     //private $connection;
@@ -18,6 +21,7 @@ class MascotaDAO
     public function add(Mascota $user)
     {
         $this->retrieveData();
+        $user->setId($this->GetNextId());
         array_push($this->usuarioList, $user);
         $this->SaveData();
     }
@@ -56,18 +60,35 @@ class MascotaDAO
         return $this->usuarioList;
     }
 
+    public function getArrayByIds($ids)
+    {
+        $retArray = array();
+        $this->retrieveData();
+        foreach ($ids as $id) {
+            foreach ($this->usuarioList as $item) {
+                if ($item->getId() == $id)
+                    array_push($retArray, $item);
+            }
+        }
+        if (isset($retArray) && !empty($retArray))
+            return $retArray;
+        else
+            return null;
+    }
+
     public function saveData()
     {
         $arrayToEncode = array();
 
         foreach ($this->usuarioList as $mascota) {
 
+            $valueArray["id"] = $mascota->getId();
             $valueArray["nombre"] = $mascota->getNombre();
             $valueArray["raza"] = $mascota->getRaza();
             $valueArray["dueno"] = $mascota->getDniDueno();
             $valueArray["tamano"] = $mascota->getTamano();
             $valueArray["observaciones"] = $mascota->getObservaciones();
-            $valueArray["fotoMascota"] = $mascota->getFotoMascota();
+            //$valueArray["fotoMascota"] = $mascota->getFotoMascota();
             array_push($arrayToEncode, $valueArray);
         }
         $jsonContent = json_encode($arrayToEncode, JSON_PRETTY_PRINT);
@@ -86,12 +107,13 @@ class MascotaDAO
             foreach ($arrayToEncode as $valueArray) {
 
                 $usuario = new Mascota;
+                $usuario->setId($valueArray["id"]);
                 $usuario->setNombre($valueArray["nombre"]);
                 $usuario->setRaza($valueArray["raza"]);
                 $usuario->setDniDueno($valueArray["dueno"]);
                 $usuario->setTamano($valueArray["tamano"]);
                 $usuario->setObservaciones($valueArray["observaciones"]);
-                $usuario->setFotoMascota($valueArray["fotoMascota"]);
+                //$usuario->setFotoMascota($valueArray["fotoMascota"]);
                 array_push($this->usuarioList, $usuario);
             }
         }
@@ -100,6 +122,18 @@ class MascotaDAO
     public function getUsuarioList()
     {
         return $this->usuarioList;
+    }
+
+    private function GetNextId()
+    {
+        $id = 0;
+
+        foreach($this->usuarioList as $mascota)
+        {
+            $id = ($mascota->getId() > $id) ? $mascota->getId() : $id;
+        }
+
+        return $id + 1;
     }
 
     /*public function Add(Dueno $dueno)

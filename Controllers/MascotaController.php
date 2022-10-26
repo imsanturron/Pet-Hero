@@ -3,7 +3,7 @@
 namespace Controllers;
 
 use DAO\MascotaDAO as MascotaDAO;
-use DateTime;
+use DateTime as DateTime;
 use Models\Alert;
 use Models\Mascota as Mascota;
 
@@ -51,15 +51,15 @@ class MascotaController
         return $retorn . $imageFileType;
     }
 
-    public function Add($nombre, $raza, $tamano, $fotoM, $observaciones = "")
+    public function Add($nombre, $raza, $tamano, /*$fotoM,*/ $observaciones = "")
     {
         if (isset($_SESSION["loggedUser"])) {
-            $fotoMUniq = IMG_PATH . $this->idFotoFechaYCheck($fotoM);
+            /*$fotoMUniq = IMG_PATH . $this->idFotoFechaYCheck($fotoM);
             if (move_uploaded_file($_FILES["fotoM"]["tmp_name"], $fotoMUniq)) {
                 echo "The file " . htmlspecialchars(basename($_FILES["fotoM"]["name"])) . " has been uploaded.";
             } else {
                 echo "Sorry, there was an error uploading your file.";
-            }
+            }*/
 
             ///preguntar si nombre o algo asi
             $mascota = new Mascota();
@@ -68,14 +68,14 @@ class MascotaController
             $mascota->setRaza($raza);
             $mascota->setTamano($tamano);
             $mascota->setObservaciones($observaciones);
-            $mascota->setFotoMascota($fotoMUniq);
+            //$mascota->setFotoMascota($fotoMUniq);
 
             $this->mascotaDAO->Add($mascota);
             //$mascota->setDniDueno($_SESSION["loggedUser"]->addMascota($mascota)); y guardar 
             $alert = new Alert("success", "Mascota agregada");
             $this->loginDueno($alert);
-        }
-        $this->Index();
+        } else
+            $this->Index();
     }
 
     public function Remove($id)
@@ -88,7 +88,7 @@ class MascotaController
             else
                 $alert = new Alert("warning", "Error borrando la mascota");
             $this->loginDueno($alert);
-        }
-        $this->Index();
+        } else
+            $this->Index();
     }
 }

@@ -8,9 +8,10 @@ class Reserva extends Solicitud
 
     public function __construct(Solicitud $solicitud)
     {
-        //parent::__construct($solicitud->getAnimales(), )
+        parent::__construct($solicitud->getAnimales(), $solicitud->getFechaInicio(),$solicitud->getFechaFin());
         
         ///setear estado comaparando con fecha actual.
+        $this->estado = "proximo";
     }
 
     public function getEstado()

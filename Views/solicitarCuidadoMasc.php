@@ -1,10 +1,10 @@
 <?php
 include('nav-bar.php');
-?>
-<?php
 
 use Config\Autoload as Autoload;
-use DAO\MascotaDAO;
+use DAO\MascotaDAO as MascotaDAO;
+use DAO\GuardianDAO as GuardianDAO;
+use Models\Guardian as Guardian;;
 
 $mascotasDao = new MascotaDAO();
 $listaMascotas = $mascotasDao->GetAll();
@@ -14,7 +14,7 @@ $listaMascotas = $mascotasDao->GetAll();
 
     <section id="listado" class="mb-5">
         <div class="container">
-            <h2 class="mb-4">Listado de mascotas</h2>
+            <h2 class="mb-4">Elegir mascotas a cuidar</h2>
             <table class="table bg-light-alpha">
                 <thead>
                     <th>Nombre</th>
@@ -25,7 +25,7 @@ $listaMascotas = $mascotasDao->GetAll();
                     <th>Seleccionar</th>
                 </thead>
                 <tbody>
-                    <form action="<?php echo FRONT_ROOT ?>" method="POST">
+                    <form action="<?php echo FRONT_ROOT ?>Dueno/ElegirGuardianFinal" method="POST">
                         <?php
                         if (isset($listaMascotas) && !empty($listaMascotas)) {
 
@@ -42,21 +42,21 @@ $listaMascotas = $mascotasDao->GetAll();
                                         <td><?php echo $mascota->getObservaciones(); ?></td>
                                         <td><img src="<?php echo IMG_PATH . $mascota->getFotoMascota() ?>"></td>
                                         <td>
-                                            <input type="checkbox" name="animales" value="<?php $mascota->getId(); ?>">
-                                            <?php // <input type="checkbox" name="animales" value="<?php $mascota; 
-                                            ?>
+                                            <input type="checkbox" name="animales[]" value="<?php echo $mascota->getId(); ?>">
+                                            <?php // <input type="checkbox" name="animales" value="<?php $mascota; ?>
                                         </td>
                                     </tr>
                             <?php
                                 }
                             }
                             ?>
-                            <input type="hidden" name="dni" value="<?php $dni ?>">
-                            <input type="hidden" name="desde" value="<?php $desde ?>">
-                            <input type="hidden" name="hasta" value="<?php $hasta ?>">
+                            <input type="hidden" name="dni" value="<?php echo $dni ?>">
+                            <input type="hidden" name="desde" value="<?php echo $desde ?>">
+                            <input type="hidden" name="hasta" value="<?php echo $hasta ?>">
                             <button type="submit" class="btn btn-danger"> Enviar </button>
                         <?php
-                        }
+                        } else
+                            echo "Primero debe cargar sus mascotas!";
                         ?>
                     </form>
                 </tbody>

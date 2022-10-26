@@ -65,6 +65,7 @@ class GuardianDAO
         foreach ($this->usuarioList as $item) {
             if ($item->getDni() == $dni) {
                 $item->addSolicitud($solicitud);
+                print_r($item->getSolicitudes());
                 $this->SaveData();
                 return true;
             }
@@ -79,7 +80,7 @@ class GuardianDAO
             if ($item->getDni() == $dni) {
                 $item->setDisponibilidadInicio($fini);
                 $item->setDisponibilidadFin($ffin);
-                $this->SaveData();
+                $this->saveData();
                 return true;
             }
         }

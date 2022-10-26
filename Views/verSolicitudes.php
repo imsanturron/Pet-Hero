@@ -1,7 +1,5 @@
 <?php
 include('nav-bar.php');
-?>
-<?php
 
 use Config\Autoload as Autoload;
 use DAO\GuardianDAO as GuardianDAO;
@@ -13,6 +11,7 @@ if (isset($_SESSION['loggedUser'])) {
     $solicitudes = $guardian->getSolicitudes();
 }
 ?>
+
 <main class="py-5">
 
     <section id="listado" class="mb-5">

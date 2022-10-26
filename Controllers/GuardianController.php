@@ -39,7 +39,7 @@ class GuardianController
 
     public function opcionMenuPrincipal($opcion)
     {
-        if (isset($_SESSION["loggedUser"]) && $_SESSION["loggedUser"] == "g") {
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
             ///cambiar tamaño mascota a cuidar
             $opcion = $_POST['opcion'];
             if ($opcion == "indicarDisponibilidad") {
@@ -57,7 +57,7 @@ class GuardianController
 
     public function elegirDisponibilidad($desde, $hasta)
     {
-        if (isset($_SESSION["loggedUser"]) && $_SESSION["loggedUser"] == "g") {
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
             $valid = AuthController::ValidarFecha($desde, $hasta); //arreglar
             if ($valid) {
                 $guardian = new Guardian();
@@ -76,13 +76,13 @@ class GuardianController
                 $alert = new Alert("warning", "La fecha seleccionada es invalida");
                 $this->login($alert);
             }
-        }
-        $this->home();
+        } else
+            $this->home();
     }
 
     public function operarSolicitud($solicitudId, $operacion)
     {
-        if (isset($_SESSION["loggedUser"]) && $_SESSION["loggedUser"]->getTipo() == "g") {
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
             if ($operacion == "aceptar") {
                 $soli = $_SESSION["loggedUser"]->getSolicitudById($solicitudId);
                 $reserva = new Reserva($soli);
@@ -102,44 +102,41 @@ class GuardianController
 
     public function Add($username, $password, $nombre, $dni, $email, $cuil, $direccion, $precio, $tamanoMasc)
     {
-        if (isset($_SESSION["loggedUser"]) && $_SESSION["loggedUser"] == "g") {
-            $valid = AuthController::ValidarUsuario($username, $dni, $email);
-            if ($valid) {
-                $guardian = new Guardian();
-                $guardian->setUserName($username);
-                $guardian->setPassword($password);
-                $guardian->setNombre($nombre);
-                $guardian->setDni($dni);
-                $guardian->setCuil($cuil);
-                $guardian->setEmail($email);
-                $guardian->setDireccion($direccion);
-                $guardian->setPrecio($precio);
-                $guardian->setTamanoACuidar($tamanoMasc);
+        $valid = AuthController::ValidarUsuario($username, $dni, $email);
+        if ($valid) {
+            $guardian = new Guardian();
+            $guardian->setUserName($username);
+            $guardian->setPassword($password);
+            $guardian->setNombre($nombre);
+            $guardian->setDni($dni);
+            $guardian->setCuil($cuil);
+            $guardian->setEmail($email);
+            $guardian->setDireccion($direccion);
+            $guardian->setPrecio($precio);
+            $guardian->setTamanoACuidar($tamanoMasc);
 
-                $this->guardianDAO->add($guardian);
-                $userDAO = new UserDAO;
-                $userDAO->Add($guardian);
-                $alert = new Alert("success", "Usuario creado");
-                $this->home($alert);
-            } else {
-                $alert = new Alert("warning", "Error! Este usuario ya existe");
-                $this->home($alert);
-            }
+            $this->guardianDAO->add($guardian);
+            $userDAO = new UserDAO;
+            $userDAO->Add($guardian);
+            $alert = new Alert("success", "Usuario creado");
+            $this->home($alert);
+        } else {
+            $alert = new Alert("warning", "Error! Este usuario ya existe");
+            $this->home($alert);
         }
-        $this->home();
     }
 
     public function Remove($dni)
     {
-        if (isset($_SESSION["loggedUser"]) && $_SESSION["loggedUser"] == "g") {
-        $bien = $this->guardianDAO->Remove($dni);
-        if ($bien)
-            $alert = new Alert("success", "Usuario borrado exitosamente");
-        else
-            $alert = new Alert("warning", "Error borrando el usuario");
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
+            $bien = $this->guardianDAO->Remove($dni);
+            if ($bien)
+                $alert = new Alert("success", "Usuario borrado exitosamente");
+            else
+                $alert = new Alert("warning", "Error borrando el usuario");
 
-        $this->home($alert);
-        }
-        $this->home();
+            $this->home($alert);
+        } else
+            $this->home();
     }
 }

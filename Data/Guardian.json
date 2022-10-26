@@ -2,35 +2,19 @@
     {
         "username": "gua1",
         "password": "1234",
-        "dni": "3892823",
-        "cuil": "34235342",
-        "precio": "5423",
-        "nombre": "lord",
-        "email": "gua@fmake",
+        "dni": "8324823",
+        "cuil": "84358345",
+        "precio": "2342",
+        "nombre": "guarda",
+        "email": "guar@kasdnkasd",
         "tipo": "g",
         "reservas": [],
-        "direccion": "lavalle 3383",
-        "FechaInicio": "2022-10-27",
-        "FechaFin": "2022-10-29",
+        "direccion": "lavalle 423",
+        "FechaInicio": "2022-10-28",
+        "FechaFin": "2022-11-23",
         "solicitudes": [
-            []
+            {}
         ],
         "tamanoMasc": "mediano"
-    },
-    {
-        "username": "121e21",
-        "password": "1234",
-        "dni": "12412124",
-        "cuil": "1231231",
-        "precio": "1231",
-        "nombre": "asdafs",
-        "email": "kamsdmsk@qdw",
-        "tipo": "g",
-        "reservas": [],
-        "direccion": "asdsasa",
-        "FechaInicio": null,
-        "FechaFin": null,
-        "solicitudes": [],
-        "tamanoMasc": "chico"
     }
 ]

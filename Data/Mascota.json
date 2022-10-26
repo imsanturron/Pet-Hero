@@ -1,18 +1,42 @@
 [
     {
-        "nombre": "jack",
+        "id": 1,
+        "nombre": "perro",
         "raza": "dogo",
-        "dueno": "1239219",
-        "tamano": "123341",
-        "observaciones": "nada",
-        "fotoMascota": "\/Pet-Hero\/Views\/img\/10-25-202217:18:31.883000"
+        "dueno": "8382384",
+        "tamano": "chico",
+        "observaciones": "nada"
     },
     {
-        "nombre": "dogg",
-        "raza": "12311",
-        "dueno": "1239219",
-        "tamano": "qweqw",
-        "observaciones": "a",
-        "fotoMascota": "\/Pet-Hero\/Views\/img\/10-25-202217:19:39.291600"
+        "id": 2,
+        "nombre": "jack",
+        "raza": "mmm",
+        "dueno": "8382384",
+        "tamano": "mediano",
+        "observaciones": "1e"
+    },
+    {
+        "id": 3,
+        "nombre": "nick",
+        "raza": "lol",
+        "dueno": "8382384",
+        "tamano": "grande",
+        "observaciones": "qqwe"
+    },
+    {
+        "id": 4,
+        "nombre": "ultimo",
+        "raza": "mmm",
+        "dueno": "8382384",
+        "tamano": "mediano",
+        "observaciones": "aa"
+    },
+    {
+        "id": 5,
+        "nombre": "33",
+        "raza": "33",
+        "dueno": "8382384",
+        "tamano": "mediano",
+        "observaciones": "asdsa"
     }
 ]
