@@ -38,6 +38,7 @@ if (isset($_SESSION['loggedUser'])) {
                                     <td>
                                         <?php //<input type="hidden" name="dni" value="<?php echo $guardianx->getDni(); "> 
                                         ?>
+                                        <input type="hidden" name="solicitudId" value="<?php echo $solicitud->getId(); ?>">
                                         <button type="submit" name="operacion" value="aceptar" class="btn btn-danger"> Aceptar </button>
                                         <button type="submit" name="operacion" value="rechazar" class="btn btn-danger"> Rechazar </button>
                                     </td>

@@ -87,6 +87,8 @@ class DuenoDAO
             $valueArray["telefono"] = $dueno->getTelefono();
             $valueArray["mascotas"] = $dueno->getMascotas();
             $valueArray["tipo"] = $dueno->getTipo();
+            $valueArray["solicitudes"] = $dueno->getSolicitudes();
+            $valueArray["reservas"] = $dueno->getReservas();
             array_push($arrayToEncode, $valueArray);
         }
         $jsonContent = json_encode($arrayToEncode, JSON_PRETTY_PRINT);
@@ -115,6 +117,8 @@ class DuenoDAO
                 $usuario->setTelefono($valueArray["telefono"]);
                 $usuario->setMascotas($valueArray["mascotas"]);
                 $usuario->setTipo($valueArray["tipo"]);
+                $usuario->setSolicitudes($valueArray["solicitudes"]);
+                $usuario->setReservas($valueArray["reservas"]);
                 array_push($this->usuarioList, $usuario);
             }
         }
@@ -135,8 +139,8 @@ class DuenoDAO
     {
         try
         {
-            $query = "INSERT INTO ".$this->tableName." (nombre, username, password, dni, email, direccion, telefono, mascotas, tipo)
-             VALUES (:nombre, :username, :password, :dni, :email, :direccion, :telefono, :mascotas, :tipo);";
+            $query = "INSERT INTO ".$this->tableName." (nombre, username, password, dni, email, direccion, telefono, mascotas, tipo, solicitudes, reservas)
+             VALUES (:nombre, :username, :password, :dni, :email, :direccion, :telefono, :mascotas, :tipo, :solicitudes, :reservas);";
             
               $parameters["nombre"] = $dueno->getNombre();
               $parameters["username"] = $dueno->getUsername();
@@ -147,6 +151,8 @@ class DuenoDAO
               $parameters["telefono"] = $dueno->getTelefono();
               $parameters["mascotas"] = $dueno->getMascotas();
               $parameters["tipo"] = $dueno->getTipo();
+              $parameters["solicitudes"] = $dueno->getSolicitudes();
+              $parameters["reservas"] = $dueno->getReservas();
             $this->connection = Connection::GetInstance();
             $this->connection->ExecuteNonQuery($query, $parameters);
         }
@@ -177,6 +183,8 @@ class DuenoDAO
                     $dueno->setTelefono($valueArray["telefono"]);
                     $dueno->setMascotas($valueArray["mascotas"]);
                     $dueno->setTipo($valueArray["tipo"]);
+                    $dueno->setSolicitudes($valueArray["solicitudes"]);
+                    $dueno->setReservas($valueArray["reservas"]);
                     array_push($duenoList, $dueno);
                 }
                 return $duenoList;
