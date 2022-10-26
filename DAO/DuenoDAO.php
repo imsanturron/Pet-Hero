@@ -186,4 +186,18 @@ class DuenoDAO
                 throw $ex;
             }
         }*/
+
+        /*protected function parseToObject($value) { REVISAR BASTANTE
+			$value = is_array($value) ? $value : [];
+			$resp = array_map(function($p){
+				return new User($p['email'],$p['password_user'],$p['administrador'],$p['id_user']);
+            }, $value);
+            
+            if(empty($resp)){
+                return $resp;
+            }
+            else {
+                return count($resp) > 1 ? $resp : $resp['0'];
+            }
+		}*/
 }

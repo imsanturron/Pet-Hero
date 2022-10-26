@@ -5,6 +5,7 @@ class Mascota{
     private $id;
     private $nombre;
     private $raza;
+    //private $especie;///////////
     private $tamano;
     private $observaciones;
     private $fotoMascota;

@@ -24,10 +24,11 @@ if (isset($_SESSION['loggedUser'])) {
                     <thead>
                         <th>Nombre</th>
                         <th>Direccion</th>
+                        <th>Opcion</th>
 
                     </thead>
                     <tbody>
-                        <form action="" method="">
+                        <form action="<?php echo FRONT_ROOT ?>Guardian/operarSolicitud" method="POST">
                             <?php
                             foreach ($solicitudes as $solicitud) {
                             ?>
@@ -37,7 +38,8 @@ if (isset($_SESSION['loggedUser'])) {
                                     <td>
                                         <?php //<input type="hidden" name="dni" value="<?php echo $guardianx->getDni(); "> 
                                         ?>
-                                        <button type="submit" class="btn btn-danger"> Aceptar </button>
+                                        <button type="submit" name="operacion" value="aceptar" class="btn btn-danger"> Aceptar </button>
+                                        <button type="submit" name="operacion" value="rechazar" class="btn btn-danger"> Rechazar </button>
                                     </td>
                                 </tr>
                             <?php } ?>

@@ -85,6 +85,19 @@ class AuthController
     } else
       return false;
   }
+
+  public static function ValidarMismaRaza($animales)
+  {
+    $bool = false;
+    if (isset($animales) && !empty($animales)) {
+      //usort($animales, fn ($a, $b) => $a['raza'] <=> $b['raza']); ///anda?
+    //$compare;
+      //for ($i = 0; $i < $animales->count(); $i++) {
+        ///VALIDAR QUE SEAN DE DISTINTA RAZA
+      //}
+    }
+  }
+
   /*
     $fini = date("Y-m-d", strtotime($finic));
     if ($ffin)

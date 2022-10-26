@@ -1,14 +1,11 @@
-
-<?php 
-  include('nav-bar.php');
+<?php
+include('nav-bar.php');
 ?>
 <?php
 
 use Config\Autoload as Autoload;
 use DAO\GuardianDAO as GuardianDAO;
 use Models\Guardian as Guardian;
-
-Autoload::Start();
 
 $guardianDao = new GuardianDAO();
 $listaguardianes = $guardianDao->GetAll();
@@ -49,7 +46,8 @@ $listaguardianes = $guardianDao->GetAll();
                                     </td>
                                     <td><?php echo $guardianx->getPrecio(); ?></td>
                                     <td><?php echo $guardianx->getDireccion(); ?></td>
-                                    <td><?php //php echo $guardianx->getReputacion(); ?></td>
+                                    <td><?php //php echo $guardianx->getReputacion(); 
+                                        ?></td>
                                     <?php if ($guardianx->getDisponibilidadInicio()) { ?>
                                         <td>
                                             <button type="submit" class="btn btn-danger" value="<?php echo $guardianx->getDni(); ?>"> Elegir </button>

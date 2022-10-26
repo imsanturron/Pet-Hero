@@ -39,7 +39,11 @@ include('nav-bar.php');
                   <input type="text" name="raza" required>
                 </td>
                 <td>
-                  <input type="text" name="tamano" required>
+                  <select name="tamano" required>
+                    <option value="chico"> Chico </option>
+                    <option value="mediano"> Mediano </option>
+                    <option value="grande"> Grande </option>
+                  </select>
                 </td>
                 <td>
                   <input type="file" name="fotoM" required>
