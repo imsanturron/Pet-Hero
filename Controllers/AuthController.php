@@ -32,6 +32,7 @@ class AuthController
         if ($guardianx && $guardianx->getPassword() == $password) {
           $bool = true;
           $_SESSION["loggedUser"] = $guardianx;
+          $_SESSION["tipo"] = "g";
           ///alerta buena
           require_once(VIEWS_PATH . "loginGuardian.php");
         } else {
@@ -45,6 +46,7 @@ class AuthController
         if ($duenox && $duenox->getPassword() == $password) {
           $bool = true;
           $_SESSION["loggedUser"] = $duenox;
+          $_SESSION["tipo"] = "d";
           ///alerta buena
           require_once(VIEWS_PATH . "loginDueno.php");
         } else {
@@ -89,15 +91,24 @@ class AuthController
   public static function ValidarMismaRaza($animales)
   {
     $bool = false;
-    if (isset($animales) && !empty($animales)) {
+  //// ver como hacerlo, loopear array
+      /*for ($i = 0; $i < $animales->count(); $i++) {
+        $j = $i;
+        $compare = $animales[$i]->getRaza();
+        for ($j; $j < $animales->count(); $j++) {
+          if()
+        }
+      }*/
       //usort($animales, fn ($a, $b) => $a['raza'] <=> $b['raza']); ///anda?
-    //$compare;
+      //usort($animales, fn($a, $b) => strcmp($a->getRaza(), $b->getRaza()));
+      //$compare;
       //for ($i = 0; $i < $animales->count(); $i++) {
-        ///VALIDAR QUE SEAN DE DISTINTA RAZA
+      ///VALIDAR QUE SEAN DE DISTINTA RAZA
       //}
-    }
   }
 
+  
+  
   /*
     $fini = date("Y-m-d", strtotime($finic));
     if ($ffin)

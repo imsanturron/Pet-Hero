@@ -53,36 +53,42 @@ class MascotaController
 
     public function Add($nombre, $raza, $tamano, $fotoM, $observaciones = "")
     {
-        $fotoMUniq = IMG_PATH . $this->idFotoFechaYCheck($fotoM);
-        if (move_uploaded_file($_FILES["fotoM"]["tmp_name"], $fotoMUniq)) {
-            echo "The file " . htmlspecialchars(basename($_FILES["fotoM"]["name"])) . " has been uploaded.";
-        } else {
-            echo "Sorry, there was an error uploading your file.";
+        if (isset($_SESSION["loggedUser"])) {
+            $fotoMUniq = IMG_PATH . $this->idFotoFechaYCheck($fotoM);
+            if (move_uploaded_file($_FILES["fotoM"]["tmp_name"], $fotoMUniq)) {
+                echo "The file " . htmlspecialchars(basename($_FILES["fotoM"]["name"])) . " has been uploaded.";
+            } else {
+                echo "Sorry, there was an error uploading your file.";
+            }
+
+            ///preguntar si nombre o algo asi
+            $mascota = new Mascota();
+            $mascota->setDniDueno($_SESSION["loggedUser"]->getDni());
+            $mascota->setNombre($nombre);
+            $mascota->setRaza($raza);
+            $mascota->setTamano($tamano);
+            $mascota->setObservaciones($observaciones);
+            $mascota->setFotoMascota($fotoMUniq);
+
+            $this->mascotaDAO->Add($mascota);
+            //$mascota->setDniDueno($_SESSION["loggedUser"]->addMascota($mascota)); y guardar 
+            $alert = new Alert("success", "Mascota agregada");
+            $this->loginDueno($alert);
         }
-
-        ///preguntar si nombre o algo asi
-        $mascota = new Mascota();
-        $mascota->setDniDueno($_SESSION["loggedUser"]->getDni());
-        $mascota->setNombre($nombre);
-        $mascota->setRaza($raza);
-        $mascota->setTamano($tamano);
-        $mascota->setObservaciones($observaciones);
-        $mascota->setFotoMascota($fotoMUniq);
-
-        $this->mascotaDAO->Add($mascota);
-        //$mascota->setDniDueno($_SESSION["loggedUser"]->addMascota($mascota)); y guardar 
-        $alert = new Alert("success", "Mascota agregada");
-        $this->loginDueno($alert);
+        $this->Index();
     }
 
     public function Remove($id)
     {
-        $bien = $this->mascotaDAO->Remove($id); //modificar funcion
-        ///y remover de dueño si la tiene
-        if ($bien)
-            $alert = new Alert("success", "Mascota borrada exitosamente");
-        else
-            $alert = new Alert("warning", "Error borrando la mascota");
-        $this->loginDueno($alert);
+        if (isset($_SESSION["loggedUser"])) {
+            $bien = $this->mascotaDAO->Remove($id); //modificar funcion
+            ///y remover de dueño si la tiene
+            if ($bien)
+                $alert = new Alert("success", "Mascota borrada exitosamente");
+            else
+                $alert = new Alert("warning", "Error borrando la mascota");
+            $this->loginDueno($alert);
+        }
+        $this->Index();
     }
 }

@@ -111,6 +111,15 @@ class User
         return $this->solicitudes;
     }
 
+    public function getSolicitudById($uid)
+    {
+        foreach ($this->solicitudes as $sol) {
+            if ($sol->getId() == $uid)
+                return $sol;
+        }
+        return null;
+    }
+
     public function setSolicitudes($solicitudes): self
     {
         $this->solicitudes = $solicitudes;
@@ -126,6 +135,15 @@ class User
     public function getReservas()
     {
         return $this->reservas;
+    }
+
+    public function getReservaById($uid)
+    {
+        foreach ($this->reservas as $res) {
+            if ($res->getId() == $uid)
+                return $res;
+        }
+        return null;
     }
 
     public function setReservas($reservas): self

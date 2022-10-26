@@ -101,4 +101,54 @@ class MascotaDAO
     {
         return $this->usuarioList;
     }
+
+    /*public function Add(Dueno $dueno)
+    {
+        try
+        {
+            $query = "INSERT INTO ".$this->tableName." (nombre, raza, dueno, tamano, observaciones, fotoMascota)
+             VALUES (:nombre, :raza, :dueno, :tamano, :observaciones, :fotoMascota);";
+            
+              $parameters["nombre"] = $dueno->getNombre();
+              $parameters["raza"] = $dueno->getRaza();
+              $parameters["dueno"] = $dueno->getDniDueno();
+              $parameters["tamano"] = $dueno->getTamano();
+              $parameters["observaciones"] = $dueno->getObservaciones();
+              $parameters["fotoMascota"] = $dueno->getFotoMascota();
+            $this->connection = Connection::GetInstance();
+            $this->connection->ExecuteNonQuery($query, $parameters);
+        }
+        catch(Exception $ex)
+        {
+            throw $ex;
+        }
+    }*/
+
+    /*public function GetAll()
+        {
+            try
+            {
+                $mascotaList = array();
+                $query = "SELECT * FROM ".$this->tableName;
+                $this->connection = Connection::GetInstance();
+                $resultSet = $this->connection->Execute($query);
+                
+                foreach ($resultSet as $row)
+                {                
+                    $mascota = new Mascota();
+                    $mascota->setNombre($valueArray["nombre"]);
+                    $mascota->setRaza($valueArray["raza"]);
+                    $mascota->setDniDueno($valueArray["dueno"]);
+                    $mascota->setTamano($valueArray["tamano"]);
+                    $mascota->setObservaciones($valueArray["observaciones"]);
+                    $mascota->setFotoMascota($valueArray["fotoMascota"]);
+                    array_push($mascotaList, $mascota);
+                }
+                return $mascotaList;
+            }
+            catch(Exception $ex)
+            {
+                throw $ex;
+            }
+        }*/
 }
