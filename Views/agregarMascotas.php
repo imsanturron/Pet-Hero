@@ -26,7 +26,7 @@ include('nav-bar.php');
                 <th>nombre</th>
                 <th>Raza</th>
                 <th>Tamaño</th>
-                <th>Imagen</th>
+                <?php // <th>Imagen</th> ?>
                 <th>Observaciones</th>
               </tr>
             </thead>
@@ -45,9 +45,11 @@ include('nav-bar.php');
                     <option value="grande"> Grande </option>
                   </select>
                 </td>
+                <?php /*
                 <td>
                   <input type="file" name="fotoM" required>
                 </td>
+                */ ?>
                 <td>
                   <input type="text" name="observaciones">
                 </td>

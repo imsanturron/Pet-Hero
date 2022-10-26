@@ -82,33 +82,53 @@ class AuthController
     if ($ffin)
       $ff = explode("-", $ffin);
 
-    if ($fini[0] <= $ff[0] && $fini[1] <= $ff[1] && $fini[2] <= $ff[2]) {
+    if ($fini[0] < $ff[0])
       return true;
-    } else
+    else if ($fini[0] == $ff[0] && $fini[1] < $ff[1])
+      return true;
+    elseif ($fini[0] == $ff[0] && $fini[1] == $ff[1] && $fini[2] <= $ff[2])
+      return true;
+    else
       return false;
   }
 
   public static function ValidarMismaRaza($animales)
   {
-    $bool = false;
-  //// ver como hacerlo, loopear array
-      /*for ($i = 0; $i < $animales->count(); $i++) {
+    if (isset($animales) && !empty($animales)) {
+      for ($i = 0; $i < count($animales); $i++) {
         $j = $i;
-        $compare = $animales[$i]->getRaza();
-        for ($j; $j < $animales->count(); $j++) {
-          if()
+        for ($j; $j < count($animales); $j++) {
+          if ($j != $i) {
+            if ($animales[$i]->getRaza() != $animales[$j]->getRaza()) {
+              return false;
+            }
+          }
         }
-      }*/
-      //usort($animales, fn ($a, $b) => $a['raza'] <=> $b['raza']); ///anda?
-      //usort($animales, fn($a, $b) => strcmp($a->getRaza(), $b->getRaza()));
-      //$compare;
-      //for ($i = 0; $i < $animales->count(); $i++) {
-      ///VALIDAR QUE SEAN DE DISTINTA RAZA
-      //}
+      }
+      return true;
+    }
+    return false;
   }
+    //usort($animales, fn($a, $b) => strcmp($a->getRaza(), $b->getRaza()));
+    
+    /*$bool = false;
+    $comp = null;
+    if (isset($animales) && !empty($animales)) {
+      usort($animales, fn ($a, $b) => strcmp($a->getRaza(), $b->getRaza()));
+      $bool = true;
+      foreach ($animales as $an) {
+        if ($comp == null)
+          $comp = $an->getRaza();
+        else if ($comp != $an->getRaza()) {
+          return false;
+        } else
+          $comp = $an->getRaza();
+      }
+      return true;
+    } else
+      return false;*/
 
-  
-  
+
   /*
     $fini = date("Y-m-d", strtotime($finic));
     if ($ffin)

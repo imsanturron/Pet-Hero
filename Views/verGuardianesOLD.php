@@ -1,7 +1,5 @@
 <?php
 include('nav-bar.php');
-?>
-<?php
 
 use Config\Autoload as Autoload;
 use DAO\GuardianDAO as GuardianDAO;
@@ -9,8 +7,8 @@ use Models\Guardian as Guardian;
 
 $guardianDao = new GuardianDAO();
 $listaguardianes = $guardianDao->GetAll();
-
 ?>
+
 <main class="py-5">
 
     <section id="listado" class="mb-5">

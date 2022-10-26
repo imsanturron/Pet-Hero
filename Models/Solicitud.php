@@ -5,35 +5,25 @@ namespace Models;
 class Solicitud
 {
 
-    private $id;
-    private $animales;
-    private $fechaInicio;
-    private $fechaFin;
-    private $nombreDueno;
-    private $dniDueno;
-    private $nombreGuardian;
-    private $dniGuardian;
-    private $direccion;//guardain
-    //private $direccion;//dueno
-    //private $telefono;//guardain
-    //private $telefono;//dueno
+    protected $id;
+    protected $animales;
+    protected $fechaInicio;
+    protected $fechaFin;
+    protected $nombreDueno;
+    protected $dniDueno;
+    protected $nombreGuardian;
+    protected $dniGuardian;
+    protected $direccion;//guardain
+    //protected $direccion;//dueno
+    //protected $telefono;//guardain
+    //protected $telefono;//dueno
 
 
-    public function  __construct($animales, $desde, $hasta)
+    public function  __construct($animales = null, $desde = "", $hasta = "")
     {
         $this->animales = $animales;
         $this->fechaInicio = $desde;
         $this->fechaFin = $hasta;
-        if (isset($_SESSION['loggedUser'])) {
-            if ($_SESSION['loggedUser']->getTipo() == 'd') {
-
-                $dueno = $_SESSION['loggedUser'];
-                $this->nombreDueno = $dueno->getNombre();
-                $this->direccion = $dueno->getDireccion();
-            }// else {
-                ///caso guardian
-            //}
-        }
     }
 
 

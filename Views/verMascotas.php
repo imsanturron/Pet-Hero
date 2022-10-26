@@ -1,15 +1,13 @@
 <?php
 include('nav-bar.php');
-?>
-<?php
 
 use Config\Autoload as Autoload;
 use DAO\MascotaDAO;
 
 $mascotasDao = new MascotaDAO();
 $listaMascotas = $mascotasDao->GetAll();
-
 ?>
+
 <main class="py-5">
 
      <section id="listado" class="mb-5">

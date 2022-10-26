@@ -1,23 +1,16 @@
 [
     {
-        "username": "due1",
-        "password": "1234",
-        "dni": "1239219",
-        "email": "due@ksmd",
-        "tipo": "d"
-    },
-    {
         "username": "gua1",
         "password": "1234",
-        "dni": "3892823",
-        "email": "gua@fmake",
+        "dni": "8324823",
+        "email": "guar@kasdnkasd",
         "tipo": "g"
     },
     {
-        "username": "121e21",
+        "username": "due1",
         "password": "1234",
-        "dni": "12412124",
-        "email": "kamsdmsk@qdw",
-        "tipo": "g"
+        "dni": "8382384",
+        "email": "duen@asmmsd",
+        "tipo": "d"
     }
 ]
