@@ -2,7 +2,8 @@
 
 namespace Controllers;
 
-use DAO\MascotaDAO as MascotaDAO;
+use DAO\JSON\MascotaDAO as MascotaDAO;
+//use DAO\MYSQL\MascotaDAO as MascotaDAOms;
 use DateTime as DateTime;
 use Models\Alert;
 use Models\Mascota as Mascota;

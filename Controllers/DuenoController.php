@@ -6,10 +6,10 @@ use Models\Dueno as Dueno;
 use Models\Solicitud as Solicitud;
 use Models\Guardian as Guardian;
 use Models\Alert as Alert;
-use DAO\DuenoDAO as DuenoDAO;
-use DAO\GuardianDAO as GuardianDAO;
-use DAO\MascotaDAO;
-use DAO\UserDAO as UserDAO;
+use DAO\JSON\DuenoDAO as DuenoDAO;
+use DAO\JSON\GuardianDAO as GuardianDAO;
+use DAO\JSON\MascotaDAO;
+use DAO\JSON\UserDAO as UserDAO;
 
 class DuenoController
 {

@@ -11,9 +11,9 @@
         "reservas": [],
         "direccion": "lavalle 423",
         "FechaInicio": "2022-10-28",
-        "FechaFin": "2022-11-23",
+        "FechaFin": "2022-10-29",
         "solicitudes": [
-            {}
+            []
         ],
         "tamanoMasc": "mediano"
     }

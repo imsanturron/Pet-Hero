@@ -1,10 +1,8 @@
 <?php
 
-namespace DAO;
+namespace DAO\JSON;
 
 use Models\Dueno as Dueno;
-use DAO\Connection as Connection;
-use \Exception as Exception;
 
 class DuenoDAO
 {

@@ -6,7 +6,7 @@ class Reserva extends Solicitud
 {
     private $estado; ///"finalizado", "actual", "proximo"
 
-    public function __construct(Solicitud $solicitud)
+    public function __construct(Solicitud $solicitud = null)
     {
         parent::__construct($solicitud->getAnimales(), $solicitud->getFechaInicio(),$solicitud->getFechaFin());
         

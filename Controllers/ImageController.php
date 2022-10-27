@@ -1,7 +1,7 @@
 <?php
     namespace Controllers;
 
-    use DAO\ImageDAO as ImageDAO;
+    use DAO\MYSQL\ImageDAO as ImageDAO;
     use Models\Imagen as Imagen;
     use \Exception as Exception;
 

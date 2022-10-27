@@ -1,11 +1,10 @@
 <?php
 
-namespace DAO;
+namespace DAO\JSON;
 
 use Models\Guardian as Guardian;
 use Models\Solicitud as Solicitud;
-use DAO\Connection as Connection;
-use \Exception as Exception;
+use Models\Reserva as Reserva;
 
 class SolicitudDAO
 {
@@ -146,4 +145,93 @@ class SolicitudDAO
     {
         return $this->usuarioList;
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////FUNCIONES BASE DE DATOS/////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /*public function Add(Solicitud $solicitud)
+    {
+        try
+        {
+            $query = "INSERT INTO ".$this->tableName." (id, animales, FechaInicio, FechaFin, nombreDueno, dniDueno, nombreGuardian, dniGuardian, direccion)
+             VALUES (:id, :animales, :FechaInicio, :FechaFin, :nombreDueno, :dniDueno, :nombreGuardian, :dniGuardian, :direccion);";
+            
+              $parameters["id"] = $solicitud->getId();
+              $parameters["animales"] = $solicitud->getAnimales();
+              $parameters["FechaInicio"] = $solicitud->getFechaInicio();
+              $parameters["FechaFin"] = $solicitud->getFechaFin();
+              $parameters["nombreDueno"] = $solicitud->getNombreDueno();
+              $parameters["dniDueno"] = $solicitud->getDniDueno();
+              $parameters["nombreGuardian"] = $solicitud->getNombreGuardian();
+              $parameters["dniGuardian"] = $solicitud->getDniGuardian();
+              $parameters["direccion"] = $solicitud->getDireccion();
+            $this->connection = Connection::GetInstance();
+            $this->connection->ExecuteNonQuery($query, $parameters);
+        }
+        catch(Exception $ex)
+        {
+            throw $ex;
+        }
+    }*/
+
+    /*public function GetAll()
+        {
+            try
+            {
+                $solicitudList = array();
+                $query = "SELECT * FROM ".$this->tableName;
+                $this->connection = Connection::GetInstance();
+                $resultSet = $this->connection->Execute($query);
+                
+                foreach ($resultSet as $row)
+                {                
+                    $solicitud = new Solicitud();
+                    $solicitud->setId($valueArray["id"]);
+                    $solicitud->setAnimales($valueArray["animales"]);
+                    $solicitud->setFechaInicio($valueArray["FechaInicio"]);
+                    $solicitud->setFechaFin($valueArray["FechaFin"]);
+                    $solicitud->setNombreDueno($valueArray["nombreDueno"]);
+                    $solicitud->setDniDueno($valueArray["dniDueno"]);
+                    $solicitud->setNombreGuardian($valueArray["nombreGuardian"]);
+                    $solicitud->setDniGuardian($valueArray["dniGuardian"]);
+                    $solicitud->setDireccion($valueArray["direccion"]);
+                    array_push($solicitudList, $solicitud);
+                }
+                return $solicitudList;
+            }
+            catch(Exception $ex)
+            {
+                throw $ex;
+            }
+        }*/
+
+    /*function GetById($id)
+        {
+            try
+            {
+                $solicitud = null;
+
+                $query = "SELECT * FROM ".$this->tableName." WHERE id = :id";
+
+                $parameters["id"] = $id;
+
+                $this->connection = Connection::GetInstance();
+
+                $resultSet = $this->connection->Execute($query, $parameters);
+                
+                foreach ($resultSet as $row)
+                {                
+                    $solicitud = new Guardian();
+                    $solicitud->setDni($row["dni"]);
+                    $solicitud->setNombre($row["nombre"]);
+                    ////////
+                }
+
+                return $solicitud;
+            }
+            catch(Exception $ex)
+            {
+                throw $ex;
+            }
+        }*/
 }
