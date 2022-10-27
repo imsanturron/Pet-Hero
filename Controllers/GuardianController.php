@@ -5,9 +5,9 @@ namespace Controllers;
 use Models\Guardian;
 use Models\Alert as Alert;
 use Models\Solicitud as Solicitud;
-use DAO\GuardianDAO as GuardianDAO;
-use DAO\UserDAO as UserDAO;
 use Models\Reserva as Reserva;
+use DAO\JSON\GuardianDAO as GuardianDAO;
+use DAO\JSON\UserDAO as UserDAO;
 
 class GuardianController
 {

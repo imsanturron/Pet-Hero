@@ -1,5 +1,5 @@
 <?php
-    namespace DAO;
+    namespace DAO\MYSQL;
 
     use Models\Imagen as Imagen;
 

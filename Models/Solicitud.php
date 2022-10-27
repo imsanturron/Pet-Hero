@@ -2,7 +2,10 @@
 
 namespace Models;
 
-class Solicitud
+use JsonSerializable;
+use Serializable;
+
+class Solicitud implements JsonSerializable
 {
 
     protected $id;
@@ -24,6 +27,10 @@ class Solicitud
         $this->animales = $animales;
         $this->fechaInicio = $desde;
         $this->fechaFin = $hasta;
+    }
+
+    public function jsonSerialize(){
+        $solicitud["id"] = $this->id;
     }
 
 

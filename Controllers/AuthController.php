@@ -2,9 +2,9 @@
 
 namespace Controllers;
 
-use DAO\GuardianDAO as GuardianDao;
-use DAO\DuenoDAO as DuenoDAO;
-use DAO\UserDAO as UserDAO;
+use DAO\JSON\GuardianDAO as GuardianDao;
+use DAO\JSON\DuenoDAO as DuenoDAO;
+use DAO\JSON\UserDAO as UserDAO;
 use Models\Guardian as Guardian;
 use Models\Dueno as Dueno;
 use Models\Alert as Alert; ////////////
@@ -78,6 +78,22 @@ class AuthController
 
   public static function ValidarFecha($finic, $ffin = null, $despDeHoy = false)
   {
+    $fini = date("Y-m-d", strtotime($finic));
+    if ($ffin)
+      $ff = date("Y-m-d", strtotime($ffin));
+
+      //var_dump(strtotime(date("Y-m-d")));
+      //var_dump($ff);
+      //var_dump(date("Y-m-d"));
+
+    /*if ($fini < date("Y-m-d")) {
+      if ($ff && $fini < $ff) {
+        return true;
+      }
+      return false;
+    }
+    return false;*/
+
     ///validar que sea desp de hoy?
     //comparar fechas normal?
     $fini = explode("-", $finic);

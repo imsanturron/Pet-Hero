@@ -1,12 +1,12 @@
 <?php
-    namespace DAO;
+    namespace DAO\MYSQL;
 
-    use DAO\IImageDAO as IImageDAO;
-    use DAO\QueryType as QueryType;
+    use DAO\MYSQL\IImageDAO as IImageDAO;
+    use DAO\MYSQL\QueryType as QueryType;
     use Models\Imagen as Imagen;
     use \Exception as Exception;
 
-    class ImageDao implements \DAO\IImageDao
+    class ImageDao implements \DAO\MYSQL\IImageDao
     {
         private $tableName = "images";
 

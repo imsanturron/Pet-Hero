@@ -1,19 +1,71 @@
 <?php
 
-namespace DAO;
+namespace DAO\MYSQL;
 
 use Models\Mascota as Mascota;
-use DAO\Connection as Connection;
+use DAO\MYSQL\Connection as Connection;
 use \Exception as Exception;
 
 class MascotaDAO
 {
-    //private $connection;
-    //private $tableName = "students";
-    private $usuarioList = array();
-    private $filename;
+    private $connection;
+    private $tableName = "mascotas";
+    //private $usuarioList = array();
+    //private $filename;
 
-    public function __construct()
+    
+    public function Add(Mascota $dueno)
+    {
+        try
+        {
+            $query = "INSERT INTO ".$this->tableName." (nombre, raza, dueno, tamano, observaciones, fotoMascota)
+             VALUES (:nombre, :raza, :dueno, :tamano, :observaciones, :fotoMascota);";
+            
+              $parameters["nombre"] = $dueno->getNombre();
+              $parameters["raza"] = $dueno->getRaza();
+              $parameters["dueno"] = $dueno->getDniDueno();
+              $parameters["tamano"] = $dueno->getTamano();
+              $parameters["observaciones"] = $dueno->getObservaciones();
+              $parameters["fotoMascota"] = $dueno->getFotoMascota();
+              ///
+            $this->connection = Connection::GetInstance();
+            $this->connection->ExecuteNonQuery($query, $parameters);
+        }
+        catch(Exception $ex)
+        {
+            throw $ex;
+        }
+    }
+
+    public function GetAll()
+        {
+            try
+            {
+                $mascotaList = array();
+                $query = "SELECT * FROM ".$this->tableName;
+                $this->connection = Connection::GetInstance();
+                $resultSet = $this->connection->Execute($query);
+                
+                foreach ($resultSet as $row)
+                {                
+                    $mascota = new Mascota();
+                    $mascota->setNombre($row["nombre"]);
+                    $mascota->setRaza($row["raza"]);
+                    $mascota->setDniDueno($row["dueno"]);
+                    $mascota->setTamano($row["tamano"]);
+                    $mascota->setObservaciones($row["observaciones"]);
+                    $mascota->setFotoMascota($row["fotoMascota"]);
+                    array_push($mascotaList, $mascota);
+                }
+                return $mascotaList;
+            }
+            catch(Exception $ex)
+            {
+                throw $ex;
+            }
+        }
+
+    /*public function __construct()
     {
         $this->filename = dirname(__DIR__) . "\Data\Mascota" . ".json";
     }
@@ -39,7 +91,7 @@ class MascotaDAO
         $this->SaveData();
     }
     /**BUsca factura por numero y tipo  en archivo retorna true o false */
-    public function search(Mascota $user)
+    /*public function search(Mascota $user)
     {
         $this->retrieveData();
         $encontrado = false;
@@ -136,55 +188,5 @@ class MascotaDAO
         }
 
         return $id + 1;
-    }
-
-    /*public function Add(Dueno $dueno)
-    {
-        try
-        {
-            $query = "INSERT INTO ".$this->tableName." (nombre, raza, dueno, tamano, observaciones, fotoMascota)
-             VALUES (:nombre, :raza, :dueno, :tamano, :observaciones, :fotoMascota);";
-            
-              $parameters["nombre"] = $dueno->getNombre();
-              $parameters["raza"] = $dueno->getRaza();
-              $parameters["dueno"] = $dueno->getDniDueno();
-              $parameters["tamano"] = $dueno->getTamano();
-              $parameters["observaciones"] = $dueno->getObservaciones();
-              $parameters["fotoMascota"] = $dueno->getFotoMascota();
-            $this->connection = Connection::GetInstance();
-            $this->connection->ExecuteNonQuery($query, $parameters);
-        }
-        catch(Exception $ex)
-        {
-            throw $ex;
-        }
     }*/
-
-    /*public function GetAll()
-        {
-            try
-            {
-                $mascotaList = array();
-                $query = "SELECT * FROM ".$this->tableName;
-                $this->connection = Connection::GetInstance();
-                $resultSet = $this->connection->Execute($query);
-                
-                foreach ($resultSet as $row)
-                {                
-                    $mascota = new Mascota();
-                    $mascota->setNombre($valueArray["nombre"]);
-                    $mascota->setRaza($valueArray["raza"]);
-                    $mascota->setDniDueno($valueArray["dueno"]);
-                    $mascota->setTamano($valueArray["tamano"]);
-                    $mascota->setObservaciones($valueArray["observaciones"]);
-                    $mascota->setFotoMascota($valueArray["fotoMascota"]);
-                    array_push($mascotaList, $mascota);
-                }
-                return $mascotaList;
-            }
-            catch(Exception $ex)
-            {
-                throw $ex;
-            }
-        }*/
 }
