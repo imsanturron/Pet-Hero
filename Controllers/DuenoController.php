@@ -88,9 +88,9 @@ class DuenoController
         $mascotas = new MascotaDAO();
         //print_r($animales);
         $arrayMascotas = array();
-        $arrayMascotas = $mascotas->getArrayByIds($animales);
+        $arrayMascotas = $mascotas->getArrayByIds($animales); ///y mandar mascotas que ya tenga
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
-            $valid = AuthController::ValidarMismaRaza($arrayMascotas); ////////!arreglar!///////////
+            $valid = AuthController::ValidarMismaRaza($arrayMascotas); ////////!arreglar!////+mascotas que tenga//
             if ($valid) {
                 $guardianes = new GuardianDAO();
                 $solicitud = new Solicitud($arrayMascotas, $desde, $hasta);

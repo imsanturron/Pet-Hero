@@ -51,7 +51,7 @@ class MascotaController
         return $retorn . $imageFileType;
     }
 
-    public function Add($nombre, $raza, $tamano, /*$fotoM,*/ $observaciones = "")
+    public function Add($especie, $nombre, $raza, $tamano, /*$fotoM,*/ $observaciones = "")
     {
         if (isset($_SESSION["loggedUser"])) {
             /*$fotoMUniq = IMG_PATH . $this->idFotoFechaYCheck($fotoM);
@@ -64,6 +64,7 @@ class MascotaController
             ///preguntar si nombre o algo asi
             $mascota = new Mascota();
             $mascota->setDniDueno($_SESSION["loggedUser"]->getDni());
+            $mascota->setEspecie($especie); ///ver si crear clase perro y gato
             $mascota->setNombre($nombre);
             $mascota->setRaza($raza);
             $mascota->setTamano($tamano);

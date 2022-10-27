@@ -1,6 +1,5 @@
 <?php
 include('nav-bar.php');
-//echo date("Y-m-d", strtotime("now"));
 ?>
 <form action="<?php echo FRONT_ROOT ?>Dueno/filtrarFechas" method="post" style="background-color: #EAEDED;padding: 2rem !important;">
     <B>
