@@ -3,6 +3,7 @@ class Mascota{
 
     private $dniDueno;
     private $id;
+    private $especie;
     private $nombre;
     private $raza;
     //private $especie;///////////
@@ -139,6 +140,18 @@ class Mascota{
     public function setPlanVacunacion($planVacunacion)
     {
         $this->planVacunacion = $planVacunacion;
+
+        return $this;
+    }
+
+    public function getEspecie()
+    {
+        return $this->especie;
+    }
+
+    public function setEspecie($especie): self
+    {
+        $this->especie = $especie;
 
         return $this;
     }

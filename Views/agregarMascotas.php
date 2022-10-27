@@ -23,16 +23,23 @@ include('nav-bar.php');
           <table>
             <thead>
               <tr>
-                <th>nombre</th>
+                <th>Especie</th>
+                <th>Nombre</th>
                 <th>Raza</th>
                 <th>Tamaño</th>
-                <?php // <th>Imagen</th> ?>
+                <?php // <th>Imagen</th> 
+                ?>
                 <th>Observaciones</th>
               </tr>
             </thead>
             <tbody align="center">
               <tr>
                 <td style="max-width: 100px;">
+                  <select name="especie" required>
+                    <option value="gato"> Perro </option>
+                    <option value="perro"> Gato </option>
+                </td>
+                <td>
                   <input type="text" name="nombre" required>
                 </td>
                 <td>

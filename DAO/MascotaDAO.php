@@ -83,6 +83,7 @@ class MascotaDAO
         foreach ($this->usuarioList as $mascota) {
 
             $valueArray["id"] = $mascota->getId();
+            $valueArray["especie"] = $mascota->getEspecie();
             $valueArray["nombre"] = $mascota->getNombre();
             $valueArray["raza"] = $mascota->getRaza();
             $valueArray["dueno"] = $mascota->getDniDueno();
@@ -108,6 +109,7 @@ class MascotaDAO
 
                 $usuario = new Mascota;
                 $usuario->setId($valueArray["id"]);
+                $usuario->setEspecie($valueArray["especie"]);
                 $usuario->setNombre($valueArray["nombre"]);
                 $usuario->setRaza($valueArray["raza"]);
                 $usuario->setDniDueno($valueArray["dueno"]);

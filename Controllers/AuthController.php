@@ -76,20 +76,40 @@ class AuthController
     return true;
   }
 
-  public static function ValidarFecha($finic, $ffin = null)
+  public static function ValidarFecha($finic, $ffin = null, $despDeHoy = false)
   {
+    ///validar que sea desp de hoy?
+    //comparar fechas normal?
     $fini = explode("-", $finic);
     if ($ffin)
       $ff = explode("-", $ffin);
 
-    if ($fini[0] < $ff[0])
+    if ($ffin && $despDeHoy == false) {
+
+      if ($fini[0] < $ff[0])
+        return true;
+      else if ($fini[0] == $ff[0] && $fini[1] < $ff[1])
+        return true;
+      elseif ($fini[0] == $ff[0] && $fini[1] == $ff[1] && $fini[2] <= $ff[2])
+        return true;
+      else
+        return false;
+    } else if($ffin == null){
+
+      $fechaHoy = date("Y-m-d", strtotime("now"));
+      $compar = explode("-", $fechaHoy); ///echo $compar[3];
+      if ($compar[0] < $fini[0])
+        return true;
+      else if ($compar[0] == $fini[0] && $compar[1] < $fini[1])
+        return true;
+      elseif ($compar[0] == $fini[0] && $compar[1] == $fini[1] && $compar[2] <= $fini[2])
+        return true;
+      else
+        return false;
+        ///seguir caso de las 2 fechas y verificar este
+    }else if($ffin && $despDeHoy == true){
       return true;
-    else if ($fini[0] == $ff[0] && $fini[1] < $ff[1])
-      return true;
-    elseif ($fini[0] == $ff[0] && $fini[1] == $ff[1] && $fini[2] <= $ff[2])
-      return true;
-    else
-      return false;
+    }
   }
 
   public static function ValidarMismaRaza($animales)
@@ -109,9 +129,9 @@ class AuthController
     }
     return false;
   }
-    //usort($animales, fn($a, $b) => strcmp($a->getRaza(), $b->getRaza()));
-    
-    /*$bool = false;
+  //usort($animales, fn($a, $b) => strcmp($a->getRaza(), $b->getRaza()));
+
+  /*$bool = false;
     $comp = null;
     if (isset($animales) && !empty($animales)) {
       usort($animales, fn ($a, $b) => strcmp($a->getRaza(), $b->getRaza()));

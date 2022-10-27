@@ -1,6 +1,5 @@
 <?php
 include('nav-bar.php');
-//echo date("Y-m-d", strtotime("now"));
 ?>
 <form action="<?php echo FRONT_ROOT ?>Guardian/elegirDisponibilidad" method="post" style="background-color: #EAEDED;padding: 2rem !important;">
   <B>

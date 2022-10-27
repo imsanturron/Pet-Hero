@@ -39,6 +39,8 @@ class GuardianController
 
     public function opcionMenuPrincipal($opcion)
     {
+        ///alerta de disponibilidad obsoleta?
+        ///checkear reservas que venzan en fecha
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
             ///cambiar tamaño mascota a cuidar
             $opcion = $_POST['opcion'];
