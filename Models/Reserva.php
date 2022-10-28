@@ -25,4 +25,21 @@ class Reserva extends Solicitud
 
         return $this;
     }
+
+    /*public function getEstadoDescripcion()
+    {
+      $ret = "";
+      switch($this->estado) {
+        case "P":
+          $ret = "Pendiente";
+          break;
+        case "F":
+          $ret = "Finalizado";
+          break;
+        case "C":
+          $ret = "Cancelado";
+          break;
+      }
+      return $ret;
+    }*/
 }

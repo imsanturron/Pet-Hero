@@ -1,12 +1,11 @@
 <?php namespace Models;
 class Mascota{
 
-    private $dniDueno;
-    private $id;
+    private $dniDueno; //FK
+    private $id; //PK
     private $especie;
     private $nombre;
     private $raza;
-    //private $especie;///////////
     private $tamano;
     private $observaciones;
     private $fotoMascota;

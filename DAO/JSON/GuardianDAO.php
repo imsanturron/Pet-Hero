@@ -123,6 +123,7 @@ class GuardianDAO
             $valueArray["tipo"] = $guardian->getTipo();
             $valueArray["reservas"] = $guardian->getReservas();
             $valueArray["direccion"] = $guardian->getDireccion();
+            $valueArray["telefono"] = $guardian->getTelefono();
             $valueArray["FechaInicio"] = $guardian->getDisponibilidadInicio();
             $valueArray["FechaFin"] = $guardian->getDisponibilidadFin();
             $valueArray["solicitudes"] = $guardian->getSolicitudes();
@@ -153,6 +154,7 @@ class GuardianDAO
                 $usuario->setEmail($valueArray["email"]);
                 $usuario->setCuil($valueArray["cuil"]);
                 $usuario->setDireccion($valueArray["direccion"]);
+                $usuario->setTelefono($valueArray["telefono"]);
                 $usuario->setTipo($valueArray["tipo"]);
                 $usuario->setReservas($valueArray["reservas"]);
                 $usuario->setDisponibilidadInicio($valueArray["FechaInicio"]);

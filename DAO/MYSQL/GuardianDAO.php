@@ -17,8 +17,8 @@ class GuardianDAO
     public function Add(Guardian $guardian)
     {
         try {
-            $query = "INSERT INTO " . $this->tableName . " (username, nombre, password, precio, dni, email, cuil, direccion, tipo, reservas, FechaInicio, FechaFin, solicitudes)
-             VALUES (:username, :nombre, :password, :precio, :dni, :email, :cuil, :direccion, :tipo, :reservas, :FechaInicio, :FechaFin, :solicitudes);";
+            $query = "INSERT INTO " . $this->tableName . " (username, nombre, password, precio, dni, email, cuil, direccion, tipo, FechaInicio, FechaFin)
+             VALUES (:username, :nombre, :password, :precio, :dni, :email, :cuil, :direccion, :tipo, :FechaInicio, :FechaFin);";
 
             $parameters["username"] = $guardian->getUsername();
             $parameters["nombre"] = $guardian->getNombre();
@@ -29,10 +29,10 @@ class GuardianDAO
             $parameters["cuil"] = $guardian->getCuil();
             $parameters["direccion"] = $guardian->getDireccion();
             $parameters["tipo"] = $guardian->getTipo();
-            $parameters["reservas"] = $guardian->getReservas();
+            //$parameters["reservas"] = $guardian->getReservas();
             $parameters["FechaInicio"] = $guardian->getDisponibilidadInicio();
             $parameters["FechaFin"] = $guardian->getDisponibilidadFin();
-            $parameters["solicitudes"] = $guardian->getSolicitudes();
+            //$parameters["solicitudes"] = $guardian->getSolicitudes();
             $this->connection = Connection::GetInstance();
             $this->connection->ExecuteNonQuery($query, $parameters);
         } catch (Exception $ex) {
@@ -59,10 +59,10 @@ class GuardianDAO
                 $guardian->setCuil($row["cuil"]);
                 $guardian->setDireccion($row["direccion"]);
                 $guardian->setTipo($row["tipo"]);
-                $guardian->setReservas($row["reservas"]);
+                //$guardian->setReservas($row["reservas"]);
                 $guardian->setDisponibilidadInicio($row["FechaInicio"]);
                 $guardian->setDisponibilidadFin($row["FechaFin"]);
-                $guardian->setSolicitudes($row["solicitudes"]);
+                //$guardian->setSolicitudes($row["solicitudes"]);
                 array_push($guardianList, $guardian);
             }
             return $guardianList;
@@ -79,6 +79,33 @@ class GuardianDAO
             $query = "SELECT * FROM " . $this->tableName . " WHERE dni = :dni";
 
             $parameters["dni"] = $dni;
+
+            $this->connection = Connection::GetInstance();
+
+            $resultSet = $this->connection->Execute($query, $parameters);
+
+            foreach ($resultSet as $row) {
+                $guardian = new Guardian();
+                $guardian->setDni($row["dni"]);
+                $guardian->setNombre($row["nombre"]);
+                ////////
+            }
+
+            return $guardian;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+    
+
+    function getByUsername($username)
+    {
+        try {
+            $guardian = null;
+
+            $query = "SELECT * FROM " . $this->tableName . " WHERE username = :username";
+
+            $parameters["username"] = $username;
 
             $this->connection = Connection::GetInstance();
 

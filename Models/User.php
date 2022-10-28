@@ -13,10 +13,12 @@ class User
     protected $dni;
     protected $email;
     protected $direccion;
-    //protected $pais;
     protected $tipo; //char = "g" || "d"
-    private $solicitudes;
-    private $reservas;
+    protected $telefono;
+    //protected $solicitudes; ///array ids
+    //protected $reservas; ///array ids
+    
+    //protected $pais;
 
     function __construct()
     {
@@ -93,6 +95,18 @@ class User
         return $this;
     }
 
+    public function getTelefono()
+    {
+        return $this->telefono;
+    }
+
+    public function setTelefono($telefono): self
+    {
+        $this->telefono = $telefono;
+
+        return $this;
+    }
+
     public function getTipo()
     {
         return $this->tipo;
@@ -106,7 +120,7 @@ class User
     }
 
 
-    public function getSolicitudes()
+    /*public function getSolicitudes()
     {
         return $this->solicitudes;
     }
@@ -156,5 +170,5 @@ class User
     public function addReserva(Reserva $reserva)
     {
         array_push($this->reservas, $reserva);
-    }
+    }*/
 }

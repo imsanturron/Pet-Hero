@@ -2,10 +2,10 @@
 
 namespace Models;
 
-use JsonSerializable;
-use Serializable;
+//use JsonSerializable;
+//use Serializable;
 
-class Solicitud implements JsonSerializable
+class Solicitud //implements JsonSerializable
 {
 
     protected $id;
@@ -16,10 +16,9 @@ class Solicitud implements JsonSerializable
     protected $dniDueno;
     protected $nombreGuardian;
     protected $dniGuardian;
-    protected $direccion;//guardain
-    //protected $direccion;//dueno
-    //protected $telefono;//guardain
-    //protected $telefono;//dueno
+    protected $direccionGuardian;
+    protected $telefonoGuardian;
+    protected $telefonoDueno;
 
 
     public function  __construct($animales = null, $desde = "", $hasta = "")
@@ -29,10 +28,12 @@ class Solicitud implements JsonSerializable
         $this->fechaFin = $hasta;
     }
 
-    public function jsonSerialize(){
+    /*public function jsonSerialize(){
         $solicitud["id"] = $this->id;
-    }
+    }*/
 
+
+    
 
     public function getId()
     {
@@ -130,15 +131,38 @@ class Solicitud implements JsonSerializable
         return $this;
     }
 
- 
-    public function getDireccion()
+    public function getDireccionGuardian()
     {
-        return $this->direccion;
+        return $this->direccionGuardian;
     }
 
-    public function setDireccion($direccion): self
+    public function setDireccionGuardian($direccionGuardian): self
     {
-        $this->direccion = $direccion;
+        $this->direccionGuardian = $direccionGuardian;
+
+        return $this;
+    }
+
+    public function getTelefonoGuardian()
+    {
+        return $this->telefonoGuardian;
+    }
+
+    public function setTelefonoGuardian($telefonoGuardian): self
+    {
+        $this->telefonoGuardian = $telefonoGuardian;
+
+        return $this;
+    }
+
+    public function getTelefonoDueno()
+    {
+        return $this->telefonoDueno;
+    }
+
+    public function setTelefonoDueno($telefonoDueno): self
+    {
+        $this->telefonoDueno = $telefonoDueno;
 
         return $this;
     }

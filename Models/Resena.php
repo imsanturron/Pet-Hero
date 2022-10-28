@@ -2,9 +2,9 @@
 
 class Resena
 {
-    private $puntaje;
-    private $fecha;
-    private $observacion;
+    private $puntaje; ///del 1 al 10
+    private $fecha; ///que se hizo la observacion
+    private $observacion; ///comentarios
 
     public function getPuntaje()
     {
