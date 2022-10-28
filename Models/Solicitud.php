@@ -2,6 +2,8 @@
 
 namespace Models;
 
+use Models\Guardian as Guardian;
+use Models\Dueno as Dueno;
 //use JsonSerializable;
 //use Serializable;
 
@@ -9,7 +11,7 @@ class Solicitud //implements JsonSerializable
 {
 
     protected $id;
-    protected $animales;
+    //protected $animales;
     protected $fechaInicio;
     protected $fechaFin;
     protected $nombreDueno;
@@ -17,15 +19,23 @@ class Solicitud //implements JsonSerializable
     protected $nombreGuardian;
     protected $dniGuardian;
     protected $direccionGuardian;
-    protected $telefonoGuardian;
     protected $telefonoDueno;
+    protected $telefonoGuardian;
 
 
-    public function  __construct($animales = null, $desde = "", $hasta = "")
+    public function  __construct(Guardian $guardian = null, Dueno $dueno = null, $desde = "", $hasta = "")
     {
-        $this->animales = $animales;
-        $this->fechaInicio = $desde;
-        $this->fechaFin = $hasta;
+        if (isset($guardian) && isset($dueno) && isset($desde)) {
+            $this->fechaInicio = $desde;
+            $this->fechaFin = $hasta;
+            $this->nombreDueno = $dueno->getNombre();
+            $this->dniDueno = $dueno->getDni();
+            $this->nombreGuardian = $guardian->getNombre();
+            $this->dniGuardian = $guardian->getdni();
+            $this->direccionGuardian = $guardian->getDireccion();
+            $this->telefonoDueno = $dueno->getTelefono();
+            $this->telefonoGuardian = $guardian->getTelefono();
+        }
     }
 
     /*public function jsonSerialize(){
@@ -33,7 +43,7 @@ class Solicitud //implements JsonSerializable
     }*/
 
 
-    
+
 
     public function getId()
     {
@@ -47,7 +57,7 @@ class Solicitud //implements JsonSerializable
         return $this;
     }
 
-    public function getAnimales()
+    /*public function getAnimales()
     {
         return $this->animales;
     }
@@ -57,7 +67,7 @@ class Solicitud //implements JsonSerializable
         $this->animales = $animales;
 
         return $this;
-    }
+    }*/
 
     public function getFechaInicio()
     {

@@ -2,12 +2,12 @@
 
 namespace Controllers;
 
-use DAO\JSON\GuardianDAO as GuardianDao;
-//use DAO\MYSQL\GuardianDAO as GuardianDao;
-use DAO\JSON\DuenoDAO as DuenoDAO;
-//use DAO\MYSQL\DuenoDAO as DuenoDAO;
-use DAO\JSON\UserDAO as UserDAO;
-//use DAO\MYSQL\UserDAO as UserDAO;
+//use DAO\JSON\GuardianDAO as GuardianDao;
+use DAO\MYSQL\GuardianDAO as GuardianDao;
+//use DAO\JSON\DuenoDAO as DuenoDAO;
+use DAO\MYSQL\DuenoDAO as DuenoDAO;
+//use DAO\JSON\UserDAO as UserDAO;
+use DAO\MYSQL\UserDAO as UserDAO;
 use Models\Guardian as Guardian;
 use Models\Dueno as Dueno;
 use Models\Alert as Alert; ////////////
@@ -25,10 +25,12 @@ class AuthController
   {
     $users = new UserDAO;
     $tipo = $users->getTipoByUsername($username);
+    //print_r($tipo);
     $bool = false;
 
     if ($tipo) {
       if ($tipo == 'g') {
+        //echo "aaaaaaaaaaaaaaaaaaaaaaaaaaaa";
         $guardianes = new GuardianDAO;
         $guardianx = new Guardian;
         $guardianx = $guardianes->getByUsername($username);
@@ -46,6 +48,7 @@ class AuthController
         $duenos = new DuenoDAO;
         $duenox = new Dueno;
         $duenox = $duenos->getByUsername($username);
+        //var_dump($duenox);
         if ($duenox && $duenox->getPassword() == $password) {
           $bool = true;
           $_SESSION["loggedUser"] = $duenox;

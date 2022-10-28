@@ -116,17 +116,16 @@ class GuardianDAO
             $valueArray["username"] = $guardian->getUsername();
             $valueArray["password"] = $guardian->getPassword();
             $valueArray["dni"] = $guardian->getDni();
-            $valueArray["cuil"] = $guardian->getCuil();
             $valueArray["precio"] = $guardian->getPrecio();
             $valueArray["nombre"] = $guardian->getNombre();
             $valueArray["email"] = $guardian->getEmail();
             $valueArray["tipo"] = $guardian->getTipo();
-            $valueArray["reservas"] = $guardian->getReservas();
+            //$valueArray["reservas"] = $guardian->getReservas();
             $valueArray["direccion"] = $guardian->getDireccion();
             $valueArray["telefono"] = $guardian->getTelefono();
             $valueArray["FechaInicio"] = $guardian->getDisponibilidadInicio();
             $valueArray["FechaFin"] = $guardian->getDisponibilidadFin();
-            $valueArray["solicitudes"] = $guardian->getSolicitudes();
+            //$valueArray["solicitudes"] = $guardian->getSolicitudes();
             $valueArray["tamanoMasc"] = $guardian->getTamanoACuidar();
             array_push($arrayToEncode, $valueArray);
         }
@@ -152,14 +151,13 @@ class GuardianDAO
                 $usuario->setPrecio($valueArray["precio"]);
                 $usuario->setDni($valueArray["dni"]);
                 $usuario->setEmail($valueArray["email"]);
-                $usuario->setCuil($valueArray["cuil"]);
                 $usuario->setDireccion($valueArray["direccion"]);
                 $usuario->setTelefono($valueArray["telefono"]);
                 $usuario->setTipo($valueArray["tipo"]);
-                $usuario->setReservas($valueArray["reservas"]);
+                //$usuario->setReservas($valueArray["reservas"]);
                 $usuario->setDisponibilidadInicio($valueArray["FechaInicio"]);
                 $usuario->setDisponibilidadFin($valueArray["FechaFin"]);
-                $usuario->setSolicitudes($valueArray["solicitudes"]);
+                //$usuario->setSolicitudes($valueArray["solicitudes"]);
                 $usuario->setTamanoACuidar($valueArray["tamanoMasc"]);
                 array_push($this->usuarioList, $usuario);
             }

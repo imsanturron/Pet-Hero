@@ -2,12 +2,16 @@
 include('nav-bar.php');
 
 use Config\Autoload as Autoload;
-use DAO\MascotaDAO as MascotaDAO;
-use DAO\GuardianDAO as GuardianDAO;
+use DAO\MYSQL\MascotaDAO as MascotaDAO;
+//use DAO\JSON\MascotaDAO as MascotaDAO;
+use DAO\MYSQL\GuardianDAO as GuardianDAO;
+//use DAO\JSON\GuardianDAO as GuardianDAO;
 use Models\Guardian as Guardian;;
 
 $mascotasDao = new MascotaDAO();
 $listaMascotas = $mascotasDao->GetAll();
+$guardianes = new GuardianDAO();
+$guardian = $guardianes->getByDni($dni);
 
 ?>
 <main class="py-5">

@@ -2,6 +2,7 @@
 class Mascota{
 
     private $dniDueno; //FK
+    private $idSoliRes; //FK
     private $id; //PK
     private $especie;
     private $nombre;
@@ -151,6 +152,18 @@ class Mascota{
     public function setEspecie($especie): self
     {
         $this->especie = $especie;
+
+        return $this;
+    }
+
+    public function getIdSoliRes()
+    {
+        return $this->idSoliRes;
+    }
+
+    public function setIdSoliRes($idSoliRes): self
+    {
+        $this->idSoliRes = $idSoliRes;
 
         return $this;
     }

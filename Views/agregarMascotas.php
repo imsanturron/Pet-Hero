@@ -36,8 +36,8 @@ include('nav-bar.php');
               <tr>
                 <td style="max-width: 100px;">
                   <select name="especie" required>
-                    <option value="gato"> Perro </option>
-                    <option value="perro"> Gato </option>
+                    <option value="gato"> Gato </option>
+                    <option value="perro"> Perro </option>
                 </td>
                 <td>
                   <input type="text" name="nombre" required> <? //ver como hacer menu distinto ?>

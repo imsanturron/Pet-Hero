@@ -3,6 +3,7 @@
 class Imagen
 {
     private $id;
+    private $idMascota;
     private $nombre;
     /*private $peso;
     private $formato;
@@ -81,4 +82,22 @@ class Imagen
 
         return $this;
     }*/
+
+    /**
+     * Get the value of idMascota
+     */
+    public function getIdMascota()
+    {
+        return $this->idMascota;
+    }
+
+    /**
+     * Set the value of idMascota
+     */
+    public function setIdMascota($idMascota): self
+    {
+        $this->idMascota = $idMascota;
+
+        return $this;
+    }
 }
