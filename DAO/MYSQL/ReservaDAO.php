@@ -19,18 +19,20 @@ class ReservaDAO
     {
         try
         {
-            $query = "INSERT INTO ".$this->tableName." (id, animales, FechaInicio, FechaFin, nombreDueno, dniDueno, nombreGuardian, dniGuardian, direccion, estado)
-             VALUES (:id, :animales, :FechaInicio, :FechaFin, :nombreDueno, :dniDueno, :nombreGuardian, :dniGuardian, :direccion, :estado);";
+            $query = "INSERT INTO ".$this->tableName." (id, FechaInicio, FechaFin, nombreDueno, dniDueno, nombreGuardian, dniGuardian, direccionGuardian, telefonoDueno, telefonoGuardian, estado)
+             VALUES (:id, :FechaInicio, :FechaFin, :nombreDueno, :dniDueno, :nombreGuardian, :dniGuardian, :direccionGuardian, :telefonoDueno, :telefonoGuardian, :estado);";
             
               $parameters["id"] = $reserva->getId();
-              $parameters["animales"] = $reserva->getAnimales();
+              //$parameters["animales"] = $reserva->getAnimales();
               $parameters["FechaInicio"] = $reserva->getFechaInicio();
               $parameters["FechaFin"] = $reserva->getFechaFin();
               $parameters["nombreDueno"] = $reserva->getNombreDueno();
               $parameters["dniDueno"] = $reserva->getDniDueno();
               $parameters["nombreGuardian"] = $reserva->getNombreGuardian();
               $parameters["dniGuardian"] = $reserva->getDniGuardian();
-              $parameters["direccion"] = $reserva->getDireccion();
+              $parameters["direccionGuardian"] = $reserva->getDireccionGuardian();
+              $parameters["telefonoDueno"] = $reserva->getTelefonoDueno();
+              $parameters["telefonoGuardian"] = $reserva->getTelefonoGuardian();
               $parameters["estado"] = $reserva->getEstado();
             $this->connection = Connection::GetInstance();
             $this->connection->ExecuteNonQuery($query, $parameters);
@@ -54,14 +56,16 @@ class ReservaDAO
                 {                
                     $reserva = new Reserva();
                     $reserva->setId($row["id"]);
-                    $reserva->setAnimales($row["animales"]);
+                    //$reserva->setAnimales($row["animales"]);
                     $reserva->setFechaInicio($row["FechaInicio"]);
                     $reserva->setFechaFin($row["FechaFin"]);
                     $reserva->setNombreDueno($row["nombreDueno"]);
                     $reserva->setDniDueno($row["dniDueno"]);
                     $reserva->setNombreGuardian($row["nombreGuardian"]);
                     $reserva->setDniGuardian($row["dniGuardian"]);
-                    $reserva->setDireccion($row["direccion"]);
+                    $reserva->setDireccionGuardian($row["direccionGuardian"]);
+                    $reserva->setTelefonoDueno($row["telefonoDueno"]);
+                    $reserva->setTelefonoGuardian($row["telefonoGuardian"]);
                     $reserva->setEstado($row["estado"]);
                     array_push($reservaList, $reserva);
                 }

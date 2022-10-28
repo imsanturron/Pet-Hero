@@ -19,20 +19,23 @@ class SolicitudDAO
     {
         try
         {
-            $query = "INSERT INTO ".$this->tableName." (id, animales, FechaInicio, FechaFin, nombreDueno, dniDueno, nombreGuardian, dniGuardian, direccion)
-             VALUES (:id, :animales, :FechaInicio, :FechaFin, :nombreDueno, :dniDueno, :nombreGuardian, :dniGuardian, :direccion);";
+            $query = "INSERT INTO ".$this->tableName." (id, FechaInicio, FechaFin, nombreDueno, dniDueno, nombreGuardian, dniGuardian, direccionGuardian, telefonoDueno, telefonoGuardian)
+             VALUES (:id, :FechaInicio, :FechaFin, :nombreDueno, :dniDueno, :nombreGuardian, :dniGuardian, :direccionGuardian, :telefonoDueno, :telefonoGuardian);";
             
-              $parameters["id"] = $solicitud->getId();
-              $parameters["animales"] = $solicitud->getAnimales();
+              $parameters["id"] = $solicitud->getId(); ///ver tema de ids
+              //$parameters["animales"] = $solicitud->getAnimales();
               $parameters["FechaInicio"] = $solicitud->getFechaInicio();
               $parameters["FechaFin"] = $solicitud->getFechaFin();
               $parameters["nombreDueno"] = $solicitud->getNombreDueno();
               $parameters["dniDueno"] = $solicitud->getDniDueno();
               $parameters["nombreGuardian"] = $solicitud->getNombreGuardian();
               $parameters["dniGuardian"] = $solicitud->getDniGuardian();
-              $parameters["direccion"] = $solicitud->getDireccion();
+              $parameters["direccionGuardian"] = $solicitud->getDireccionGuardian();
+              $parameters["telefonoDueno"] = $solicitud->getTelefonoDueno();
+              $parameters["telefonoGuardian"] = $solicitud->getTelefonoGuardian();
             $this->connection = Connection::GetInstance();
             $this->connection->ExecuteNonQuery($query, $parameters);
+
         }
         catch(Exception $ex)
         {
@@ -53,14 +56,16 @@ class SolicitudDAO
                 {                
                     $solicitud = new Solicitud();
                     $solicitud->setId($row["id"]);
-                    $solicitud->setAnimales($row["animales"]);
+                    //$solicitud->setAnimales($row["animales"]);
                     $solicitud->setFechaInicio($row["FechaInicio"]);
                     $solicitud->setFechaFin($row["FechaFin"]);
                     $solicitud->setNombreDueno($row["nombreDueno"]);
                     $solicitud->setDniDueno($row["dniDueno"]);
                     $solicitud->setNombreGuardian($row["nombreGuardian"]);
                     $solicitud->setDniGuardian($row["dniGuardian"]);
-                    $solicitud->setDireccion($row["direccion"]);
+                    $solicitud->setDireccionGuardian($row["direccionGuardian"]);
+                    $solicitud->setTelefonoDueno($row["telefonoDueno"]);
+                    $solicitud->setTelefonoGuardian($row["telefonoGuardian"]);
                     array_push($solicitudList, $solicitud);
                 }
                 return $solicitudList;

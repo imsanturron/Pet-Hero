@@ -18,14 +18,15 @@ class MascotaDAO
     {
         try
         {
-            $query = "INSERT INTO ".$this->tableName." (id, nombre, especie, raza, dueno, tamano, observaciones)
-             VALUES (:id, :nombre, :especie, :raza, :dueno, :tamano, :observaciones);";
+            $query = "INSERT INTO ".$this->tableName." (id, nombre, especie, raza, dueno, idSoliRes, tamano, observaciones)
+             VALUES (:id, :nombre, :especie, :raza, :dueno, :idSoliRes, :tamano, :observaciones);";
             
               $parameters["id"] = $mascota->getId();
               $parameters["nombre"] = $mascota->getNombre();
               $parameters["especie"] = $mascota->getEspecie();
               $parameters["raza"] = $mascota->getRaza();
               $parameters["dueno"] = $mascota->getDniDueno();
+              $parameters["idSoliRes"] = $mascota->getIdSoliRes();
               $parameters["tamano"] = $mascota->getTamano();
               $parameters["observaciones"] = $mascota->getObservaciones();
               //$parameters["fotoMascota"] = $mascota->getFotoMascota();
@@ -58,6 +59,7 @@ class MascotaDAO
                     $mascota->setRaza($row["raza"]);
                     $mascota->setEspecie($row["especie"]);
                     $mascota->setDniDueno($row["dueno"]);
+                    $mascota->setIdSoliRes($row["idSoliRes"]);
                     $mascota->setTamano($row["tamano"]);
                     $mascota->setObservaciones($row["observaciones"]);
                     //$mascota->setFotoMascota($row["fotoMascota"]);
@@ -71,6 +73,41 @@ class MascotaDAO
             {
                 throw $ex;
             }
+        }
+
+        function getArrayByIds($ids) /////
+        {
+          try {
+            $mascotaList = array();
+      
+            foreach($ids as $id){
+            $query = "SELECT * FROM " . $this->tableName . " WHERE id = :id";
+      
+            $parameters["id"] = $id;
+      
+            $this->connection = Connection::GetInstance();
+      
+            $resultSet = $this->connection->Execute($query, $parameters);
+      
+            foreach ($resultSet as $row) {
+                $mascota = new Mascota();
+                $mascota->setId($row["id"]);
+                $mascota->setNombre($row["nombre"]);
+                $mascota->setRaza($row["raza"]);
+                $mascota->setEspecie($row["especie"]);
+                $mascota->setDniDueno($row["dueno"]);
+                $mascota->setIdSoliRes($row["idSoliRes"]);
+                $mascota->setTamano($row["tamano"]);
+                $mascota->setObservaciones($row["observaciones"]);
+                array_push($mascotaList, $mascota);
+              ////////
+            }
+        }
+      
+            return $mascotaList;
+          } catch (Exception $ex) {
+            throw $ex;
+          }
         }
 
     /*public function __construct()

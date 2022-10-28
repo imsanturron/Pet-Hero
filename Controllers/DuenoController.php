@@ -8,8 +8,11 @@ use Models\Guardian as Guardian;
 use Models\Alert as Alert;
 //use DAO\JSON\DuenoDAO as DuenoDAO;
 use DAO\MYSQL\DuenoDAO as DuenoDAO;
-use DAO\JSON\GuardianDAO as GuardianDAO;
-use DAO\JSON\MascotaDAO;
+//use DAO\JSON\GuardianDAO as GuardianDAO;
+use DAO\MYSQL\GuardianDAO as GuardianDAO;
+//use DAO\JSON\MascotaDAO;
+use DAO\MYSQL\MascotaDAO;
+use DAO\MYSQL\SolicitudDAO;
 //use DAO\JSON\UserDAO as UserDAO;
 use DAO\MYSQL\UserDAO as UserDAO;
 
@@ -52,9 +55,11 @@ class DuenoController
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             $valid = AuthController::ValidarFecha($desde, $hasta); //arreglar
-            if ($valid)
+            if ($valid) {
+                //$guardianDao = new GuardianDAO();
+                //$listaguardianes = $guardianDao->GetAll(); no me deja asi no se xq
                 require_once(VIEWS_PATH . "verGuardianes.php");
-            else {
+            } else {
                 $alert = new Alert("warning", "Fecha invalida");
                 $this->login($alert);
             }
@@ -70,9 +75,9 @@ class DuenoController
     public function ElegirGuardian($dni, $desde, $hasta)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
-            $guardianes = new GuardianDAO();
-            //$guardian = new Guardian(); /////////////
-            $guardian = $guardianes->getByDni($dni);
+            ////$guardianes = new GuardianDAO();
+            ////$guardian = new Guardian(); /////////////
+            ////$guardian = $guardianes->getByDni($dni); no deja tampoco no se xq
             require_once(VIEWS_PATH . "solicitarCuidadoMasc.php");
             //$guardianes->remove($guardian);// DESCOMENTAR CUANDO PUEDA RETORNAR SOLICITUDES
             //$solicitud = new Solicitud($desde, $hasta);
@@ -89,15 +94,20 @@ class DuenoController
     {
         $mascotas = new MascotaDAO();
         //print_r($animales);
-        $arrayMascotas = array();
         $arrayMascotas = $mascotas->getArrayByIds($animales); ///y mandar mascotas que ya tenga
+        //var_dump($animales);
+        //echo " /////// ";
+        //print_r($arrayMascotas);
+        //echo "<br><br><br> ";
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             $valid = AuthController::ValidarMismaRaza($arrayMascotas); ////////!arreglar!////+mascotas que tenga//
             if ($valid) {
+                echo "aaaaaaaaaaa";
                 $guardianes = new GuardianDAO();
-                $solicitud = new Solicitud($arrayMascotas, $desde, $hasta);
-                //print_r($solicitud);
-                $guardianes->addSolicitudDao($solicitud, $dni); //*****************//
+                $guardian = $guardianes->getByDni($dni);
+                $solicitud = new Solicitud($guardian, $_SESSION["loggedUser"], $desde, $hasta);
+                $solicitudesD = new SolicitudDAO;
+                $solicitudesD->Add($solicitud);
                 $alert = new Alert("success", "Solicitud enviada!");
                 $this->login($alert);
             } else {

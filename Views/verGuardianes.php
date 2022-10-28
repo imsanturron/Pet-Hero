@@ -3,7 +3,6 @@ include('nav-bar.php');
 ?>
 <?php
 
-use Config\Autoload as Autoload;
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
 //use DAO\JSON\GuardianDAO as GuardianDAO;
 use Models\Guardian as Guardian;

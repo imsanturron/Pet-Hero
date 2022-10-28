@@ -10,6 +10,8 @@ use Models\Guardian as Guardian;;
 
 $mascotasDao = new MascotaDAO();
 $listaMascotas = $mascotasDao->GetAll();
+$guardianes = new GuardianDAO();
+$guardian = $guardianes->getByDni($dni);
 
 ?>
 <main class="py-5">

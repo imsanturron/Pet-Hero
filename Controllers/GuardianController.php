@@ -8,6 +8,7 @@ use Models\Solicitud as Solicitud;
 use Models\Reserva as Reserva;
 //use DAO\JSON\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
+use DAO\MYSQL\SolicitudDAO;
 //use DAO\JSON\UserDAO as UserDAO;
 use DAO\MYSQL\UserDAO as UserDAO;
 
@@ -54,6 +55,8 @@ class GuardianController
                 ///sin terminar
                 require_once(VIEWS_PATH . "perfilGuardian.php");
             } else if ($opcion == "verSolicitudes") {
+                $solicitudes = new SolicitudDAO;
+                $solis = $solicitudes->GetAll(); ///get all by id desp
                 require_once(VIEWS_PATH . "verSolicitudes.php");
             }
         }
@@ -88,6 +91,7 @@ class GuardianController
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
             if ($operacion == "aceptar") {
+                //$solicitud = new SolicitudDAO();
                 $soli = $_SESSION["loggedUser"]->getSolicitudById($solicitudId);
                 $reserva = new Reserva($soli);
                 $_SESSION["loggedUser"]->addReserva($reserva);
