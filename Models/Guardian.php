@@ -4,8 +4,6 @@ namespace Models;
 
 class Guardian extends User
 {
-
-    private $cuil;
     private $disponibilidadInicio;
     private $disponibilidadFin;
     private $precio;
@@ -16,18 +14,6 @@ class Guardian extends User
     {
         parent::__construct();
         $this->tipo = 'g';
-    }
-
-    public function getCuil()
-    {
-        return $this->cuil;
-    }
-
-    public function setCuil($cuil): self
-    {
-        $this->cuil = $cuil;
-
-        return $this;
     }
 
     public function getPrecio()

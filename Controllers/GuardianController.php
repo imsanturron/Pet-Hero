@@ -6,8 +6,10 @@ use Models\Guardian;
 use Models\Alert as Alert;
 use Models\Solicitud as Solicitud;
 use Models\Reserva as Reserva;
-use DAO\JSON\GuardianDAO as GuardianDAO;
-use DAO\JSON\UserDAO as UserDAO;
+//use DAO\JSON\GuardianDAO as GuardianDAO;
+use DAO\MYSQL\GuardianDAO as GuardianDAO;
+//use DAO\JSON\UserDAO as UserDAO;
+use DAO\MYSQL\UserDAO as UserDAO;
 
 class GuardianController
 {
@@ -102,7 +104,7 @@ class GuardianController
         $this->login($alert);
     }
 
-    public function Add($username, $password, $nombre, $dni, $email, $cuil, $direccion, $telefono, $precio, $tamanoMasc)
+    public function Add($username, $password, $nombre, $dni, $email, $direccion, $telefono, $precio, $tamanoMasc)
     {
         $valid = AuthController::ValidarUsuario($username, $dni, $email);
         if ($valid) {
@@ -111,7 +113,6 @@ class GuardianController
             $guardian->setPassword($password);
             $guardian->setNombre($nombre);
             $guardian->setDni($dni);
-            $guardian->setCuil($cuil);
             $guardian->setEmail($email);
             $guardian->setDireccion($direccion);
             $guardian->setTelefono($telefono);
@@ -129,7 +130,7 @@ class GuardianController
         }
     }
 
-    public function Remove($dni)
+    /*public function Remove($dni)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
             $bien = $this->guardianDAO->Remove($dni);
@@ -141,5 +142,5 @@ class GuardianController
             $this->home($alert);
         } else
             $this->home();
-    }
+    }*/
 }

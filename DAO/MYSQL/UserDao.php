@@ -93,14 +93,18 @@ class UserDAO
 
       $resultSet = $this->connection->Execute($query, $parameters);
 
-      /*foreach ($resultSet as $row) {
+      foreach ($resultSet as $row) {
                 $usuario = new User();
-                $usuario->setDni($row["dni"]);
-                $usuario->setNombre($row["nombre"]);
+                //$usuario->setUserName($row["username"]);
+                //$usuario->setPassword($row["password"]);
+                //$usuario->setDni($row["dni"]);
+                //$usuario->setEmail($row["email"]);
+                $usuario->setTipo($row["tipo"]);
                 ////////
-            }*/
+            }
 
-      return $resultSet;
+      //return $resultSet;
+      return $usuario->getTipo();
     } catch (Exception $ex) {
       throw $ex;
     }

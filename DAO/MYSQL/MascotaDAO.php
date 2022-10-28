@@ -14,19 +14,23 @@ class MascotaDAO
     //private $filename;
 
     
-    public function Add(Mascota $dueno)
+    public function Add(Mascota $mascota)
     {
         try
         {
-            $query = "INSERT INTO ".$this->tableName." (nombre, raza, dueno, tamano, observaciones, fotoMascota)
-             VALUES (:nombre, :raza, :dueno, :tamano, :observaciones, :fotoMascota);";
+            $query = "INSERT INTO ".$this->tableName." (id, nombre, especie, raza, dueno, tamano, observaciones)
+             VALUES (:id, :nombre, :especie, :raza, :dueno, :tamano, :observaciones);";
             
-              $parameters["nombre"] = $dueno->getNombre();
-              $parameters["raza"] = $dueno->getRaza();
-              $parameters["dueno"] = $dueno->getDniDueno();
-              $parameters["tamano"] = $dueno->getTamano();
-              $parameters["observaciones"] = $dueno->getObservaciones();
-              $parameters["fotoMascota"] = $dueno->getFotoMascota();
+              $parameters["id"] = $mascota->getId();
+              $parameters["nombre"] = $mascota->getNombre();
+              $parameters["especie"] = $mascota->getEspecie();
+              $parameters["raza"] = $mascota->getRaza();
+              $parameters["dueno"] = $mascota->getDniDueno();
+              $parameters["tamano"] = $mascota->getTamano();
+              $parameters["observaciones"] = $mascota->getObservaciones();
+              //$parameters["fotoMascota"] = $mascota->getFotoMascota();
+              //$parameters["video"] = $mascota->getVideo();
+              //$parameters["planVacunacion"] = $mascota->getPlanVacunacion();
               ///
             $this->connection = Connection::GetInstance();
             $this->connection->ExecuteNonQuery($query, $parameters);
@@ -49,12 +53,16 @@ class MascotaDAO
                 foreach ($resultSet as $row)
                 {                
                     $mascota = new Mascota();
+                    $mascota->setId($row["id"]);
                     $mascota->setNombre($row["nombre"]);
                     $mascota->setRaza($row["raza"]);
+                    $mascota->setEspecie($row["especie"]);
                     $mascota->setDniDueno($row["dueno"]);
                     $mascota->setTamano($row["tamano"]);
                     $mascota->setObservaciones($row["observaciones"]);
-                    $mascota->setFotoMascota($row["fotoMascota"]);
+                    //$mascota->setFotoMascota($row["fotoMascota"]);
+                    //$mascota->setVideo($row["video"]);
+                    //$mascota->setPlanVacunacion($row["planVacunacion"]);
                     array_push($mascotaList, $mascota);
                 }
                 return $mascotaList;

@@ -17,8 +17,8 @@ class GuardianDAO
     public function Add(Guardian $guardian)
     {
         try {
-            $query = "INSERT INTO " . $this->tableName . " (username, nombre, password, precio, dni, email, cuil, direccion, tipo, FechaInicio, FechaFin)
-             VALUES (:username, :nombre, :password, :precio, :dni, :email, :cuil, :direccion, :tipo, :FechaInicio, :FechaFin);";
+            $query = "INSERT INTO " . $this->tableName . " (username, nombre, password, precio, dni, email, telefono, direccion, tipo, FechaInicio, FechaFin, tamanoACuidar)
+             VALUES (:username, :nombre, :password, :precio, :dni, :email, :telefono, :direccion, :tipo, :FechaInicio, :FechaFin, :tamanoACuidar);";
 
             $parameters["username"] = $guardian->getUsername();
             $parameters["nombre"] = $guardian->getNombre();
@@ -26,12 +26,13 @@ class GuardianDAO
             $parameters["precio"] = $guardian->getPrecio();
             $parameters["dni"] = $guardian->getDni();
             $parameters["email"] = $guardian->getEmail();
-            $parameters["cuil"] = $guardian->getCuil();
+            $parameters["telefono"] = $guardian->getTelefono();
             $parameters["direccion"] = $guardian->getDireccion();
             $parameters["tipo"] = $guardian->getTipo();
             //$parameters["reservas"] = $guardian->getReservas();
             $parameters["FechaInicio"] = $guardian->getDisponibilidadInicio();
             $parameters["FechaFin"] = $guardian->getDisponibilidadFin();
+            $parameters["tamanoACuidar"] = $guardian->getTamanoACuidar();
             //$parameters["solicitudes"] = $guardian->getSolicitudes();
             $this->connection = Connection::GetInstance();
             $this->connection->ExecuteNonQuery($query, $parameters);
@@ -56,12 +57,14 @@ class GuardianDAO
                 $guardian->setPrecio($row["precio"]);
                 $guardian->setDni($row["dni"]);
                 $guardian->setEmail($row["email"]);
-                $guardian->setCuil($row["cuil"]);
+                $guardian->setTelefono($row["telefono"]);
                 $guardian->setDireccion($row["direccion"]);
                 $guardian->setTipo($row["tipo"]);
                 //$guardian->setReservas($row["reservas"]);
                 $guardian->setDisponibilidadInicio($row["FechaInicio"]);
                 $guardian->setDisponibilidadFin($row["FechaFin"]);
+                $guardian->setTamanoACuidar($row["tamanoACuidar"]);
+                //$guardian->setReputacion($row["reputacion"]);
                 //$guardian->setSolicitudes($row["solicitudes"]);
                 array_push($guardianList, $guardian);
             }
@@ -86,8 +89,18 @@ class GuardianDAO
 
             foreach ($resultSet as $row) {
                 $guardian = new Guardian();
-                $guardian->setDni($row["dni"]);
+                $guardian->setUserName($row["username"]);
                 $guardian->setNombre($row["nombre"]);
+                $guardian->setPassword($row["password"]);
+                $guardian->setPrecio($row["precio"]);
+                $guardian->setDni($row["dni"]);
+                $guardian->setEmail($row["email"]);
+                $guardian->setTelefono($row["telefono"]);
+                $guardian->setDireccion($row["direccion"]);
+                $guardian->setTipo($row["tipo"]);
+                $guardian->setDisponibilidadInicio($row["FechaInicio"]);
+                $guardian->setDisponibilidadFin($row["FechaFin"]);
+                $guardian->setTamanoACuidar($row["tamanoACuidar"]);
                 ////////
             }
 
@@ -96,7 +109,7 @@ class GuardianDAO
             throw $ex;
         }
     }
-    
+
 
     function getByUsername($username)
     {
@@ -113,14 +126,43 @@ class GuardianDAO
 
             foreach ($resultSet as $row) {
                 $guardian = new Guardian();
-                $guardian->setDni($row["dni"]);
+                $guardian->setUserName($row["username"]);
                 $guardian->setNombre($row["nombre"]);
+                $guardian->setPassword($row["password"]);
+                $guardian->setPrecio($row["precio"]);
+                $guardian->setDni($row["dni"]);
+                $guardian->setEmail($row["email"]);
+                $guardian->setTelefono($row["telefono"]);
+                $guardian->setDireccion($row["direccion"]);
+                $guardian->setTipo($row["tipo"]);
+                $guardian->setDisponibilidadInicio($row["FechaInicio"]);
+                $guardian->setDisponibilidadFin($row["FechaFin"]);
+                $guardian->setTamanoACuidar($row["tamanoACuidar"]);
                 ////////
             }
 
             return $guardian;
         } catch (Exception $ex) {
             throw $ex;
+        }
+    }
+
+    public function updateDisponibilidad($dni, $fini, $ffin)
+    {
+        try {
+            $query = "UPDATE " . $this->tableName . " SET FechaInicio = :FechaInicio, FechaFin = :FechaFin WHERE dni = :dni;";
+
+            $parameters["FechaInicio"] = $fini;
+            $parameters["FechaFin"] = $ffin;
+            $parameters["dni"] = $dni;
+
+            $this->connection = Connection::GetInstance();
+
+            $this->connection->ExecuteNonQuery($query, $parameters);
+            return true;
+        } catch (Exception $ex) {
+            return false;
+            //throw $ex;
         }
     }
 

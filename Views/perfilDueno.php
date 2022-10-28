@@ -28,7 +28,7 @@ include('nav-bar.php');
                             <td><?php echo $_SESSION["loggedUser"]->getTelefono(); ?></td>
                             <td><?php if ($_SESSION["loggedUser"]->getMascotas())
                                     print_r($_SESSION["loggedUser"]->getMascotas());
-                                else
+                                else ///cambiar por mascota controllers
                                     echo "No hay mascotas cargadas";
                                 ?></td>
                             </tr>

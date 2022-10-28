@@ -2,8 +2,8 @@
 
 namespace Controllers;
 
-use DAO\JSON\MascotaDAO as MascotaDAO;
-//use DAO\MYSQL\MascotaDAO as MascotaDAOms;
+//use DAO\JSON\MascotaDAO as MascotaDAO;
+use DAO\MYSQL\MascotaDAO as MascotaDAO;
 use DateTime as DateTime;
 use Models\Alert;
 use Models\Mascota as Mascota;
@@ -80,7 +80,7 @@ class MascotaController
             $this->Index();
     }
 
-    public function Remove($id)
+    /*public function Remove($id)
     {
         if (isset($_SESSION["loggedUser"])) {
             $bien = $this->mascotaDAO->Remove($id); //modificar funcion
@@ -92,5 +92,5 @@ class MascotaController
             $this->loginDueno($alert);
         } else
             $this->Index();
-    }
+    }*/
 }

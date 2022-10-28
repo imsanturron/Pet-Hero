@@ -14,7 +14,6 @@ include('nav-bar.php');
                     <th>Password</th>
                     <th>Email</th>
                     <th>Direccion</th>
-                    <th>Cuil</th>
                     <th>Disponibilidad actual</th>
                     <th>Precio</th>
                     <th>Reservas</th>
@@ -27,7 +26,6 @@ include('nav-bar.php');
                             <td><?php echo "***"; ?></td>
                             <td><?php echo $_SESSION["loggedUser"]->getEmail(); ?></td>
                             <td><?php echo $_SESSION["loggedUser"]->getDireccion(); ?></td>
-                            <td><?php echo $_SESSION["loggedUser"]->getCuil(); ?></td>
                             <td><?php if ($_SESSION["loggedUser"]->getDisponibilidadInicio()) {
                                     echo $_SESSION["loggedUser"]->getDisponibilidadInicio() .
                                         " hasta " . $_SESSION["loggedUser"]->getDisponibilidadFin();

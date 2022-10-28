@@ -2,13 +2,14 @@
 include('nav-bar.php');
 
 use Config\Autoload as Autoload;
-use DAO\GuardianDAO as GuardianDAO;
+//use DAO\JSON\GuardianDAO as GuardianDAO;
+use DAO\MYSQL\GuardianDAO as GuardianDAO;
 use Models\Guardian as Guardian;
 use Models\Dueno as Dueno;
 
 if (isset($_SESSION['loggedUser'])) {
     $guardian = $_SESSION['loggedUser'];
-    $solicitudes = $guardian->getSolicitudes();
+    $solicitudes = $guardian->getSolicitudes(); ///CAMBIAR
 }
 ?>
 
