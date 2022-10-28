@@ -10,6 +10,7 @@ class Guardian extends User
     private $disponibilidadFin;
     private $precio;
     private $TamanoACuidar;
+    private $reputacion; ///tipo reseña o id de reseñas
 
     function __construct()
     {
@@ -83,6 +84,18 @@ class Guardian extends User
     public function setTamanoACuidar($TamanoACuidar): self
     {
         $this->TamanoACuidar = $TamanoACuidar;
+
+        return $this;
+    }
+
+    public function getReputacion()
+    {
+        return $this->reputacion;
+    }
+
+    public function setReputacion($reputacion): self
+    {
+        $this->reputacion = $reputacion;
 
         return $this;
     }

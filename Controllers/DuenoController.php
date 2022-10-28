@@ -6,10 +6,12 @@ use Models\Dueno as Dueno;
 use Models\Solicitud as Solicitud;
 use Models\Guardian as Guardian;
 use Models\Alert as Alert;
-use DAO\JSON\DuenoDAO as DuenoDAO;
+//use DAO\JSON\DuenoDAO as DuenoDAO;
+use DAO\MYSQL\DuenoDAO as DuenoDAO;
 use DAO\JSON\GuardianDAO as GuardianDAO;
 use DAO\JSON\MascotaDAO;
-use DAO\JSON\UserDAO as UserDAO;
+//use DAO\JSON\UserDAO as UserDAO;
+use DAO\MYSQL\UserDAO as UserDAO;
 
 class DuenoController
 {
@@ -142,7 +144,7 @@ class DuenoController
     }
 
     ////////////////////
-    public function Remove($dni)
+    /*public function Remove($dni)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             $bien = $this->duenoDAO->Remove($dni);
@@ -154,5 +156,5 @@ class DuenoController
             $this->home($alert);
         } else
             $this->home();
-    }
+    }*/
 }

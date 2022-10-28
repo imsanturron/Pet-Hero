@@ -16,8 +16,8 @@ class DuenoDAO
     public function Add(Dueno $dueno)
     {
         try {
-            $query = "INSERT INTO " . $this->tableName . " (nombre, username, password, dni, email, direccion, telefono, mascotas, tipo, solicitudes, reservas)
-             VALUES (:nombre, :username, :password, :dni, :email, :direccion, :telefono, :mascotas, :tipo, :solicitudes, :reservas);";
+            $query = "INSERT INTO " . $this->tableName . " (nombre, username, password, dni, email, direccion, telefono, tipo)
+             VALUES (:nombre, :username, :password, :dni, :email, :direccion, :telefono, :tipo);";
 
             $parameters["nombre"] = $dueno->getNombre();
             $parameters["username"] = $dueno->getUsername();
@@ -26,10 +26,10 @@ class DuenoDAO
             $parameters["email"] = $dueno->getEmail();
             $parameters["direccion"] = $dueno->getDireccion();
             $parameters["telefono"] = $dueno->getTelefono();
-            $parameters["mascotas"] = $dueno->getMascotas();
+            //$parameters["mascotas"] = $dueno->getMascotas();
             $parameters["tipo"] = $dueno->getTipo();
-            $parameters["solicitudes"] = $dueno->getSolicitudes();
-            $parameters["reservas"] = $dueno->getReservas();
+            //$parameters["solicitudes"] = $dueno->getSolicitudes();
+            //$parameters["reservas"] = $dueno->getReservas();
             $this->connection = Connection::GetInstance();
             $this->connection->ExecuteNonQuery($query, $parameters);
         } catch (Exception $ex) {
@@ -54,13 +54,46 @@ class DuenoDAO
                 $dueno->setEmail($row["email"]);
                 $dueno->setDireccion($row["direccion"]);
                 $dueno->setTelefono($row["telefono"]);
-                $dueno->setMascotas($row["mascotas"]);
+                //$dueno->setMascotas($row["mascotas"]);
                 $dueno->setTipo($row["tipo"]);
-                $dueno->setSolicitudes($row["solicitudes"]);
-                $dueno->setReservas($row["reservas"]);
+                //$dueno->setSolicitudes($row["solicitudes"]);
+                //$dueno->setReservas($row["reservas"]);
                 array_push($duenoList, $dueno);
             }
             return $duenoList;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    function getByUsername($username)
+    {
+        try {
+            $dueno = null;
+
+            $query = "SELECT * FROM " . $this->tableName . " WHERE username = :username";
+
+            $parameters["username"] = $username;
+
+            $this->connection = Connection::GetInstance();
+
+            $resultSet = $this->connection->Execute($query, $parameters);
+
+            foreach ($resultSet as $row) {
+                $dueno = new Dueno();
+                $dueno->setNombre($row["nombre"]);
+                $dueno->setUserName($row["username"]);
+                $dueno->setPassword($row["password"]);
+                $dueno->setDni($row["dni"]);
+                $dueno->setEmail($row["email"]);
+                $dueno->setDireccion($row["direccion"]);
+                $dueno->setTelefono($row["telefono"]);
+                $dueno->setTipo($row["tipo"]);
+
+                ////////
+            }
+
+            return $dueno;
         } catch (Exception $ex) {
             throw $ex;
         }

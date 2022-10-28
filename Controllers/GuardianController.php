@@ -102,7 +102,7 @@ class GuardianController
         $this->login($alert);
     }
 
-    public function Add($username, $password, $nombre, $dni, $email, $cuil, $direccion, $precio, $tamanoMasc)
+    public function Add($username, $password, $nombre, $dni, $email, $cuil, $direccion, $telefono, $precio, $tamanoMasc)
     {
         $valid = AuthController::ValidarUsuario($username, $dni, $email);
         if ($valid) {
@@ -114,6 +114,7 @@ class GuardianController
             $guardian->setCuil($cuil);
             $guardian->setEmail($email);
             $guardian->setDireccion($direccion);
+            $guardian->setTelefono($telefono);
             $guardian->setPrecio($precio);
             $guardian->setTamanoACuidar($tamanoMasc);
 
