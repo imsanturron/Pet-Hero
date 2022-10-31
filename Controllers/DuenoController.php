@@ -98,7 +98,7 @@ class DuenoController
        //print_r($arrayMascotas);
         //echo " /////// ";
         //print_r($arrayMascotas);
-        //echo "<br><br><br> ";
+        //echo "<br><br>";
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             $valid = AuthController::ValidarMismaRaza($arrayMascotas); ////////!arreglar!////+mascotas que tenga//
             if ($valid) {
@@ -109,8 +109,10 @@ class DuenoController
 
                 $solicitud = new Solicitud($guardian, $_SESSION["loggedUser"], $desde, $hasta);
                 $solicitudesD = new SolicitudDAO;
+                
                 $solicitudesD->Add($solicitud);
-                $mascotas->setIdSolicitudEnMascota($arrayMascotas,$solicitud->getId());//Esta funcion tendria que colocar el id de la solicitud en cada mascota que haya elegido
+                $idSolicitud=$solicitudesD->GetByDniDuenoYGuardian($solicitud->getDniDueno(),$solicitud->getDniGuardian());
+                $mascotas->setIdSolicitudEnMascota($arrayMascotas,$idSolicitud);//Esta funcion tendria que colocar el id de la solicitud en cada mascota que haya elegido
                
                 $alert = new Alert("success", "Solicitud enviada!");
                 $this->login($alert);

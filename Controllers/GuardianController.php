@@ -11,6 +11,7 @@ use DAO\MYSQL\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\SolicitudDAO;
 //use DAO\JSON\UserDAO as UserDAO;
 use DAO\MYSQL\UserDAO as UserDAO;
+use DAO\MYSQL\ReservaDAO as ReservaDAO;
 
 class GuardianController
 {
@@ -91,16 +92,30 @@ class GuardianController
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
             if ($operacion == "aceptar") {
-                //$solicitud = new SolicitudDAO();
-                $soli = $_SESSION["loggedUser"]->getSolicitudById($solicitudId);
-                $reserva = new Reserva($soli);
-                $_SESSION["loggedUser"]->addReserva($reserva);
-                $_SESSION["loggedUser"]->unsetSolicitud($solicitudId);
+                $solicitud = new SolicitudDAO();
+               // $soli = $_SESSION["loggedUser"]->getSolicitudById($solicitudId);
+               
+               $soli = $solicitud->GetById($solicitudId);
+               $reserva = new Reserva($soli);
+               $reservaDAO = new ReservaDAO();
+               $reservaDAO->add($reserva);
+               $resul=$solicitud->removeSolicitud($solicitudId);
                 ///********///
+                if($resul){
                 $alert = new Alert("success", "Solicitud aceptada");
+                }else{
+                    $alert = new Alert("warning", "No se borro la solicitud");
+                }
             } else if ($operacion == "rechazar") {
-                $_SESSION["loggedUser"]->unsetSolicitud($solicitudId);
-                $alert = new Alert("success", "Solicitud cancelada");
+               
+                $solicitud = new SolicitudDAO();
+                $resul=$solicutud->removeSolicitud($solicitudId);
+              
+                if($resul){
+                    $alert = new Alert("success", "Solicitud borrada con exito");
+                    }else{
+                        $alert = new Alert("warning", "No se borro la solicitud");
+                    }
             }
             $this->login($alert);
         }

@@ -19,11 +19,12 @@ class SolicitudDAO
     {
         try
         {
-            $query = "INSERT INTO ".$this->tableName." (id, FechaInicio, FechaFin, nombreDueno, dniDueno, nombreGuardian, dniGuardian, direccionGuardian, telefonoDueno, telefonoGuardian)
-             VALUES (:id, :FechaInicio, :FechaFin, :nombreDueno, :dniDueno, :nombreGuardian, :dniGuardian, :direccionGuardian, :telefonoDueno, :telefonoGuardian);";
+            $query = "INSERT INTO ".$this->tableName." ( FechaInicio, FechaFin, nombreDueno, dniDueno, nombreGuardian, dniGuardian, direccionGuardian, telefonoDueno, telefonoGuardian)
+             VALUES ( :FechaInicio, :FechaFin, :nombreDueno, :dniDueno, :nombreGuardian, :dniGuardian, :direccionGuardian, :telefonoDueno, :telefonoGuardian);";
             
-              $parameters["id"] = $solicitud->getId(); ///ver tema de ids
+             // $parameters["id"] = $solicitud->getId(); ///ver tema de ids
               //$parameters["animales"] = $solicitud->getAnimales();
+             
               $parameters["FechaInicio"] = $solicitud->getFechaInicio();
               $parameters["FechaFin"] = $solicitud->getFechaFin();
               $parameters["nombreDueno"] = $solicitud->getNombreDueno();
@@ -35,6 +36,7 @@ class SolicitudDAO
               $parameters["telefonoGuardian"] = $solicitud->getTelefonoGuardian();
             $this->connection = Connection::GetInstance();
             $this->connection->ExecuteNonQuery($query, $parameters);
+          
 
         }
         catch(Exception $ex)
@@ -92,9 +94,18 @@ class SolicitudDAO
                 
                 foreach ($resultSet as $row)
                 {                
-                    $solicitud = new Guardian();
-                    $solicitud->setDni($row["dni"]);
-                    $solicitud->setNombre($row["nombre"]);
+                    $solicitud = new Solicitud();
+                    $solicitud->setId($row["id"]);
+                    //$solicitud->setAnimales($row["animales"]);
+                    $solicitud->setFechaInicio($row["FechaInicio"]);
+                    $solicitud->setFechaFin($row["FechaFin"]);
+                    $solicitud->setNombreDueno($row["nombreDueno"]);
+                    $solicitud->setDniDueno($row["dniDueno"]);
+                    $solicitud->setNombreGuardian($row["nombreGuardian"]);
+                    $solicitud->setDniGuardian($row["dniGuardian"]);
+                    $solicitud->setDireccionGuardian($row["direccionGuardian"]);
+                    $solicitud->setTelefonoDueno($row["telefonoDueno"]);
+                    $solicitud->setTelefonoGuardian($row["telefonoGuardian"]);
                     ////////
                 }
 
@@ -106,6 +117,104 @@ class SolicitudDAO
             }
         }
 
+        function GetByDniDuenoYGuardian($dniDueno,$dniGuardian)
+        {
+            try
+            {
+                $solicitud = null;
+
+                $query = "SELECT id FROM ".$this->tableName." WHERE dniDueno = :dniDueno AND dniGuardian = :dniGuardian";
+
+         
+                $parameters["dniDueno"] = $dniDueno;
+                $parameters["dniGuardian"] = $dniGuardian;
+
+                $this->connection = Connection::GetInstance();
+
+                $resultSet = $this->connection->Execute($query, $parameters);
+                
+                foreach ($resultSet as $row)
+                {                
+                    $solicitud = new Solicitud();
+                    $solicitud->setId($row["id"]);
+                    
+                    ////////
+                }
+
+                return $solicitud->getId();
+            }
+            catch(Exception $ex)
+            {
+                throw $ex;
+            }
+        }
+
+
+
+        function getSolicitudesByDniGuardian($dniGuardian) /////
+        {
+          try {
+            $solicitudList = array();
+      
+           
+            $query = "SELECT * FROM " . $this->tableName . " WHERE dniGuardian = :dniGuardian";
+      
+            $parameters["dniGuardian"] = $dniGuardian;
+      
+            $this->connection = Connection::GetInstance();
+      
+            $resultSet = $this->connection->Execute($query, $parameters);
+      
+            foreach ($resultSet as $row) {
+                $solicitud = new Solicitud();
+                $solicitud->setId($row["id"]);
+                //$solicitud->setAnimales($row["animales"]);
+                $solicitud->setFechaInicio($row["FechaInicio"]);
+                $solicitud->setFechaFin($row["FechaFin"]);
+                $solicitud->setNombreDueno($row["nombreDueno"]);
+                $solicitud->setDniDueno($row["dniDueno"]);
+                $solicitud->setNombreGuardian($row["nombreGuardian"]);
+                $solicitud->setDniGuardian($row["dniGuardian"]);
+                $solicitud->setDireccionGuardian($row["direccionGuardian"]);
+                $solicitud->setTelefonoDueno($row["telefonoDueno"]);
+                $solicitud->setTelefonoGuardian($row["telefonoGuardian"]);
+                array_push($solicitudList, $solicitud);
+              ////////
+            }
+              if(isset($solicitudList))
+              return $solicitudList;
+             else 
+             return null;
+
+          } catch (Exception $ex) {
+            throw $ex;
+          }
+        }
+
+        public function removeSolicitudById($idSolicitud){
+
+            try
+            {
+                $solicitud = null;
+
+                $query = "DELETE * FROM ".$this->tableName." WHERE id = :id";
+
+                $parameters["id"] = $idSolicitud;
+
+                $this->connection = Connection::GetInstance();
+
+                $resultSet = $this->connection->Execute($query, $parameters);
+                
+          
+                return true;
+            }
+            catch(Exception $ex)
+            {
+                throw $ex;
+            }
+  
+
+        }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////FUNCIONES JSONJSONJSON/////////////////////////////////////////////////

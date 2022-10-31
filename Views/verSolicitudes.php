@@ -12,9 +12,11 @@ use Models\Dueno as Dueno;
 if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
     $guardian = $_SESSION['loggedUser'];
     $solicitudes = new SolicitudDAO();
-    $solis = $solicitudes->GetAll(); ///get all by id desp
+    //$solis = $solicitudes->GetAll(); ///get all by id desp
+    $solis=$solicitudes->getSolicitudesByDniGuardian($guardian->getDni());
     $mascota = new MascotaDAO(); ///get all by id desp
     $mascotas = $mascota->GetAll(); ///get all by id desp
+    //$mascotas = $mascota->getMascotasByIdSolicitud();
     $ingreso=false;//SIRVE PARA VERIFICAR SI EL DUEÑO TIENE ALGUNA SOLICITUD
 }?>
 
@@ -27,16 +29,7 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                 
             <?php if(isset($solis)){?>
        
-                <?php foreach ($solis as $solicitud) { ?>
-                   
-                       <?php  if($_SESSION['loggedUser']->getDni()== $solicitud->getDniDueno()){ 
-                        $ingreso=true;     
-                       } 
-                    }
-                }?>
-                  
-               
-                    <?php if($ingreso == true){ ?>
+          
                     
                     <thead>
                         <th>Nombre Dueño</th>
@@ -46,6 +39,8 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                         <th>Nombre</th>
                         <th>Raza</th>
                         <th>Observaciones</th>
+                        <th>Opcion</th>
+                        
 
                     </thead>
                     <tbody>
@@ -53,7 +48,7 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                             <?php foreach ($solis as $solicitud) { ?>
                                 <tr>
                                 
-                                <?php if($solicitud->getDniDueno()==$_SESSION['loggedUser']->getDni()){?>
+                                <?php if($solicitud->getDniGuardian()==$_SESSION['loggedUser']->getDni()){?>
                                     
                                     <td><?php echo $solicitud->getNombreDueno(); ?></td>
                                     <td><?php echo $solicitud->getFechaInicio(); ?></td>
@@ -75,7 +70,7 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                                         <input type="hidden" name="solicitudId" value="<?php echo $solicitud->getId();?>">
                                         <button type="submit" name="operacion" value="aceptar" class="btn btn-danger"> Aceptar </button>
                                         <button type="submit" name="operacion" value="rechazar" class="btn btn-danger"> Rechazar </button>
-                                    </td>
+                                 </td>
 
                                     <?php } ?>
                                 <?php } ?>

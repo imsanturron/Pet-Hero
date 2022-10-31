@@ -110,20 +110,37 @@ class MascotaDAO
           }
         }
 
-        function setIdSolicitudEnMascota($ids,$idSolicitud) /////
+        function setIdSolicitudEnMascota($mascotas,$idSolicitud) /////
         {
           try {
-    
-            foreach($ids as $id){
-           
-                $query = "UPDATE " . $this->tableName . " SET idSoliRes = :idSoliRes WHERE id = :id;";
-
-                $parameters["id"] = $id;
-                $parameters["idSoliRes"] = $idSolicitud;
             
+      
+            foreach($mascotas as $mascota){
+                $query = "UPDATE " . $this->tableName . " SET idSoliRes = :idSoliRes WHERE id = :id;";
+      
+                $parameters["idSoliRes"] = $idSolicitud;
+                $parameters["id"] = $mascota->getId();
+          
+
             $this->connection = Connection::GetInstance();
-            $this->connection->ExecuteNonQuery($query, $parameters);  
+      
+            $resultSet = $this->connection->Execute($query, $parameters);
+      
+            foreach ($resultSet as $row) {
+                $mascota = new Mascota();
+                $mascota->setId($row["id"]);
+                $mascota->setNombre($row["nombre"]);
+                $mascota->setRaza($row["raza"]);
+                $mascota->setEspecie($row["especie"]);
+                $mascota->setDniDueno($row["dueno"]);
+                $mascota->setIdSoliRes($row["idSoliRes"]);
+                $mascota->setTamano($row["tamano"]);
+                $mascota->setObservaciones($row["observaciones"]);
+             
+              ////////
+
             }
+        }
            
       
           } catch (Exception $ex) {
@@ -132,7 +149,45 @@ class MascotaDAO
         }
 
 
-  
+/*
+        function getMascotasByIdSolicitud($) /////
+        {
+          try {
+            $solicitudList = array();
+      
+           
+            $query = "SELECT * FROM " . $this->tableName . " WHERE dniGuardian = :dniGuardian";
+      
+            $parameters["dniGuardian"] = $dniGuardian;
+      
+            $this->connection = Connection::GetInstance();
+      
+            $resultSet = $this->connection->Execute($query, $parameters);
+      
+            foreach ($resultSet as $row) {
+                $solicitud = new Solicitud();
+                $solicitud->setId($row["id"]);
+                //$solicitud->setAnimales($row["animales"]);
+                $solicitud->setFechaInicio($row["FechaInicio"]);
+                $solicitud->setFechaFin($row["FechaFin"]);
+                $solicitud->setNombreDueno($row["nombreDueno"]);
+                $solicitud->setDniDueno($row["dniDueno"]);
+                $solicitud->setNombreGuardian($row["nombreGuardian"]);
+                $solicitud->setDniGuardian($row["dniGuardian"]);
+                $solicitud->setDireccionGuardian($row["direccionGuardian"]);
+                $solicitud->setTelefonoDueno($row["telefonoDueno"]);
+                $solicitud->setTelefonoGuardian($row["telefonoGuardian"]);
+                array_push($solicitudList, $solicitud);
+              ////////
+            }
+        
+      
+            return $solicitudList;
+          } catch (Exception $ex) {
+            throw $ex;
+          }
+        }
+  */
 
     /*public function __construct()
     {
