@@ -1,21 +1,10 @@
-<<<<<<< HEAD
-<?php 
- include('header.php');
- include('nav-bar.php');
-=======
 <?php
-include('header.php');
 include('nav-bar.php');
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
 ?>
 <!-- ################################################################################################ -->
 <div class="wrapper row2 bgded" style="background-image:url('../images/demo/backgrounds/1.png');">
   <div class="overlay">
-<<<<<<< HEAD
-    <div id="breadcrumb" class="clear"> 
-=======
     <div id="breadcrumb" class="clear">
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
       <ul>
         <li><a href="#">Home</a></li>
         <li><a href="#">Add</a></li>
@@ -26,51 +15,48 @@ include('nav-bar.php');
 </div>
 <!-- ################################################################################################ -->
 <div class="wrapper row4">
-<<<<<<< HEAD
-<main class="container clear"> 
-    <div class="content"> 
-      <div id="comments" >
-        <h2>Agregar mascota</h2>
-        <form action="<?php echo FRONT_ROOT ?>Mascota/Add" method="post"  style="background-color: #EAEDED;padding: 2rem !important;">
-          <table> 
-=======
   <main class="container clear">
     <div class="content">
       <div id="comments">
         <h2>Agregar mascota</h2>
-        <form action="<?php echo FRONT_ROOT ?>Mascota/Add" method="post" style="background-color: #EAEDED;padding: 2rem !important;">
+        <form action="<?php echo FRONT_ROOT ?>Mascota/Add" method="post" style="background-color: #EAEDED;padding: 2rem !important;" enctype="multipart/form-data">
           <table>
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
             <thead>
               <tr>
-                <th>nombre</th>
+                <th>Especie</th>
+                <th>Nombre</th>
                 <th>Raza</th>
                 <th>Tamaño</th>
-                <th>observaciones</th>
+                <?php // <th>Imagen</th> 
+                ?>
+                <th>Observaciones</th>
               </tr>
             </thead>
             <tbody align="center">
               <tr>
                 <td style="max-width: 100px;">
-                  <input type="text" name="nombre" required>
+                  <select name="especie" required>
+                    <option value="gato"> Gato </option>
+                    <option value="perro"> Perro </option>
+                </td>
+                <td>
+                  <input type="text" name="nombre" required> <? //ver como hacer menu distinto ?>
                 </td>
                 <td>
                   <input type="text" name="raza" required>
                 </td>
                 <td>
-                  <input type="text" name="tamano" required>
-<<<<<<< HEAD
-                </td>     
-                <td>
-                  <input type="text" name="observaciones">
-                </td>         
-              </tr>
-              </tbody>
-          </table>
-          <div>
-            <input type="submit" class="btn" value="Agregar" style="background-color:#DC8E47;color:white;"/>
-=======
+                  <select name="tamano" required>
+                    <option value="chico"> Chico </option>
+                    <option value="mediano"> Mediano </option>
+                    <option value="grande"> Grande </option>
+                  </select>
                 </td>
+                <?php /*
+                <td>
+                  <input type="file" name="fotoM" required>
+                </td>
+                */ ?>
                 <td>
                   <input type="text" name="observaciones">
                 </td>
@@ -79,7 +65,6 @@ include('nav-bar.php');
           </table>
           <div>
             <input type="submit" class="btn" value="Agregar" style="background-color:#DC8E47;color:white;" />
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
           </div>
         </form>
       </div>
@@ -87,12 +72,6 @@ include('nav-bar.php');
   </main>
 </div>
 <!-- ################################################################################################ -->
-
-<<<<<<< HEAD
-<?php 
-  include('footer.php');
-=======
-<?php
-include('footer.php');
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
-?>
+<div class="alert alert-<?php echo $alert->getTipo() ?>">
+  <?php echo $alert->getMensaje() ?>
+</div>

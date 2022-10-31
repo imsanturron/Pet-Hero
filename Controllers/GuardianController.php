@@ -3,100 +3,127 @@
 namespace Controllers;
 
 use Models\Guardian;
-use DAO\GuardianDAO as GuardianDAO;
-<<<<<<< HEAD
-=======
-use DAO\UserDAO as UserDAO;
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
+use Models\Alert as Alert;
+use Models\Solicitud as Solicitud;
+use Models\Reserva as Reserva;
+//use DAO\JSON\GuardianDAO as GuardianDAO;
+use DAO\MYSQL\GuardianDAO as GuardianDAO;
+use DAO\MYSQL\SolicitudDAO;
+//use DAO\JSON\UserDAO as UserDAO;
+use DAO\MYSQL\UserDAO as UserDAO;
+use DAO\MYSQL\ReservaDAO as ReservaDAO;
 
 class GuardianController
 {
     private $guardianDAO;
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
     public function __construct()
     {
         $this->guardianDAO = new GuardianDAO();
     }
 
-    public function home()
+    public function Index($message = "")
     {
         require_once(VIEWS_PATH . "home.php");
     }
 
-<<<<<<< HEAD
-    public function verificar($username, $password)
+    public function home(Alert $alert = null)
     {
-        require_once(VIEWS_PATH . "ControlDeAccesoGuardian.php");
+        require_once(VIEWS_PATH . "home.php");
     }
 
-=======
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
-    public function login()
+    public function login(Alert $alert = null)
     {
         require_once(VIEWS_PATH . "loginGuardian.php");
     }
-    public function registro()
+    public function registro(Alert $alert = null)
     {
         require_once(VIEWS_PATH . "registroGuardian.php");
     }
 
-<<<<<<< HEAD
-    public function Add($username, $password, $nombre, $cuil, $disponibilidad, $direccion, $precio)
-    {
-        $guardian = new Guardian();
-        $guardian->setUserName($username);
-        $guardian->setPassword($password);
-        $guardian->setNombre($nombre);
-        $guardian->setCuil($cuil);
-        $guardian->setDireccion($direccion);
-        $guardian->setDisponibilidad($disponibilidad);
-        $guardian->setPrecio($precio);
-
-        $this->guardianDAO->Add($guardian);
-
-        $this->home();
-=======
     public function opcionMenuPrincipal($opcion)
     {
-        $opcion = $_POST['opcion'];
-        if ($opcion == "indicarDisponibilidad") {
-            require_once(VIEWS_PATH . "indicarDisponibilidad.php");
-        } else if ($opcion == "verListadReservas") {
-            require_once(VIEWS_PATH . "loginGuardian.php");
-        } else if ($opcion == "verPerfil") {
-            ///sin terminar
-            require_once(VIEWS_PATH . "perfilGuardian.php");
+        ///alerta de disponibilidad obsoleta?
+        ///checkear reservas que venzan en fecha
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
+            ///cambiar tamaño mascota a cuidar
+            $opcion = $_POST['opcion'];
+            if ($opcion == "indicarDisponibilidad") {
+                require_once(VIEWS_PATH . "indicarDisponibilidad.php");
+            } else if ($opcion == "verListadReservas") {
+                require_once(VIEWS_PATH . "loginGuardian.php");
+            } else if ($opcion == "verPerfil") {
+                ///sin terminar
+                require_once(VIEWS_PATH . "perfilGuardian.php");
+            } else if ($opcion == "verSolicitudes") {
+                $solicitudes = new SolicitudDAO;
+                $solis = $solicitudes->GetAll(); ///get all by id desp
+                require_once(VIEWS_PATH . "verSolicitudes.php");
+            }
         }
     }
 
     public function elegirDisponibilidad($desde, $hasta)
     {
-        $valid = AuthController::ValidarFecha($desde, $hasta);//arreglar
-        if ($valid) {
-            $guardian = new Guardian();
-            $guardian = $_SESSION["loggedUser"];
-            $guardian->setDisponibilidadInicio($desde);
-            $guardian->setDisponibilidadFin($hasta);
-            $bien = $this->guardianDAO->updateDisponibilidad($_SESSION["loggedUser"]->getDni(), $desde, $hasta);
-            $_SESSION["loggedUser"] = $guardian;
-            if($bien){
-            ///alerta buena
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
+            $valid = AuthController::ValidarFecha($desde, $hasta); //arreglar
+            if ($valid) {
+                $guardian = new Guardian();
+                $guardian = $_SESSION["loggedUser"];
+                $guardian->setDisponibilidadInicio($desde);
+                $guardian->setDisponibilidadFin($hasta);
+                $bien = $this->guardianDAO->updateDisponibilidad($_SESSION["loggedUser"]->getDni(), $desde, $hasta);
+                $_SESSION["loggedUser"] = $guardian;
+                if ($bien) {
+                    $alert = new Alert("success", "Disponibilidad actualizada");
+                } else {
+                    $alert = new Alert("warning", "Error actualizando disponibilidad");
+                }
+                $this->login($alert);
+            } else {
+                $alert = new Alert("warning", "La fecha seleccionada es invalida");
+                $this->login($alert);
             }
-            else{
-            ///alerta mala
-            }
-            require_once(VIEWS_PATH . "loginGuardian.php");
-        } else {
-            ///alerta mala
-            require_once(VIEWS_PATH . "loginGuardian.php");
-        }
+        } else
+            $this->home();
     }
 
-    public function Add($username, $password, $nombre, $dni, $email, $cuil, $direccion, $precio)
+    public function operarSolicitud($solicitudId, $operacion)
+    {
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
+            if ($operacion == "aceptar") {
+                $solicitud = new SolicitudDAO();
+               // $soli = $_SESSION["loggedUser"]->getSolicitudById($solicitudId);
+               
+               $soli = $solicitud->GetById($solicitudId);
+               $reserva = new Reserva($soli);
+               $reservaDAO = new ReservaDAO();
+               $reservaDAO->add($reserva);
+               $resul=$solicitud->removeSolicitud($solicitudId);
+                ///********///
+                if($resul){
+                $alert = new Alert("success", "Solicitud aceptada");
+                }else{
+                    $alert = new Alert("warning", "No se borro la solicitud");
+                }
+            } else if ($operacion == "rechazar") {
+               
+                $solicitud = new SolicitudDAO();
+                $resul=$solicutud->removeSolicitud($solicitudId);
+              
+                if($resul){
+                    $alert = new Alert("success", "Solicitud borrada con exito");
+                    }else{
+                        $alert = new Alert("warning", "No se borro la solicitud");
+                    }
+            }
+            $this->login($alert);
+        }
+        $alert = new Alert("warning", "Hubo un error");
+        $this->login($alert);
+    }
+
+    public function Add($username, $password, $nombre, $dni, $email, $direccion, $telefono, $precio, $tamanoMasc)
     {
         $valid = AuthController::ValidarUsuario($username, $dni, $email);
         if ($valid) {
@@ -105,27 +132,34 @@ class GuardianController
             $guardian->setPassword($password);
             $guardian->setNombre($nombre);
             $guardian->setDni($dni);
-            $guardian->setCuil($cuil);
             $guardian->setEmail($email);
             $guardian->setDireccion($direccion);
+            $guardian->setTelefono($telefono);
             $guardian->setPrecio($precio);
+            $guardian->setTamanoACuidar($tamanoMasc);
 
-            $this->guardianDAO->Add($guardian);
+            $this->guardianDAO->add($guardian);
             $userDAO = new UserDAO;
             $userDAO->Add($guardian);
-            echo '<script>alert("Usuario creado")</script>';
-            $this->home();
+            $alert = new Alert("success", "Usuario creado");
+            $this->home($alert);
         } else {
-            echo '<script>alert("Usuario ya existente")</script>';
-            $this->home();
+            $alert = new Alert("warning", "Error! Este usuario ya existe");
+            $this->home($alert);
         }
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
     }
 
-    public function Remove($dni)
+    /*public function Remove($dni)
     {
-        $this->guardianDAO->Remove($dni);
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
+            $bien = $this->guardianDAO->Remove($dni);
+            if ($bien)
+                $alert = new Alert("success", "Usuario borrado exitosamente");
+            else
+                $alert = new Alert("warning", "Error borrando el usuario");
 
-        $this->home();
-    }
+            $this->home($alert);
+        } else
+            $this->home();
+    }*/
 }

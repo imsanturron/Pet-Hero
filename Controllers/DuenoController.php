@@ -3,11 +3,18 @@
 namespace Controllers;
 
 use Models\Dueno as Dueno;
-use DAO\DuenoDAO as DuenoDAO;
-<<<<<<< HEAD
-=======
-use DAO\UserDAO as UserDAO;
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
+use Models\Solicitud as Solicitud;
+use Models\Guardian as Guardian;
+use Models\Alert as Alert;
+//use DAO\JSON\DuenoDAO as DuenoDAO;
+use DAO\MYSQL\DuenoDAO as DuenoDAO;
+//use DAO\JSON\GuardianDAO as GuardianDAO;
+use DAO\MYSQL\GuardianDAO as GuardianDAO;
+//use DAO\JSON\MascotaDAO;
+use DAO\MYSQL\MascotaDAO;
+use DAO\MYSQL\SolicitudDAO;
+//use DAO\JSON\UserDAO as UserDAO;
+use DAO\MYSQL\UserDAO as UserDAO;
 
 class DuenoController
 {
@@ -18,84 +25,115 @@ class DuenoController
         $this->duenoDAO = new DuenoDAO();
     }
 
-<<<<<<< HEAD
-    public function verificar($username, $password)
+    public function Index($message = "")
     {
-        require_once(VIEWS_PATH . "ControlDeAccesoDueno.php");
+        require_once(VIEWS_PATH . "home.php");
     }
-//recibe la respuesta del form(loginDueno.php) y dependiendo cual sea la opcion seleccionada te redirecciona al php pertinente*/
-=======
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
+
     public function opcionMenuPrincipal($opcion)
     {
-        $opcion = $_POST['opcion'];
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
+            $opcion = $_POST['opcion'];
 
-<<<<<<< HEAD
-        if ($opcion == "verm") {
-            require_once(VIEWS_PATH . "verMascotas.php");
-        } else if ($opcion == "agregarm"){
-            require_once(VIEWS_PATH . "agregarMascotas.php");
-        } else if($opcion == "verg"){
-=======
-        if ($opcion == "verMascotas") {
-            require_once(VIEWS_PATH . "verMascotas.php");
-        } else if ($opcion == "agregarMascota") {
-            require_once(VIEWS_PATH . "agregarMascotas.php");
-        } else if ($opcion == "verGuardianes") {
-            //$listaguardianes=$this->duenoDAO->getAll();
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
-            require_once(VIEWS_PATH . "verGuardianes.php");
-        }
+            if ($opcion == "verMascotas") {
+                require_once(VIEWS_PATH . "verMascotas.php");
+            } else if ($opcion == "agregarMascota") {
+                require_once(VIEWS_PATH . "agregarMascotas.php");
+            } else if ($opcion == "verGuardianes") {
+                //$listaguardianes=$this->duenoDAO->getAll();
+                //require_once(VIEWS_PATH . "verGuardianes.php");
+                require_once(VIEWS_PATH . "filtrarPorFecha.php");
+            } else if ($opcion == "verPerfil") {
+                ///sin terminar
+                require_once(VIEWS_PATH . "perfilDueno.php");
+            }
+        } else
+            $this->home();
     }
 
-    public function home()
+    public function filtrarFechas($desde, $hasta)
+    {
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
+            $valid = AuthController::ValidarFecha($desde, $hasta); //arreglar
+            if ($valid) {
+                //$guardianDao = new GuardianDAO();
+                //$listaguardianes = $guardianDao->GetAll(); no me deja asi no se xq
+                require_once(VIEWS_PATH . "verGuardianes.php");
+            } else {
+                $alert = new Alert("warning", "Fecha invalida");
+                $this->login($alert);
+            }
+        } else
+            $this->home();
+    }
+
+    public function home(Alert $alert = null)
     {
         require_once(VIEWS_PATH . "home.php");
     }
 
-<<<<<<< HEAD
-=======
-    public function ElegirGuardian()
+    public function ElegirGuardian($dni, $desde, $hasta)
     {
-        //require_once(VIEWS_PATH . "ver como seguirlo.php");
-        require_once(VIEWS_PATH . "home.php");
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
+            ////$guardianes = new GuardianDAO();
+            ////$guardian = new Guardian(); /////////////
+            ////$guardian = $guardianes->getByDni($dni); no deja tampoco no se xq
+            require_once(VIEWS_PATH . "solicitarCuidadoMasc.php");
+            //$guardianes->remove($guardian);// DESCOMENTAR CUANDO PUEDA RETORNAR SOLICITUDES
+            //$solicitud = new Solicitud($desde, $hasta);
+            //$guardianes->addSolicitudDao($solicitud, $dni); //*****************//
+            //$guardian->addSolicitud($solicitud);
+            //$solicitudes=$guardian->getSolicitudes();//ME CREA ARREGLOS VACIOS DENTRO DEL ARREGLO
+            //$guardianes->add($guardian);
+            //$this->login();
+        } else
+            $this->home();
     }
 
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
-    public function login()
+    public function ElegirGuardianFinal($animales, $dni, $desde, $hasta)
+    {
+        $mascotas = new MascotaDAO();
+        //print_r($animales);
+       $arrayMascotas = $mascotas->getArrayByIds($animales); ///y mandar mascotas que ya tenga
+       //print_r($arrayMascotas);
+        //echo " /////// ";
+        //print_r($arrayMascotas);
+        //echo "<br><br>";
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
+            $valid = AuthController::ValidarMismaRaza($arrayMascotas); ////////!arreglar!////+mascotas que tenga//
+            if ($valid) {
+                
+                $guardianes = new GuardianDAO();
+                $guardian = $guardianes->getByDni($dni);
+                //EN ALGUN MOMENTO DE ACA AL ANIMAL HABRIA QUE AGREGARLE LA SOLICITUD
+
+                $solicitud = new Solicitud($guardian, $_SESSION["loggedUser"], $desde, $hasta);
+                $solicitudesD = new SolicitudDAO;
+                
+                $solicitudesD->Add($solicitud);
+                $idSolicitud=$solicitudesD->GetByDniDuenoYGuardian($solicitud->getDniDueno(),$solicitud->getDniGuardian());
+                $mascotas->setIdSolicitudEnMascota($arrayMascotas,$idSolicitud);//Esta funcion tendria que colocar el id de la solicitud en cada mascota que haya elegido
+               
+                $alert = new Alert("success", "Solicitud enviada!");
+                $this->login($alert);
+            } else {
+                $alert = new Alert("warning", "Hubo un error");
+                $this->login($alert);
+            }
+        } else
+            $this->home();
+    }
+
+    public function login(Alert $alert = null)
     {
         require_once(VIEWS_PATH . "loginDueno.php");
     }
 
-    public function registro()
+    public function registro(Alert $alert = null)
     {
         require_once(VIEWS_PATH . "registroDueno.php");
     }
 
-<<<<<<< HEAD
-    public function Add($username, $password, $nombre, $dni, $direccion, $telefono)
-    {
-        $dueno = new Dueno();
-        $dueno->setUserName($username);
-        $dueno->setPassword($password);
-        $dueno->setNombre($nombre);
-        $dueno->setDni($dni);
-        $dueno->setDireccion($direccion);
-        $dueno->setTelefono($telefono);
-
-        $this->duenoDAO->Add($dueno);
-
-        $this->home();
-    }
-
-    public function Remove($dni)
-    {
-        $this->duenoDAO->Remove($dni);
-
-        $this->home();
-    }
-}
-=======
     public function Add($username, $password, $nombre, $dni, $email, $direccion, $telefono)
     {
         $valid = AuthController::ValidarUsuario($username, $dni, $email);
@@ -111,21 +149,28 @@ class DuenoController
 
             $this->duenoDAO->Add($dueno);
             $userDAO = new UserDAO;
-            $userDAO->Add($dueno);
-            ///alerta buena
-            $this->home();
+            $userDAO->add($dueno);
+
+            $alert = new Alert("success", "Usuario creado");
+            $this->home($alert);
         } else {
-            ///alerta mala
-            $this->home();
+            $alert = new Alert("warning", "Error! Usuario ya existente");
+            $this->home($alert);
         }
     }
 
     ////////////////////
-    public function Remove($dni)
+    /*public function Remove($dni)
     {
-        $this->duenoDAO->Remove($dni);
-        ///alerta buena
-        $this->home();
-    }
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
+            $bien = $this->duenoDAO->Remove($dni);
+            if ($bien)
+                $alert = new Alert("success", "Usuario borrado exitosamente");
+            else
+                $alert = new Alert("warning", "Error borrando el usuario");
+
+            $this->home($alert);
+        } else
+            $this->home();
+    }*/
 }
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7

@@ -1,31 +1,16 @@
-<<<<<<< HEAD
-=======
-
-<?php 
-  include('nav-bar.php');
-?>
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
 <?php
+include('nav-bar.php');
 
 use Config\Autoload as Autoload;
-use DAO\MascotaDAO;
+//use DAO\JSON\MascotaDAO;
+use DAO\MYSQL\MascotaDAO;
 
-Autoload::Start();
-
-<<<<<<< HEAD
-$mascotasDao = new MascotaDAO();     
-=======
 $mascotasDao = new MascotaDAO();
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
 $listaMascotas = $mascotasDao->GetAll();
-
 ?>
-<main class="py-5">
-<<<<<<< HEAD
-     
-=======
 
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
+<main class="py-5">
+
      <section id="listado" class="mb-5">
           <div class="container">
                <h2 class="mb-4">Listado de mascotas</h2>
@@ -35,41 +20,22 @@ $listaMascotas = $mascotasDao->GetAll();
                          <th>Raza</th>
                          <th>Tamaño</th>
                          <th>Observaciones</th>
+                         <th>Foto</th>
                     </thead>
                     <tbody>
-<<<<<<< HEAD
-                         <form action="<?php echo FRONT_ROOT ?>Mascota/Remove" method="POST" >
-                         <?php 
-                              if(isset($listaMascotas) && !empty($listaMascotas)){
-                                   
-                                   foreach($listaMascotas as $mascota){
-                                   ?>
-                                        <tr> 
-                                             <td><?php echo $mascota->getNombre(); ?></td>
-                                             <td><?php echo "Raza: ".$mascota->getRaza(); ?></td>
-                                             <td><?php echo $mascota->getTamano(); ?></td>
-                                             <td><?php echo $mascota->getObservaciones(); ?></td>
-                                             <td>
-                                                  <button type="submit" name="btnRemove" class="btn btn-danger" value="123"> Eliminar </button>
-                                             </td>
-                                        </tr>
-                                   <?php
-                                   }
-                              }
-                         ?>
-=======
                          <form action="<?php echo FRONT_ROOT ?>Mascota/Remove" method="POST">
                               <?php
                               if (isset($listaMascotas) && !empty($listaMascotas)) {
-
+                              
                                    foreach ($listaMascotas as $mascota) {
                               ?>
                                         <?php if ($mascota->getdniDueno() == $_SESSION["loggedUser"]->getDni()) { ?>
                                              <tr>
                                                   <td><?php echo $mascota->getNombre(); ?></td>
-                                                  <td><?php echo "Raza: " . $mascota->getRaza(); ?></td>
+                                                  <td><?php echo $mascota->getRaza(); ?></td>
                                                   <td><?php echo $mascota->getTamano(); ?></td>
                                                   <td><?php echo $mascota->getObservaciones(); ?></td>
+                                                  <td><img src="<?php echo IMG_PATH . $mascota->getFotoMascota() ?>"></td>
                                                   <td>
                                                        <button type="submit" class="btn btn-danger" value="<?php echo $mascota->getId(); ?>"> Eliminar </button>
                                                   </td>
@@ -79,13 +45,14 @@ $listaMascotas = $mascotasDao->GetAll();
                                    }
                               }
                               ?>
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
                          </form>
                     </tbody>
                </table>
           </div>
      </section>
-
+     <div class="alert alert-<?php echo $alert->getTipo() ?>">
+          <?php echo $alert->getMensaje() ?>
+     </div>
      <div class="container">
           <div class="bg-light-alpha p-1">
                <div class="row">
@@ -98,9 +65,4 @@ $listaMascotas = $mascotasDao->GetAll();
                </div>
           </div>
      </div>
-<<<<<<< HEAD
 </main>
-
-=======
-</main>
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7

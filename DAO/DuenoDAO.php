@@ -43,11 +43,7 @@ class DuenoDAO
 
         foreach ($this->usuarioList as $element) {
 
-<<<<<<< HEAD
-            if ($user->getUsername == $element->getUsername()) {
-=======
             if ($user->getUsername() == $element->getUsername()) {
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
 
                 $encontrado = true;
             }
@@ -55,8 +51,6 @@ class DuenoDAO
         return $encontrado;
     }
 
-<<<<<<< HEAD
-=======
     
     public function getByUsername($user) 
     {
@@ -69,7 +63,6 @@ class DuenoDAO
       return null;
     }
 
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
     public function getAll(){
         $this->retrieveData();
         return $this->usuarioList;
@@ -82,13 +75,10 @@ class DuenoDAO
 
             $valueArray["username"] = $dueno->getUsername();
             $valueArray["password"] = $dueno->getPassword();
-<<<<<<< HEAD
-=======
             $valueArray["dni"] = $dueno->getDni();
             $valueArray["email"] = $dueno->getEmail();
             $valueArray["mascotas"] = $dueno->getMascotas();
             $valueArray["tipo"] = $dueno->getTipo();
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
             array_push($arrayToEncode, $valueArray);
         }
         $jsonContent = json_encode($arrayToEncode, JSON_PRETTY_PRINT);
@@ -106,11 +96,6 @@ class DuenoDAO
 
             foreach ($arrayToEncode as $valueArray) {
 
-<<<<<<< HEAD
-                $usuario = new Dueno("", "");
-                $usuario->setUsername($valueArray["username"]);
-                $usuario->setPassword($valueArray["password"]);
-=======
                 $usuario = new Dueno;
                 $usuario->setUsername($valueArray["username"]);
                 $usuario->setPassword($valueArray["password"]);
@@ -118,7 +103,6 @@ class DuenoDAO
                 $usuario->setEmail($valueArray["email"]);
                 $usuario->setMascotas($valueArray["mascotas"]);
                 $usuario->setTipo($valueArray["tipo"]);
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
                 array_push($this->usuarioList, $usuario);
             }
         }

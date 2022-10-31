@@ -1,15 +1,17 @@
 <?php namespace Models;
 class Mascota{
 
-<<<<<<< HEAD
-=======
-    private $dniDueno;
-    private $id;
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
+    private $dniDueno; //FK
+    private $idSoliRes; //FK
+    private $id; //PK
+    private $especie;
     private $nombre;
     private $raza;
     private $tamano;
     private $observaciones;
+    private $fotoMascota;
+    private $video;
+    private $planVacunacion;
     
     public function getNombre()
     {
@@ -22,8 +24,6 @@ class Mascota{
 
         return $this;
     }
-<<<<<<< HEAD
-=======
     
     public function getId()
     {
@@ -48,7 +48,6 @@ class Mascota{
 
         return $this;
     }
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
 
     public function getRaza()
     {
@@ -62,12 +61,18 @@ class Mascota{
         return $this;
     }
 
+  
     public function getTamano()
     {
         return $this->tamano;
     }
 
-    public function setTamano($tamano): self
+    /**
+     * Set the value of tamano
+     *
+     * @return  self
+     */ 
+    public function setTamano($tamano)
     {
         $this->tamano = $tamano;
 
@@ -79,9 +84,86 @@ class Mascota{
         return $this->observaciones;
     }
 
-    public function setObservaciones($observaciones): self
+    /**
+     * Set the value of observaciones
+     *
+     * @return  self
+     */ 
+    public function setObservaciones($observaciones)
     {
         $this->observaciones = $observaciones;
+
+        return $this;
+    }
+    public function getFotoMascota()
+    {
+        return $this->fotoMascota;
+    }
+
+    /**
+     * Set the value of observaciones
+     *
+     * @return  self
+     */ 
+    public function setFotoMascota($fotoMascota)
+    {
+        $this->fotoMascota = $fotoMascota;
+
+        return $this;
+    }
+    public function getVideo()
+    {
+        return $this->video;
+    }
+
+    /**
+     * Set the value of observaciones
+     *
+     * @return  self
+     */ 
+    public function setVideo($video)
+    {
+        $this->video = $video;
+
+        return $this;
+    }
+    public function getPlanVacunacion()
+    {
+        return $this->planVacunacion;
+    }
+
+    /**
+     * Set the value of observaciones
+     *
+     * @return  self
+     */ 
+    public function setPlanVacunacion($planVacunacion)
+    {
+        $this->planVacunacion = $planVacunacion;
+
+        return $this;
+    }
+
+    public function getEspecie()
+    {
+        return $this->especie;
+    }
+
+    public function setEspecie($especie): self
+    {
+        $this->especie = $especie;
+
+        return $this;
+    }
+
+    public function getIdSoliRes()
+    {
+        return $this->idSoliRes;
+    }
+
+    public function setIdSoliRes($idSoliRes): self
+    {
+        $this->idSoliRes = $idSoliRes;
 
         return $this;
     }

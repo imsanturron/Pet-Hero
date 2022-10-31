@@ -2,11 +2,39 @@
 
 class Imagen
 {
-    private $peso;
+    private $id;
+    private $idMascota;
+    private $nombre;
+    /*private $peso;
     private $formato;
     private $extension;
-    private $url;
+    private $url;*/
 
+    
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setId($id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    public function setNombre($nombre): self
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+/*
     public function getPeso()
     {
         return $this->peso;
@@ -51,6 +79,24 @@ class Imagen
     public function setUrl($url): self
     {
         $this->url = $url;
+
+        return $this;
+    }*/
+
+    /**
+     * Get the value of idMascota
+     */
+    public function getIdMascota()
+    {
+        return $this->idMascota;
+    }
+
+    /**
+     * Set the value of idMascota
+     */
+    public function setIdMascota($idMascota): self
+    {
+        $this->idMascota = $idMascota;
 
         return $this;
     }

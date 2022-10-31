@@ -2,7 +2,10 @@
 
 namespace Controllers;
 
-use DAO\MascotaDAO as MascotaDAO;
+//use DAO\JSON\MascotaDAO as MascotaDAO;
+use DAO\MYSQL\MascotaDAO as MascotaDAO;
+use DateTime as DateTime;
+use Models\Alert;
 use Models\Mascota as Mascota;
 
 class MascotaController
@@ -14,11 +17,14 @@ class MascotaController
         $this->mascotaDAO = new MascotaDAO();
     }
 
+    public function Index($message = "")
+    {
+        require_once(VIEWS_PATH . "home.php");
+    }
 
     /*public function opcionMenuPrincipal($opcion)
     {
         $opcion = $_POST['opcion'];
-
         if ($opcion == "verm") {
             require_once(VIEWS_PATH . "verMascotas.php");
         } else if ($opcion == "agregarm"){
@@ -33,45 +39,58 @@ class MascotaController
         require_once(VIEWS_PATH . "loginDueno.php");
     }
 
-
-<<<<<<< HEAD
-/*agrega nueva mascota*/
-    public function Add($nombre, $raza, $tamano, $observaciones = "")
+    public function idFotoFechaYCheck($fotoM)
     {
-        $mascota = new Mascota();
-=======
-
-    public function Add($nombre, $raza, $tamano, $observaciones = "")
-    {
-        ///preguntar si nombre o algo asi
-        $mascota = new Mascota();
-        $mascota->setDniDueno($_SESSION["loggedUser"]->getDni()); 
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
-        $mascota->setNombre($nombre);
-        $mascota->setRaza($raza);
-        $mascota->setTamano($tamano);
-        $mascota->setObservaciones($observaciones);
-
-        $this->mascotaDAO->Add($mascota);
-<<<<<<< HEAD
-
-=======
-        //$mascota->setDniDueno($_SESSION["loggedUser"]->addMascota($mascota)); y guardar 
-        ///alerta buena
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
-        $this->loginDueno();
+        $a = DateTime::createFromFormat('U.u', microtime(true));
+        $res = $a->format("m-d-Y H:i:s.u");
+        $retorn = str_replace(' ', '', $res);
+        $imageFileType = strtolower(pathinfo($fotoM, PATHINFO_EXTENSION));
+        /*if ($_FILES["fotoM"]["size"] > 50000000) {
+            echo "Sorry, your file is too large.";
+            $uploadOk = 0;
+        }*/
+        return $retorn . $imageFileType;
     }
 
-    public function Remove($id)
+    public function Add($especie, $nombre, $raza, $tamano, /*$fotoM,*/ $observaciones = "")
     {
-<<<<<<< HEAD
-        $this->mascotaDAO->Remove($id);
+        if (isset($_SESSION["loggedUser"])) {
+            /*$fotoMUniq = IMG_PATH . $this->idFotoFechaYCheck($fotoM);
+            if (move_uploaded_file($_FILES["fotoM"]["tmp_name"], $fotoMUniq)) {
+                echo "The file " . htmlspecialchars(basename($_FILES["fotoM"]["name"])) . " has been uploaded.";
+            } else {
+                echo "Sorry, there was an error uploading your file.";
+            }*/
 
-=======
-        $this->mascotaDAO->Remove($id);//modificar funcion
-        ///y remover de dueño si la tiene
-        ///alerta buena
->>>>>>> 7d536500738db2b0e3a166f37745baa7420ebfe7
-        $this->loginDueno();
+            ///preguntar si nombre o algo asi
+            $mascota = new Mascota();
+            $mascota->setDniDueno($_SESSION["loggedUser"]->getDni());
+            $mascota->setEspecie($especie); ///ver si crear clase perro y gato
+            $mascota->setNombre($nombre);
+            $mascota->setRaza($raza);
+            $mascota->setTamano($tamano);
+            $mascota->setObservaciones($observaciones);
+            //$mascota->setFotoMascota($fotoMUniq);
+
+            $this->mascotaDAO->Add($mascota);
+            //$mascota->setDniDueno($_SESSION["loggedUser"]->addMascota($mascota)); y guardar 
+            $alert = new Alert("success", "Mascota agregada");
+            $this->loginDueno($alert);
+        } else
+            $this->Index();
     }
+
+    /*public function Remove($id)
+    {
+        if (isset($_SESSION["loggedUser"])) {
+            $bien = $this->mascotaDAO->Remove($id); //modificar funcion
+            ///y remover de dueño si la tiene
+            if ($bien)
+                $alert = new Alert("success", "Mascota borrada exitosamente");
+            else
+                $alert = new Alert("warning", "Error borrando la mascota");
+            $this->loginDueno($alert);
+        } else
+            $this->Index();
+    }*/
 }
