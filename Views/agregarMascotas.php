@@ -1,5 +1,4 @@
 <?php
-include('header.php');
 include('nav-bar.php');
 ?>
 <!-- ################################################################################################ -->
@@ -24,27 +23,40 @@ include('nav-bar.php');
           <table>
             <thead>
               <tr>
-                <th>nombre</th>
+                <th>Especie</th>
+                <th>Nombre</th>
                 <th>Raza</th>
                 <th>Tamaño</th>
-                <th>Imagen</th>
+                <?php // <th>Imagen</th> 
+                ?>
                 <th>Observaciones</th>
               </tr>
             </thead>
             <tbody align="center">
               <tr>
                 <td style="max-width: 100px;">
-                  <input type="text" name="nombre" required>
+                  <select name="especie" required>
+                    <option value="gato"> Gato </option>
+                    <option value="perro"> Perro </option>
+                </td>
+                <td>
+                  <input type="text" name="nombre" required> <? //ver como hacer menu distinto ?>
                 </td>
                 <td>
                   <input type="text" name="raza" required>
                 </td>
                 <td>
-                  <input type="text" name="tamano" required>
+                  <select name="tamano" required>
+                    <option value="chico"> Chico </option>
+                    <option value="mediano"> Mediano </option>
+                    <option value="grande"> Grande </option>
+                  </select>
                 </td>
+                <?php /*
                 <td>
                   <input type="file" name="fotoM" required>
                 </td>
+                */ ?>
                 <td>
                   <input type="text" name="observaciones">
                 </td>
@@ -60,7 +72,6 @@ include('nav-bar.php');
   </main>
 </div>
 <!-- ################################################################################################ -->
-
-<?php
-include('footer.php');
-?>
+<div class="alert alert-<?php echo $alert->getTipo() ?>">
+  <?php echo $alert->getMensaje() ?>
+</div>

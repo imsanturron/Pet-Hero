@@ -1,15 +1,13 @@
 <?php
 
-namespace DAO;
+namespace DAO\JSON;
 
 use Models\Dueno as Dueno;
-use DAO\Connection as Connection;
-use \Exception as Exception;
 
 class DuenoDAO
 {
     //private $connection;
-    //private $tableName = "students";
+    //private $tableName = "duenos";
     private $usuarioList = array();
     private $filename;
 
@@ -87,6 +85,8 @@ class DuenoDAO
             $valueArray["telefono"] = $dueno->getTelefono();
             $valueArray["mascotas"] = $dueno->getMascotas();
             $valueArray["tipo"] = $dueno->getTipo();
+            $valueArray["solicitudes"] = $dueno->getSolicitudes();
+            $valueArray["reservas"] = $dueno->getReservas();
             array_push($arrayToEncode, $valueArray);
         }
         $jsonContent = json_encode($arrayToEncode, JSON_PRETTY_PRINT);
@@ -115,6 +115,8 @@ class DuenoDAO
                 $usuario->setTelefono($valueArray["telefono"]);
                 $usuario->setMascotas($valueArray["mascotas"]);
                 $usuario->setTipo($valueArray["tipo"]);
+                $usuario->setSolicitudes($valueArray["solicitudes"]);
+                $usuario->setReservas($valueArray["reservas"]);
                 array_push($this->usuarioList, $usuario);
             }
         }
@@ -135,8 +137,8 @@ class DuenoDAO
     {
         try
         {
-            $query = "INSERT INTO ".$this->tableName." (nombre, username, password, dni, email, direccion, telefono, mascotas, tipo)
-             VALUES (:nombre, :username, :password, :dni, :email, :direccion, :telefono, :mascotas, :tipo);";
+            $query = "INSERT INTO ".$this->tableName." (nombre, username, password, dni, email, direccion, telefono, mascotas, tipo, solicitudes, reservas)
+             VALUES (:nombre, :username, :password, :dni, :email, :direccion, :telefono, :mascotas, :tipo, :solicitudes, :reservas);";
             
               $parameters["nombre"] = $dueno->getNombre();
               $parameters["username"] = $dueno->getUsername();
@@ -147,9 +149,9 @@ class DuenoDAO
               $parameters["telefono"] = $dueno->getTelefono();
               $parameters["mascotas"] = $dueno->getMascotas();
               $parameters["tipo"] = $dueno->getTipo();
-
+              $parameters["solicitudes"] = $dueno->getSolicitudes();
+              $parameters["reservas"] = $dueno->getReservas();
             $this->connection = Connection::GetInstance();
-
             $this->connection->ExecuteNonQuery($query, $parameters);
         }
         catch(Exception $ex)
@@ -163,11 +165,8 @@ class DuenoDAO
             try
             {
                 $duenoList = array();
-
                 $query = "SELECT * FROM ".$this->tableName;
-
                 $this->connection = Connection::GetInstance();
-
                 $resultSet = $this->connection->Execute($query);
                 
                 foreach ($resultSet as $row)
@@ -182,10 +181,10 @@ class DuenoDAO
                     $dueno->setTelefono($valueArray["telefono"]);
                     $dueno->setMascotas($valueArray["mascotas"]);
                     $dueno->setTipo($valueArray["tipo"]);
-
+                    $dueno->setSolicitudes($valueArray["solicitudes"]);
+                    $dueno->setReservas($valueArray["reservas"]);
                     array_push($duenoList, $dueno);
                 }
-
                 return $duenoList;
             }
             catch(Exception $ex)
@@ -193,4 +192,18 @@ class DuenoDAO
                 throw $ex;
             }
         }*/
+
+        /*protected function parseToObject($value) { REVISAR BASTANTE
+			$value = is_array($value) ? $value : [];
+			$resp = array_map(function($p){
+				return new User($p['email'],$p['password_user'],$p['administrador'],$p['id_user']);
+            }, $value);
+            
+            if(empty($resp)){
+                return $resp;
+            }
+            else {
+                return count($resp) > 1 ? $resp : $resp['0'];
+            }
+		}*/
 }

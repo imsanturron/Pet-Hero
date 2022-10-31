@@ -1,18 +1,14 @@
-
-<?php 
-  include('nav-bar.php');
-?>
 <?php
+include('nav-bar.php');
 
 use Config\Autoload as Autoload;
-use DAO\MascotaDAO;
-
-Autoload::Start();
+//use DAO\JSON\MascotaDAO;
+use DAO\MYSQL\MascotaDAO;
 
 $mascotasDao = new MascotaDAO();
 $listaMascotas = $mascotasDao->GetAll();
-
 ?>
+
 <main class="py-5">
 
      <section id="listado" class="mb-5">
@@ -30,7 +26,7 @@ $listaMascotas = $mascotasDao->GetAll();
                          <form action="<?php echo FRONT_ROOT ?>Mascota/Remove" method="POST">
                               <?php
                               if (isset($listaMascotas) && !empty($listaMascotas)) {
-
+                              
                                    foreach ($listaMascotas as $mascota) {
                               ?>
                                         <?php if ($mascota->getdniDueno() == $_SESSION["loggedUser"]->getDni()) { ?>
@@ -54,7 +50,9 @@ $listaMascotas = $mascotasDao->GetAll();
                </table>
           </div>
      </section>
-
+     <div class="alert alert-<?php echo $alert->getTipo() ?>">
+          <?php echo $alert->getMensaje() ?>
+     </div>
      <div class="container">
           <div class="bg-light-alpha p-1">
                <div class="row">

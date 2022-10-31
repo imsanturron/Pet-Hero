@@ -1,8 +1,10 @@
 <?php namespace Models;
 class Mascota{
 
-    private $dniDueno;
-    private $id;
+    private $dniDueno; //FK
+    private $idSoliRes; //FK
+    private $id; //PK
+    private $especie;
     private $nombre;
     private $raza;
     private $tamano;
@@ -138,6 +140,30 @@ class Mascota{
     public function setPlanVacunacion($planVacunacion)
     {
         $this->planVacunacion = $planVacunacion;
+
+        return $this;
+    }
+
+    public function getEspecie()
+    {
+        return $this->especie;
+    }
+
+    public function setEspecie($especie): self
+    {
+        $this->especie = $especie;
+
+        return $this;
+    }
+
+    public function getIdSoliRes()
+    {
+        return $this->idSoliRes;
+    }
+
+    public function setIdSoliRes($idSoliRes): self
+    {
+        $this->idSoliRes = $idSoliRes;
 
         return $this;
     }

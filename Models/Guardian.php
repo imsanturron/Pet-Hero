@@ -1,33 +1,19 @@
-<?php namespace Models;
-use Models\Dueno as Dueno;
-use Models\Solicitud as solicitud;
+<?php
 
-class Guardian extends User{
+namespace Models;
 
-    private $cuil;
+class Guardian extends User
+{
     private $disponibilidadInicio;
     private $disponibilidadFin;
     private $precio;
-    private $solicitudes;
- 
+    private $TamanoACuidar;
+    private $reputacion; ///tipo reseña o id de reseñas
 
     function __construct()
     {
+        parent::__construct();
         $this->tipo = 'g';
-        $this->reservas = array();
-        $this->solicitudes = array();
-    }
-
-    public function getCuil()
-    {
-        return $this->cuil;
-    }
-
-    public function setCuil($cuil): self
-    {
-        $this->cuil = $cuil;
-
-        return $this;
     }
 
     public function getPrecio()
@@ -42,7 +28,6 @@ class Guardian extends User{
         return $this;
     }
 
- 
     public function getDisponibilidadFin()
     {
         return $this->disponibilidadFin;
@@ -52,7 +37,7 @@ class Guardian extends User{
      * Set the value of disponibilidadFin
      *
      * @return  self
-     */ 
+     */
     public function setDisponibilidadFin($disponibilidadFin)
     {
         $this->disponibilidadFin = $disponibilidadFin;
@@ -69,7 +54,7 @@ class Guardian extends User{
      * Set the value of disponibilidadInicio
      *
      * @return  self
-     */ 
+     */
     public function setDisponibilidadInicio($disponibilidadInicio)
     {
         $this->disponibilidadInicio = $disponibilidadInicio;
@@ -77,31 +62,27 @@ class Guardian extends User{
         return $this;
     }
 
-    /**
-     * Get the value of solicitudes
-     */ 
-    public function getSolicitudes()
+    public function getTamanoACuidar()
     {
-       
-        return $this->solicitudes;
+        return $this->TamanoACuidar;
     }
 
-    /**
-     * Set the value of solicitudes
-     *
-     * @return  self
-     */ 
-    public function setSolicitudes($solicitudes)
+    public function setTamanoACuidar($TamanoACuidar): self
     {
-        $this->solicitudes = $solicitudes;
+        $this->TamanoACuidar = $TamanoACuidar;
 
         return $this;
-    } 
-    
-    public function addSolicitud($solicitud)
-    { 
-            array_push($this->solicitudes,$solicitud);
-          
-    
+    }
+
+    public function getReputacion()
+    {
+        return $this->reputacion;
+    }
+
+    public function setReputacion($reputacion): self
+    {
+        $this->reputacion = $reputacion;
+
+        return $this;
     }
 }

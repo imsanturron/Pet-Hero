@@ -1,46 +1,17 @@
 <?php namespace Models;
 
-class Reserva
+use Models\Solicitud as Solicitud;
+
+class Reserva extends Solicitud
 {
-    private $fechaDeInicio;
-    private $fechaFinal;
-    private $horarios;
-    private $estado;
+    private $estado; ///"finalizado", "actual", "proximo"
 
-    public function getFechaDeInicio()
+    public function __construct(Solicitud $solicitud = null)
     {
-        return $this->fechaDeInicio;
-    }
-
-    public function setFechaDeInicio($fechaDeInicio): self
-    {
-        $this->fechaDeInicio = $fechaDeInicio;
-
-        return $this;
-    }
-
-    public function getFechaFinal()
-    {
-        return $this->fechaFinal;
-    }
-
-    public function setFechaFinal($fechaFinal): self
-    {
-        $this->fechaFinal = $fechaFinal;
-
-        return $this;
-    }
-
-    public function getHorarios()
-    {
-        return $this->horarios;
-    }
-
-    public function setHorarios($horarios): self
-    {
-        $this->horarios = $horarios;
-
-        return $this;
+        parent::__construct($solicitud->getAnimales(), $solicitud->getFechaInicio(),$solicitud->getFechaFin());
+        
+        ///setear estado comaparando con fecha actual.
+        $this->estado = "proximo";
     }
 
     public function getEstado()
@@ -54,4 +25,21 @@ class Reserva
 
         return $this;
     }
+
+    /*public function getEstadoDescripcion()
+    {
+      $ret = "";
+      switch($this->estado) {
+        case "P":
+          $ret = "Pendiente";
+          break;
+        case "F":
+          $ret = "Finalizado";
+          break;
+        case "C":
+          $ret = "Cancelado";
+          break;
+      }
+      return $ret;
+    }*/
 }

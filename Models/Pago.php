@@ -2,6 +2,8 @@
 
 class Pago
 {
+    private $id; //PK
+    private $dniDueno; //FK
     private $monto;
     private $fecha;
     private $formaDePago;
@@ -38,6 +40,30 @@ class Pago
     public function setFormaDePago($formaDePago): self
     {
         $this->formaDePago = $formaDePago;
+
+        return $this;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setId($id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    public function getDniDueno()
+    {
+        return $this->dniDueno;
+    }
+
+    public function setDniDueno($dniDueno): self
+    {
+        $this->dniDueno = $dniDueno;
 
         return $this;
     }

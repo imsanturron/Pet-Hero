@@ -2,8 +2,10 @@
 
 namespace Controllers;
 
-use DAO\MascotaDAO as MascotaDAO;
-use DateTime;
+//use DAO\JSON\MascotaDAO as MascotaDAO;
+use DAO\MYSQL\MascotaDAO as MascotaDAO;
+use DateTime as DateTime;
+use Models\Alert;
 use Models\Mascota as Mascota;
 
 class MascotaController
@@ -50,35 +52,45 @@ class MascotaController
         return $retorn . $imageFileType;
     }
 
-    public function Add($nombre, $raza, $tamano, $fotoM, $observaciones = "")
+    public function Add($especie, $nombre, $raza, $tamano, /*$fotoM,*/ $observaciones = "")
     {
-        $fotoMUniq = IMG_PATH . $this->idFotoFechaYCheck($fotoM);
-        if (move_uploaded_file($_FILES["fotoM"]["tmp_name"], $fotoMUniq)) {
-            echo "The file " . htmlspecialchars(basename($_FILES["fotoM"]["name"])) . " has been uploaded.";
-        } else {
-            echo "Sorry, there was an error uploading your file.";
-        }
+        if (isset($_SESSION["loggedUser"])) {
+            /*$fotoMUniq = IMG_PATH . $this->idFotoFechaYCheck($fotoM);
+            if (move_uploaded_file($_FILES["fotoM"]["tmp_name"], $fotoMUniq)) {
+                echo "The file " . htmlspecialchars(basename($_FILES["fotoM"]["name"])) . " has been uploaded.";
+            } else {
+                echo "Sorry, there was an error uploading your file.";
+            }*/
 
-        ///preguntar si nombre o algo asi
-        $mascota = new Mascota();
-        $mascota->setDniDueno($_SESSION["loggedUser"]->getDni());
-        $mascota->setNombre($nombre);
-        $mascota->setRaza($raza);
-        $mascota->setTamano($tamano);
-        $mascota->setObservaciones($observaciones);
-        $mascota->setFotoMascota($fotoMUniq);
+            ///preguntar si nombre o algo asi
+            $mascota = new Mascota();
+            $mascota->setDniDueno($_SESSION["loggedUser"]->getDni());
+            $mascota->setEspecie($especie); ///ver si crear clase perro y gato
+            $mascota->setNombre($nombre);
+            $mascota->setRaza($raza);
+            $mascota->setTamano($tamano);
+            $mascota->setObservaciones($observaciones);
+            //$mascota->setFotoMascota($fotoMUniq);
 
-        $this->mascotaDAO->Add($mascota);
-        //$mascota->setDniDueno($_SESSION["loggedUser"]->addMascota($mascota)); y guardar 
-        ///alerta buena
-        $this->loginDueno();
+            $this->mascotaDAO->Add($mascota);
+            //$mascota->setDniDueno($_SESSION["loggedUser"]->addMascota($mascota)); y guardar 
+            $alert = new Alert("success", "Mascota agregada");
+            $this->loginDueno($alert);
+        } else
+            $this->Index();
     }
 
-    public function Remove($id)
+    /*public function Remove($id)
     {
-        $this->mascotaDAO->Remove($id); //modificar funcion
-        ///y remover de dueño si la tiene
-        ///alerta buena
-        $this->loginDueno();
-    }
+        if (isset($_SESSION["loggedUser"])) {
+            $bien = $this->mascotaDAO->Remove($id); //modificar funcion
+            ///y remover de dueño si la tiene
+            if ($bien)
+                $alert = new Alert("success", "Mascota borrada exitosamente");
+            else
+                $alert = new Alert("warning", "Error borrando la mascota");
+            $this->loginDueno($alert);
+        } else
+            $this->Index();
+    }*/
 }
