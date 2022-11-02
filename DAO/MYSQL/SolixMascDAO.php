@@ -12,9 +12,6 @@ class SolixMascDAO
 {
     private $connection;
     private $tableName = "solicitudxmascota";
-    //private $usuarioList = array();
-    //private $filename;
-
 
     public function add($arrayMascotas, $idSolicitud)
     {

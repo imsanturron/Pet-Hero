@@ -12,8 +12,6 @@ class SolicitudDAO
 {
     private $connection;
     private $tableName = "solicitudes";
-    //private $usuarioList = array();
-    //private $filename;
 
     public function Add(Solicitud $solicitud)
     {
