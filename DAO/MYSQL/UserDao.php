@@ -92,16 +92,10 @@ class UserDAO
       $resultSet = $this->connection->Execute($query, $parameters);
 
       foreach ($resultSet as $row) {
-                $usuario = new User();
-                //$usuario->setUserName($row["username"]);
-                //$usuario->setPassword($row["password"]);
-                //$usuario->setDni($row["dni"]);
-                //$usuario->setEmail($row["email"]);
-                $usuario->setTipo($row["tipo"]);
-                ////////
-            }
+        $usuario = new User();
+        $usuario->setTipo($row["tipo"]);
+      }
 
-      //return $resultSet;
       return $usuario->getTipo();
     } catch (Exception $ex) {
       throw $ex;
@@ -166,28 +160,26 @@ class UserDAO
     }
   }
 
-  public function removeUserByDni($dni){
+  public function removeUserByDni($dni)
+  {
 
-    try
-    {
-        $solicitud = null;
+    try {
+      $solicitud = null;
 
-        $query = "DELETE FROM ".$this->tableName." WHERE dni = :dni";
+      $query = "DELETE FROM " . $this->tableName . " WHERE dni = :dni";
 
-        $parameters["dni"] = $dni;
+      $parameters["dni"] = $dni;
 
-        $this->connection = Connection::GetInstance();
+      $this->connection = Connection::GetInstance();
 
-        $resultSet = $this->connection->Execute($query, $parameters);
-        
-  
-        return true;
+      $resultSet = $this->connection->Execute($query, $parameters);
+
+
+      return true;
+    } catch (Exception $ex) {
+      throw $ex;
     }
-    catch(Exception $ex)
-    {
-        throw $ex;
-    }
-}
+  }
 
   ///////////////////////////////////////////FUNCIONES JSONJJSONJSON/////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////
