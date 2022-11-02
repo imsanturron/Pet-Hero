@@ -98,20 +98,28 @@ class AuthController
     if ($ffin)
       $ff = date("Y-m-d", strtotime($ffin));
 
+    /*if ($ffin && $despDeHoy == false) { ///verificar si fini es antes de ff
+      if (strtotime($fini) <= strtotime($ff))
+        return true;
+      else
+        return false;
+    } else if ($ffin == null) {
+      if (strtotime($fini) >= strtotime(date("Y-m-d"))) ///verificar que fini mayor que hoy
+        return true;
+      else
+        return false;
+    } else if ($ffin && $despDeHoy == true) { //primer if + fini despues de hoy
+      if (strtotime($fini) >= strtotime(date("Y-m-d")) && strtotime($fini) <= strtotime($ff))
+        return true;
+      else
+        return false;
+    }*/
+
+
     //var_dump(strtotime(date("Y-m-d")));
     //var_dump($ff);
     //var_dump(date("Y-m-d"));
 
-    /*if ($fini < date("Y-m-d")) {
-      if ($ff && $fini < $ff) {
-        return true;
-      }
-      return false;
-    }
-    return false;*/
-
-    ///validar que sea desp de hoy?
-    //comparar fechas normal?
     $fini = explode("-", $finic);
     if ($ffin)
       $ff = explode("-", $ffin);
@@ -204,53 +212,8 @@ class AuthController
     } else
       return true;
   }
-  //usort($animales, fn($a, $b) => strcmp($a->getRaza(), $b->getRaza()));
 
-  /*$bool = false;
-    $comp = null;
-    if (isset($animales) && !empty($animales)) {
-      usort($animales, fn ($a, $b) => strcmp($a->getRaza(), $b->getRaza()));
-      $bool = true;
-      foreach ($animales as $an) {
-        if ($comp == null)
-          $comp = $an->getRaza();
-        else if ($comp != $an->getRaza()) {
-          return false;
-        } else
-          $comp = $an->getRaza();
-      }
-      return true;
-    } else
-      return false;*/
-
-
-  /*
-    $fini = date("Y-m-d", strtotime($finic));
-    if ($ffin)
-      $ff = date("Y-m-d", strtotime($ffin));
-
-    if ($fini < date("Y-m-d")) {
-      if ($ff && $fini < $ff) {
-        return true;
-      }
-      return false;
-    }
-    return false;
-
-  /*  --- NO BORRAR ---
-  if($ffin != null){
-    if ((strtotime($finic) < strtotime('now')) && (strtotime($finic) < strtotime($ffin))) 
-      return true;
-        else
-      return false;
-  }
-    if (strtotime($finic) < strtotime('now'))
-      return true;
-    else
-      return false;
-  */
-
-
+  
   public function Logout()
   {
     session_destroy();

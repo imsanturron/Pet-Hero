@@ -87,6 +87,16 @@ class GuardianController
                 $_SESSION["loggedUser"] = $guardian;
                 if ($bien) {
                     $alert = new Alert("success", "Disponibilidad actualizada");
+                    //////////
+                    $solicitud = new SolicitudDAO(); //borrar solicitudes que no estan en mi nuevo rango disponible
+                    $solicitudes = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
+                    foreach($solicitudes as $soli){
+                        if(AuthController::ValidarFecha($soli->getFechaInicio(), $desde)
+                            || AuthController::ValidarFecha($hasta, $soli->getFechaFin())){
+                                 $solicitud->removeSolicitudById($soli->getId()); //creo q bien, checkear
+                            }
+                    }
+                    /////////
                 } else {
                     $alert = new Alert("warning", "Error actualizando disponibilidad");
                 }
@@ -115,10 +125,10 @@ class GuardianController
                 $solicitudXmasc = new SolixMascDAO();
 
                 $soli = $solicitud->GetById($solicitudId);
-                var_dump($soli);
-                $reserva = new Reserva($soli); //xq hacer esto?
+                //var_dump($soli);
+                $reserva = new Reserva($soli); 
                 $reservaDAO = new ReservaDAO();
-                $reservaDAO->add($reserva);
+                $reservaDAO->add($reserva); ///pareciera que llega vacio
                 $resul = $solicitud->removeSolicitudById($solicitudId);
                 $resul2 = $solicitudXmasc->removeSolicitudMascIntById($idIntermedia); //!//
                 $intermediaMascotasXreserva = new ResxMascDAO();
@@ -178,7 +188,9 @@ class GuardianController
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
             $bien = $this->guardianDAO->removeGuardianByDni($dni);
-            if ($bien)
+            $bien2 = $userDAO = new UserDAO;
+            $bien2 = $userDAO->removeUserByDni($dni);
+            if ($bien && $bien2)
                 $alert = new Alert("success", "Usuario borrado exitosamente");
             else
                 $alert = new Alert("warning", "Error borrando el usuario");

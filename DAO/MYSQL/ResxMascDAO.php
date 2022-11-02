@@ -12,9 +12,6 @@ class ResxMascDAO
 {
     private $connection;
     private $tableName = "reservaxmascota";
-    //private $usuarioList = array();
-    //private $filename;
-
 
     public function add($arrayMascotas, $idReserva)
     {

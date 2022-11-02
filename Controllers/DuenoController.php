@@ -196,7 +196,9 @@ class DuenoController
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             $bien = $this->duenoDAO->removeDuenoByDni($dni);
-            if ($bien)
+            $bien2 = $userDAO = new UserDAO;
+            $bien2 = $userDAO->removeUserByDni($dni);
+            if ($bien && $bien2)
                 $alert = new Alert("success", "Usuario borrado exitosamente");
             else
                 $alert = new Alert("warning", "Error borrando el usuario");
