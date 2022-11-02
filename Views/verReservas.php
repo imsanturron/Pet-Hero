@@ -17,22 +17,18 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
     if ($_SESSION['tipo'] == 'g') {
         $guardian = $_SESSION['loggedUser'];
         $reservas = new ReservaDAO();
-        //$solis = $solicitudes->GetAll(); ///get all by id desp
         $ress = $reservas->getReservasByDniGuardian($guardian->getDni());
         $mascota = new MascotaDAO(); ///get all by id desp
         $mascotas = $mascota->GetAll(); ///get all by id desp
-        //$mascotas = $mascota->getMascotasByIdSolicitud();
         $resXmascDAO = new ResxMascDAO();
         $mascXres = $resXmascDAO->GetAll();
         $ingreso = false; //SIRVE PARA VERIFICAR SI EL DUEÑO TIENE ALGUNA SOLICITUD
     } else {
         $dueno = $_SESSION['loggedUser'];
         $reservas = new ReservaDAO();
-        //$solis = $solicitudes->GetAll(); ///get all by id desp
         $ress = $reservas->getReservasByDniDueno($dueno->getDni());
         $mascota = new MascotaDAO(); ///get all by id desp
         $mascotas = $mascota->GetAll(); ///get all by id desp
-        //$mascotas = $mascota->getMascotasByIdSolicitud();
         $resXmascDAO = new ResxMascDAO();
         $mascXres = $resXmascDAO->GetAll();
         $ingreso = false; //SIRVE PARA VERIFICAR SI EL DUEÑO TIENE ALGUNA SOLICITUD
@@ -76,7 +72,7 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
 
                                     <?php foreach ($mascXres as $tabla) { ?>
 
-                                        <?php if ($tabla->getIdSolicitud() == $reserva->getId()) {  ?>
+                                        <?php if ($tabla->getIdReserva() == $reserva->getId()) {  ?>
                                             <?php $idMascotaX = $tabla->getIdMascota();  ?>
                                             <?php foreach ($mascotas as $masc) {
                                                 if ($masc->getId() == $idMascotaX) { ?>

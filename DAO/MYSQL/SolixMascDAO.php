@@ -69,6 +69,24 @@ class SolixMascDAO
 
             $resultSet = $this->connection->Execute($query, $parameters);
 
+            return true;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    function removeSolicitudMascIntByIdSolicitud($idSolicitud)
+    {
+        try {
+            $solicitud = null;
+
+            $query = "DELETE FROM " . $this->tableName . " WHERE idSolicitud = :idSolicitud";
+
+            $parameters["idSolicitud"] = $idSolicitud;
+
+            $this->connection = Connection::GetInstance();
+
+            $resultSet = $this->connection->Execute($query, $parameters);
 
             return true;
         } catch (Exception $ex) {

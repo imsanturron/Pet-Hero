@@ -83,7 +83,6 @@ class SolicitudDAO
             foreach ($resultSet as $row) {
                 $solicitud = new Solicitud();
                 $solicitud->setId($row["id"]);
-                //$solicitud->setAnimales($row["animales"]);
                 $solicitud->setFechaInicio($row["FechaInicio"]);
                 $solicitud->setFechaFin($row["FechaFin"]);
                 $solicitud->setNombreDueno($row["nombreDueno"]);
@@ -120,8 +119,6 @@ class SolicitudDAO
             foreach ($resultSet as $row) {
                 $solicitud = new Solicitud();
                 $solicitud->setId($row["id"]);
-
-                ////////
             }
 
             return $solicitud->getId();

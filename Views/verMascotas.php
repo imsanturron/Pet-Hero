@@ -21,6 +21,7 @@ $listaMascotas = $mascotasDao->GetAll();
                          <th>Tamaño</th>
                          <th>Observaciones</th>
                          <th>Foto</th>
+                         <th>Opcion</th>
                     </thead>
                     <tbody>
                          <form action="<?php echo FRONT_ROOT ?>Mascota/Remove" method="POST">

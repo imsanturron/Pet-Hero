@@ -17,6 +17,7 @@ class ResxMascDAO
     {
         try {
             foreach ($arrayMascotas as $masc) {
+
                 $query = "INSERT INTO " . $this->tableName . " (idReserva, idMascota)
              VALUES (:idReserva, :idMascota);";
                 ///id fk?
@@ -54,26 +55,24 @@ class ResxMascDAO
     }
 
     function getIdMascotaByIdReserva($idReserva) /////
-        {
-          try {
-           
+    {
+        try {
+
             $query = "SELECT idMascota FROM " . $this->tableName . " WHERE idReserva = :idReserva"; //Limit 1?
-      
+
             $parameters["idReserva"] = $idReserva;
-      
+
             $this->connection = Connection::GetInstance();
-      
+
             $resultSet = $this->connection->Execute($query, $parameters);
-      
+
             foreach ($resultSet as $row) {
                 $resXmasc = new ResxMasc();
-                $resXmasc->setIdResxMasc($row["idResxMasc"]);
-                $resXmasc->setIdReserva($row["idReserva"]);
                 $resXmasc->setIdMascota($row["idMascota"]);
             }
-              return $resXmasc->getIdMascota();
-          } catch (Exception $ex) {
+            return $resXmasc->getIdMascota();
+        } catch (Exception $ex) {
             throw $ex;
-          }
         }
+    }
 }

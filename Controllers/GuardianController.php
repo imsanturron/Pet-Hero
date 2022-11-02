@@ -52,7 +52,7 @@ class GuardianController
         require_once(VIEWS_PATH . "verSolicitudes.php");
     }
 
-    public function opcionMenuPrincipal($opcion)
+    public function opcionMenuPrincipal($opcion) ///cambiar tamaño mascota a cuidar
     {
         ///alerta de disponibilidad obsoleta?
         ///checkear reservas que venzan en fecha
@@ -111,26 +111,33 @@ class GuardianController
 
     public function operarSolicitud($idIntermedia, $animales, $solicitudId, $operacion)
     {
-        echo "echo de id de la intermedia: " . $idIntermedia . "<br><br>";
-        echo "animales-->  ";
-        print_r($animales);
+        //echo "echo de id de la intermedia: " . $idIntermedia . "<br><br>";
+        //echo "echo de id de la solicitud: " . $solicitudId . "<br><br>";
+        //echo "animales-->  ";
+        //print_r($animales);
         $mascotas = new MascotaDAO();
-        $arrayMascotas = $mascotas->getArrayByIds($animales);
-        echo "mascotas-->  ";
-        print_r($mascotas);
+        $arrayMascotas = $mascotas->getArrayByIds($animales); //chequear
+        //echo "<br><br>mascotas-->  ";
+        //print_r($mascotas);
+        //echo "<br><br> **";
 
-        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") { //ver xq en intermedias va uno solo
             if ($operacion == "aceptar") {
                 $solicitud = new SolicitudDAO();
                 $solicitudXmasc = new SolixMascDAO();
 
+                //echo $solicitudId;
                 $soli = $solicitud->GetById($solicitudId);
                 //var_dump($soli);
-                $reserva = new Reserva($soli); 
+                //var_dump($soli);da null si refersh
+                //echo "<br> -----_______-------- <br>";
+                $reserva = new Reserva($soli);
+                //var_dump($reserva); 
                 $reservaDAO = new ReservaDAO();
-                $reservaDAO->add($reserva); ///pareciera que llega vacio
+                $reservaDAO->add($reserva); 
                 $resul = $solicitud->removeSolicitudById($solicitudId);
-                $resul2 = $solicitudXmasc->removeSolicitudMascIntById($idIntermedia); //!//
+                //$resul2 = $solicitudXmasc->removeSolicitudMascIntById($idIntermedia); //!//andaba pero removia solo 1
+                $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($solicitudId); //nueva y la q va creo
                 $intermediaMascotasXreserva = new ResxMascDAO();
                 $intermediaMascotasXreserva->add($arrayMascotas, $solicitudId);
                 ///********///
