@@ -8,10 +8,23 @@ class Reserva extends Solicitud
 
     public function __construct(Solicitud $solicitud = null)
     {
-        parent::__construct($solicitud->getAnimales(), $solicitud->getFechaInicio(),$solicitud->getFechaFin());
-        
+       // parent::__construct($solicitud->getAnimales(), $solicitud->getFechaInicio(),$solicitud->getFechaFin());
+       
+       if($solicitud){
+        $this->setId($solicitud->getId());
+        $this->setFechaInicio($solicitud->getFechaInicio());    
+        $this->setFechaFin($solicitud->getFechaFin());   
+        $this->setNombreDueno($solicitud->getNombreDueno());   
+        $this->setDniDueno($solicitud->getDniDueno());  
+        $this->setNombreGuardian($solicitud->getNombreGuardian());   
+        $this->setDniGuardian($solicitud->getDniGuardian());
+        $this->setDireccionGuardian($solicitud->getDireccionGuardian());   
+        $this->setTelefonoDueno($solicitud->getTelefonoDueno());
+        $this->setTelefonoGuardian($solicitud->getTelefonoGuardian());
+
         ///setear estado comaparando con fecha actual.
         $this->estado = "proximo";
+    }
     }
 
     public function getEstado()

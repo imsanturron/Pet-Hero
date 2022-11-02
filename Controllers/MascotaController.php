@@ -80,10 +80,10 @@ class MascotaController
             $this->Index();
     }
 
-    /*public function Remove($id)
+    public function Remove($id)
     {
         if (isset($_SESSION["loggedUser"])) {
-            $bien = $this->mascotaDAO->Remove($id); //modificar funcion
+            $bien = $this->mascotaDAO->removeMascotaById($id); //modificar funcion
             ///y remover de dueño si la tiene
             if ($bien)
                 $alert = new Alert("success", "Mascota borrada exitosamente");
@@ -92,5 +92,5 @@ class MascotaController
             $this->loginDueno($alert);
         } else
             $this->Index();
-    }*/
+    }
 }

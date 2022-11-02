@@ -1,5 +1,11 @@
 <?php
+
+use DAO\MYSQL\MascotaDAO;
+use Models\Mascota as Mascota;
+
 include('nav-bar.php');
+$mascota = new MascotaDAO;
+$mascotas = $mascota->getMascotasByDniDueno($_SESSION["loggedUser"]->getDni());
 ?>
 <main class="py-5">
 
@@ -26,11 +32,7 @@ include('nav-bar.php');
                             <td><?php echo $_SESSION["loggedUser"]->getEmail(); ?></td>
                             <td><?php echo $_SESSION["loggedUser"]->getDireccion(); ?></td>
                             <td><?php echo $_SESSION["loggedUser"]->getTelefono(); ?></td>
-                            <td><?php if ($_SESSION["loggedUser"]->getMascotas())
-                                    print_r($_SESSION["loggedUser"]->getMascotas());
-                                else ///cambiar por mascota controllers
-                                    echo "No hay mascotas cargadas";
-                                ?></td>
+                            <td> <a href="<?php echo FRONT_ROOT ?>Dueno/verMascotas"> Apreta para ver</a> </td>
                             </tr>
                         <?php } ?>
                     </form>
