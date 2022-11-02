@@ -166,6 +166,29 @@ class GuardianDAO
         }
     }
 
+    public function removeGuardianByDni($dni){
+
+        try
+        {
+            $solicitud = null;
+
+            $query = "DELETE FROM ".$this->tableName." WHERE dni = :dni";
+
+            $parameters["dni"] = $dni;
+
+            $this->connection = Connection::GetInstance();
+
+            $resultSet = $this->connection->Execute($query, $parameters);
+            
+      
+            return true;
+        }
+        catch(Exception $ex)
+        {
+            throw $ex;
+        }
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////FUNCIONES JSONJJSONJSON/////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////

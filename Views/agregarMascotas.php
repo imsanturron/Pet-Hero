@@ -40,10 +40,10 @@ include('nav-bar.php');
                     <option value="perro"> Perro </option>
                 </td>
                 <td>
-                  <input type="text" name="nombre" required> <? //ver como hacer menu distinto ?>
+                  <input type="text" name="nombre" required> 
                 </td>
                 <td>
-                  <input type="text" name="raza" required>
+                  <input type="text" name="raza" required> <? //ver como hacer menu distinto ?>
                 </td>
                 <td>
                   <select name="tamano" required>

@@ -4,6 +4,7 @@ class Pago
 {
     private $id; //PK
     private $dniDueno; //FK
+    private $dniGuardian; //FK
     private $monto;
     private $fecha;
     private $formaDePago;
@@ -64,6 +65,24 @@ class Pago
     public function setDniDueno($dniDueno): self
     {
         $this->dniDueno = $dniDueno;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of dniGuardian
+     */
+    public function getDniGuardian()
+    {
+        return $this->dniGuardian;
+    }
+
+    /**
+     * Set the value of dniGuardian
+     */
+    public function setDniGuardian($dniGuardian): self
+    {
+        $this->dniGuardian = $dniGuardian;
 
         return $this;
     }
