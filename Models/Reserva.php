@@ -11,16 +11,16 @@ class Reserva extends Solicitud
        // parent::__construct($solicitud->getAnimales(), $solicitud->getFechaInicio(),$solicitud->getFechaFin());
        
        if($solicitud){
-       $this->setId($solicitud->GetId());
-        $this->setFechaInicio($solicitud->GetFechaInicio());    
-        $this->setFechaFin($solicitud->GetFechaFin());   
-        $this->setNombreDueno($solicitud->GetNombreDueno());   
-        $this->setDniDueno($solicitud->GetDniDueno());  
-        $this->setNombreGuardian($solicitud->GetNombreGuardian());   
-        $this->setDniGuardian($solicitud->GetDniGuardian());
-        $this->setDireccionGuardian($solicitud->GetDireccionGuardian());   
-        $this->setTelefonoDueno($solicitud->GetTelefonoDueno());
-        $this->setTelefonoGuardian($solicitud->GetTelefonoGuardian());
+        $this->setId($solicitud->getId());
+        $this->setFechaInicio($solicitud->getFechaInicio());    
+        $this->setFechaFin($solicitud->getFechaFin());   
+        $this->setNombreDueno($solicitud->getNombreDueno());   
+        $this->setDniDueno($solicitud->getDniDueno());  
+        $this->setNombreGuardian($solicitud->getNombreGuardian());   
+        $this->setDniGuardian($solicitud->getDniGuardian());
+        $this->setDireccionGuardian($solicitud->getDireccionGuardian());   
+        $this->setTelefonoDueno($solicitud->getTelefonoDueno());
+        $this->setTelefonoGuardian($solicitud->getTelefonoGuardian());
 
         ///setear estado comaparando con fecha actual.
         $this->estado = "proximo";

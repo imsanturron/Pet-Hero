@@ -17,6 +17,7 @@ include('nav-bar.php');
                     <th>Disponibilidad actual</th>
                     <th>Precio</th>
                     <th>Reservas</th>
+                    <th>Solicitudes</th>
                 </thead>
                 <tbody>
                     <form action="<?php echo FRONT_ROOT ?>Home/cambiarPerfil" method="POST">
@@ -33,6 +34,8 @@ include('nav-bar.php');
                                     echo "no ha seleccionado disponibilidad";
                                 } ?> </td>
                             <td><?php echo $_SESSION["loggedUser"]->getPrecio(); ?></td>
+                            <td><a href="<?php echo FRONT_ROOT ?>Guardian/verReservas"> Apreta para ver</a></td>
+                            <td><a href="<?php echo FRONT_ROOT ?>Guardian/verSolicitudes"> Apreta para ver</a></td>
                             </tr>
                         <?php } ?>
                     </form>

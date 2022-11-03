@@ -12,6 +12,9 @@ use DAO\MYSQL\SolicitudDAO;
 //use DAO\JSON\UserDAO as UserDAO;
 use DAO\MYSQL\UserDAO as UserDAO;
 use DAO\MYSQL\ReservaDAO as ReservaDAO;
+use DAO\MYSQL\SolixMascDAO as SolixMascDAO;
+use DAO\MYSQL\MascotaDAO as MascotaDAO;
+use DAO\MYSQL\ResxMascDAO as ResxMascDAO;
 
 class GuardianController
 {
@@ -40,8 +43,16 @@ class GuardianController
     {
         require_once(VIEWS_PATH . "registroGuardian.php");
     }
+    public function verReservas(Alert $alert = null)
+    {
+        require_once(VIEWS_PATH . "verReservas.php");
+    }
+    public function verSolicitudes(Alert $alert = null)
+    {
+        require_once(VIEWS_PATH . "verSolicitudes.php");
+    }
 
-    public function opcionMenuPrincipal($opcion)
+    public function opcionMenuPrincipal($opcion) ///cambiar tamaño mascota a cuidar
     {
         ///alerta de disponibilidad obsoleta?
         ///checkear reservas que venzan en fecha
@@ -51,7 +62,7 @@ class GuardianController
             if ($opcion == "indicarDisponibilidad") {
                 require_once(VIEWS_PATH . "indicarDisponibilidad.php");
             } else if ($opcion == "verListadReservas") {
-                require_once(VIEWS_PATH . "loginGuardian.php");
+                require_once(VIEWS_PATH . "verReservas.php");
             } else if ($opcion == "verPerfil") {
                 ///sin terminar
                 require_once(VIEWS_PATH . "perfilGuardian.php");
@@ -76,6 +87,16 @@ class GuardianController
                 $_SESSION["loggedUser"] = $guardian;
                 if ($bien) {
                     $alert = new Alert("success", "Disponibilidad actualizada");
+                    $solicitud = new SolicitudDAO(); //borrar solicitudes que no estan en mi nuevo rango disponible
+                    $solicitudes = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
+                    foreach($solicitudes as $soli){
+                        if(AuthController::ValidarFecha($soli->getFechaInicio(), $desde)
+                            || AuthController::ValidarFecha($hasta, $soli->getFechaFin())){
+                                 $solicitud->removeSolicitudById($soli->getId()); //creo q bien, checkear
+                                 $alert = new Alert("success", "Disponibilidad actualizada + solis removidas");
+                            }
+                    }
+                    
                 } else {
                     $alert = new Alert("warning", "Error actualizando disponibilidad");
                 }
@@ -88,34 +109,42 @@ class GuardianController
             $this->home();
     }
 
-    public function operarSolicitud($solicitudId, $operacion)
+    public function operarSolicitud($idIntermedia, $animales, $solicitudId, $operacion)
     {
+        $mascotas = new MascotaDAO();
+        $arrayMascotas = $mascotas->getArrayByIds($animales);
+
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
             if ($operacion == "aceptar") {
                 $solicitud = new SolicitudDAO();
-               // $soli = $_SESSION["loggedUser"]->getSolicitudById($solicitudId);
-               
-               $soli = $solicitud->GetById($solicitudId);
-               $reserva = new Reserva($soli);
-               $reservaDAO = new ReservaDAO();
-               $reservaDAO->add($reserva);
-               $resul=$solicitud->removeSolicitud($solicitudId);
-                ///********///
-                if($resul){
-                $alert = new Alert("success", "Solicitud aceptada");
-                }else{
-                    $alert = new Alert("warning", "No se borro la solicitud");
+                $solicitudXmasc = new SolixMascDAO();
+
+                $soli = $solicitud->GetById($solicitudId);
+                $reserva = new Reserva($soli);
+                $reservaDAO = new ReservaDAO();
+                $reservaDAO->add($reserva); 
+                $resul = $solicitud->removeSolicitudById($solicitudId);
+                $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($solicitudId);
+                $intermediaMascotasXreserva = new ResxMascDAO();
+                $intermediaMascotasXreserva->add($arrayMascotas, $solicitudId);
+                
+                if ($resul && $resul2) {
+                    $alert = new Alert("success", "Solicitud aceptada");
+                } else {
+                    $alert = new Alert("warning", "No se borro alguna solicitud");
                 }
             } else if ($operacion == "rechazar") {
-               
+
                 $solicitud = new SolicitudDAO();
-                $resul=$solicutud->removeSolicitud($solicitudId);
-              
-                if($resul){
+                $solicitudXmasc = new SolixMascDAO();
+                $resul = $solicitud->removeSolicitudById($solicitudId);
+                $resul2 = $solicitudXmasc->removeSolicitudMascIntById($idIntermedia); //!//
+
+                if ($resul && $resul2) {
                     $alert = new Alert("success", "Solicitud borrada con exito");
-                    }else{
-                        $alert = new Alert("warning", "No se borro la solicitud");
-                    }
+                } else {
+                    $alert = new Alert("warning", "No se borro alguna solicitud");
+                }
             }
             $this->login($alert);
         }
@@ -149,17 +178,18 @@ class GuardianController
         }
     }
 
-    /*public function Remove($dni)
+    public function Remove($dni)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
-            $bien = $this->guardianDAO->Remove($dni);
-            if ($bien)
+            $bien = $this->guardianDAO->removeGuardianByDni($dni);
+            $bien2 = $userDAO = new UserDAO;
+            $bien2 = $userDAO->removeUserByDni($dni);
+            if ($bien && $bien2)
                 $alert = new Alert("success", "Usuario borrado exitosamente");
             else
                 $alert = new Alert("warning", "Error borrando el usuario");
-
             $this->home($alert);
         } else
             $this->home();
-    }*/
+    }
 }

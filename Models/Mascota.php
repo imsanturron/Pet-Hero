@@ -2,7 +2,6 @@
 class Mascota{
 
     private $dniDueno; //FK
-    private $idSoliRes; //FK
     private $id; //PK
     private $especie;
     private $nombre;
@@ -12,6 +11,7 @@ class Mascota{
     private $fotoMascota;
     private $video;
     private $planVacunacion;
+    //private $ocupada; true false y ver si podemos mandar solicitud con mascota reservada.
     
     public function getNombre()
     {

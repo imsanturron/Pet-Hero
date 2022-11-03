@@ -19,6 +19,7 @@ $guardian = $guardianes->getByDni($dni);
     <section id="listado" class="mb-5">
         <div class="container">
             <h2 class="mb-4">Elegir mascotas a cuidar</h2>
+            Recuerda, deberan ser de la misma raza <br>
             <table class="table bg-light-alpha">
                 <thead>
                     <th>Nombre</th>
@@ -32,7 +33,7 @@ $guardian = $guardianes->getByDni($dni);
                     <form action="<?php echo FRONT_ROOT ?>Dueno/ElegirGuardianFinal" method="POST">
                         <?php
                         if (isset($listaMascotas) && !empty($listaMascotas)) {
-                           
+
                             foreach ($listaMascotas as $mascota) {
                         ?>
                                 <?php if (
