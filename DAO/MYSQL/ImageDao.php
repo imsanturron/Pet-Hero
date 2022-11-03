@@ -14,13 +14,15 @@
         {
             try
             {
-                $query = "CALL images_add(?);";
+                $query = "INSERT INTO " . $this->tableName . " (name)
+             VALUES (:name);";
+
                 
-                $parameters["nombre"] = $image->getNombre();
+                $parameters["name"] = $image->getNombre();
 
                 $this->connection = Connection::GetInstance();
 
-                $this->connection->ExecuteNonQuery($query, $parameters, QueryType::StoredProcedure);
+                $this->connection->ExecuteNonQuery($query, $parameters);
             }
             catch(Exception $ex)
             {

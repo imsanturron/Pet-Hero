@@ -91,17 +91,7 @@ class DuenoController
     public function ElegirGuardian($dni, $desde, $hasta)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
-            ////$guardianes = new GuardianDAO();
-            ////$guardian = new Guardian(); /////////////
-            ////$guardian = $guardianes->getByDni($dni); no deja tampoco no se xq
             require_once(VIEWS_PATH . "solicitarCuidadoMasc.php");
-            //$guardianes->remove($guardian);// DESCOMENTAR CUANDO PUEDA RETORNAR SOLICITUDES
-            //$solicitud = new Solicitud($desde, $hasta);
-            //$guardianes->addSolicitudDao($solicitud, $dni); //*****************//
-            //$guardian->addSolicitud($solicitud);
-            //$solicitudes=$guardian->getSolicitudes();//ME CREA ARREGLOS VACIOS DENTRO DEL ARREGLO
-            //$guardianes->add($guardian);
-            //$this->login();
         } else
             $this->home();
     }
@@ -109,31 +99,27 @@ class DuenoController
     public function ElegirGuardianFinal($animales, $dni, $desde, $hasta)
     {
         $mascotas = new MascotaDAO();
-        $arrayMascotas = $mascotas->getArrayByIds($animales); ///y mandar mascotas que ya tenga
+        $arrayMascotas = $mascotas->getArrayByIds($animales); 
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
-            $valid = AuthController::ValidarMismaRaza($arrayMascotas, $dni, $desde, $hasta); ////////!arreglar!////+mascotas que tenga//
-            $valid2 = AuthController::VerifGuardianSoliNuestraRepetida($dni); //hacer - creo q necesario
+            $valid = AuthController::ValidarMismaRaza($arrayMascotas, $dni, $desde, $hasta); //chequear con mascotas q ya tenga
+            $valid2 = AuthController::VerifGuardianSoliNuestraRepetida($dni); 
             ///ver ocupacion de mascotas y de guardianes.
             if ($valid && $valid2) {
 
                 $guardianes = new GuardianDAO();
                 $guardian = $guardianes->getByDni($dni);
-                //EN ALGUN MOMENTO DE ACA AL ANIMAL HABRIA QUE AGREGARLE LA SOLICITUD
 
                 $solicitud = new Solicitud($guardian, $_SESSION["loggedUser"], $desde, $hasta);
                 $solicitudesD = new SolicitudDAO;
 
                 $solicitudesD->Add($solicitud);
                 $idSolicitud = $solicitudesD->GetIdByDniDuenoYGuardian($solicitud->getDniDueno(), $solicitud->getDniGuardian());
-                ///hacer tabla solicitud x mascota -- idsxidm
-                ///tamb tabla reserva x mascota -- idrxidm con estado creo
                 $intermediaMascotasXsolicitud = new SolixMascDAO();
-                $intermediaMascotasXsolicitud->add($arrayMascotas, $idSolicitud); //Esta funcion tendria que colocar el id de la solicitud en cada mascota que haya elegido
+                $intermediaMascotasXsolicitud->add($arrayMascotas, $idSolicitud);
 
                 $alert = new Alert("success", "Solicitud enviada!");
                 $this->login($alert);
             } else {
-                //cambiar alert dependiendo caso
                 $alert = new Alert("warning", "Hubo un error");
                 $this->login($alert);
             }
@@ -191,7 +177,6 @@ class DuenoController
         $this->login($alert);
     }
 
-    ////////////////////
     public function Remove($dni)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {

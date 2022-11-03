@@ -12,67 +12,36 @@ use Models\Dueno as Dueno;
 use Models\Mascota as Mascota;
 
 if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
-    if ($_SESSION['tipo']  == 'g') {
-        $guardian = $_SESSION['loggedUser'];
-        $solicitudes = new SolicitudDAO();
-        //$solis = $solicitudes->GetAll(); ///get all by id desp
-        $solis = $solicitudes->getSolicitudesByDniGuardian($guardian->getDni());
-        $mascota = new MascotaDAO(); ///get all by id desp
-        $mascotas = $mascota->GetAll(); ///get all by id desp
-        //$mascotas = $mascota->getMascotasByIdSolicitud();
-        $mascXsoliDAO = new SolixMascDAO();
-        $mascXsoli = $mascXsoliDAO->GetAll();
-        $ingreso = false; //SIRVE PARA VERIFICAR SI EL DUEÑO TIENE ALGUNA SOLICITUD
-    } else {
-        $dueno = $_SESSION['loggedUser'];
-        $solicitudes = new SolicitudDAO();
-        //$solis = $solicitudes->GetAll(); ///get all by id desp
-        $solis = $solicitudes->getSolicitudesByDniDueno($dueno->getDni());
-        $mascota = new MascotaDAO(); ///get all by id desp
-        $mascotas = $mascota->GetAll(); ///get all by id desp
-        //$mascotas = $mascota->getMascotasByIdSolicitud();
-        $mascXsoliDAO = new SolixMascDAO();
-        $mascXsoli = $mascXsoliDAO->GetAll();
-        $ingreso = false; //SIRVE PARA VERIFICAR SI EL DUEÑO TIENE ALGUNA SOLICITUD
-    }
-} ?>
+    $mascota = new MascotaDAO(); ///get all by id desp
+    $mascotas = $mascota->GetAll(); ///get all by id desp
+    //$mascotas = $mascota->getMascotasByIdSolicitud();
+    $mascXsoliDAO = new SolixMascDAO();
+    $mascXsoli = $mascXsoliDAO->GetAll();
+    echo $idSolicitud;
+}
+?>
 
 <main class="py-5">
 
     <section id="listado" class="mb-5">
         <div class="container">
-            <?php if ($_SESSION['tipo'] == 'g') { ?>
-                <h2 class="mb-4">Solicitudes de dueños</h2>
-            <?php } else { ?>
-                <h2 class="mb-4">Solicitudes enviadas</h2>
-            <?php } ?>
+            <h2 class="mb-4">Mascotas de la solicitud/reserva</h2>
             <table class="table bg-light-alpha">
 
-                <?php if (isset($solis) && !empty($solis)) { ?>
+                <?php if (isset($mascXsoli) && !empty($mascXsoli)) { ?>
 
                     <thead>
-                        <th>Nombre Dueño</th>
-                        <th>Nombre Guardian</th>
-                        <th>Desde</th>
-                        <th>Hasta</th>
-                        <th>Direccion de guarda</th>
-                       <? // <th>Mascotas de solicitud</th> ?>
-                        <th>Especie</th>
                         <th>Nombre</th>
                         <th>Raza</th>
+                        <th>Tamaño</th>
                         <th>Observaciones</th>
-                        <th>Opcion</th>
+                        <th>Foto</th>
 
 
                     </thead>
                     <tbody>
-                        <?php if ($_SESSION['tipo'] == 'g') { ?>
-                            <form action="<?php echo FRONT_ROOT ?>Guardian/operarSolicitud" method="POST">
-                            <?php } else { ?>
-                                <form action="<?php echo FRONT_ROOT ?>Dueno/cancelarSolicitud" method="POST">
-                                <?php } ?>
 
-                                <?php foreach ($solis as $solicitud) { ?>
+                                <?php foreach ($mascotas as $mascota) { ?>
                                     <tr>
 
                                         <td><?php echo $solicitud->getNombreDueno(); ?></td>
@@ -80,7 +49,7 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                                         <td><?php echo $solicitud->getFechaInicio(); ?></td>
                                         <td><?php echo $solicitud->getFechaFin(); ?></td>
                                         <td><?php echo $solicitud->getDireccionGuardian(); ?></td>
-                                       <? // <td> <a href="<?php echo FRONT_ROOT ?><?//Home/verMascotasSoliRes/<?php echo $solicitud->getId(); ?> <? //"> Ver mascotas</a> </td> ?>
+                                        <td> <a href="<?php echo FRONT_ROOT ?>Home/verMascotasSoliRes"> Ver mascotas</a> </td>
 
                                         <?php foreach ($mascXsoli as $tabla) { ?>
 
