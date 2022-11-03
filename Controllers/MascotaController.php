@@ -66,7 +66,7 @@ class MascotaController
             $extension = strtolower(pathinfo($_FILES['fotoM']['name'], PATHINFO_EXTENSION));
             //echo "<br>extension ---> " . $extension;
 
-            if (strcmp($extension, 'jpg') == 0 || strcmp($extension, 'png')) {
+            if (strcmp($extension, 'jpg') == 0 || strcmp($extension, 'png') == 0) {
 
                 $sizeFM = $_FILES['fotoM']['size'];
                 //echo "<br>sizeFM  ----> " . $sizeFM;
@@ -95,7 +95,7 @@ class MascotaController
 
                 $extension = strtolower(pathinfo($_FILES['planVacunacion']['name'], PATHINFO_EXTENSION));
 
-                if (strcmp($extension, 'jpg') == 0 || strcmp($extension, 'png')) {
+                if (strcmp($extension, 'jpg') == 0 || strcmp($extension, 'png') == 0) {
                     $sizePV = $_FILES['planVacunacion']['size'];
 
                     if ($sizePV > 1000000) { // 1mb
@@ -135,7 +135,7 @@ class MascotaController
                     echo "error 9";
                 }
             } else
-                $video = null;
+                $video = null; //sino da error raro cuando no mando
             ///preguntar si nombre o algo asi
             $mascota = new Mascota();
             $mascota->setDniDueno($_SESSION["loggedUser"]->getDni());
