@@ -21,6 +21,8 @@ $listaMascotas = $mascotasDao->GetAll();
                          <th>Tamaño</th>
                          <th>Observaciones</th>
                          <th>Foto</th>
+                         <th>Plan de vacunacion</th>
+                         <th>Video</th>
                          <th>Opcion</th>
                     </thead>
                     <tbody>
@@ -36,7 +38,15 @@ $listaMascotas = $mascotasDao->GetAll();
                                                   <td><?php echo $mascota->getRaza(); ?></td>
                                                   <td><?php echo $mascota->getTamano(); ?></td>
                                                   <td><?php echo $mascota->getObservaciones(); ?></td>
-                                                  <td><img src="<?php echo IMG_PATH . $mascota->getFotoMascota() ?>"></td>
+                                                  <td><img src="<?php echo FRONT_ROOT . IMG_PATH . $mascota->getFotoMascota() ?>"></td>
+                                                  <td><img src="<?php echo FRONT_ROOT . IMG_PATH . $mascota->getPlanVacunacion() ?>"></td>
+                                                  <td>
+                                                       <?php if ($mascota->getVideo()) { ?>
+                                                            <video controls width="220" height="140">
+                                                                 <source src="<?php echo FRONT_ROOT . VIDEO_PATH . $mascota->getVideo() ?>" type="video/mp4">
+                                                            </video>
+                                                       <?php } ?>
+                                                  </td>
                                                   <td>
                                                        <input type="hidden" name="id" value="<?php echo $mascota->getId(); ?>">
                                                        <button type="submit" class="btn btn-danger" ?> Eliminar </button>

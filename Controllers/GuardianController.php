@@ -87,13 +87,13 @@ class GuardianController
                 $_SESSION["loggedUser"] = $guardian;
                 if ($bien) {
                     $alert = new Alert("success", "Disponibilidad actualizada");
-                    //////////
                     $solicitud = new SolicitudDAO(); //borrar solicitudes que no estan en mi nuevo rango disponible
                     $solicitudes = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
                     foreach($solicitudes as $soli){
                         if(AuthController::ValidarFecha($soli->getFechaInicio(), $desde)
                             || AuthController::ValidarFecha($hasta, $soli->getFechaFin())){
                                  $solicitud->removeSolicitudById($soli->getId()); //creo q bien, checkear
+                                 $alert = new Alert("success", "Disponibilidad actualizada + solis removidas");
                             }
                     }
                     /////////
@@ -111,33 +111,20 @@ class GuardianController
 
     public function operarSolicitud($idIntermedia, $animales, $solicitudId, $operacion)
     {
-        //echo "echo de id de la intermedia: " . $idIntermedia . "<br><br>";
-        //echo "echo de id de la solicitud: " . $solicitudId . "<br><br>";
-        //echo "animales-->  ";
-        //print_r($animales);
         $mascotas = new MascotaDAO();
-        $arrayMascotas = $mascotas->getArrayByIds($animales); //chequear
-        //echo "<br><br>mascotas-->  ";
-        //print_r($mascotas);
-        //echo "<br><br> **";
+        $arrayMascotas = $mascotas->getArrayByIds($animales);
 
-        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") { //ver xq en intermedias va uno solo
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
             if ($operacion == "aceptar") {
                 $solicitud = new SolicitudDAO();
                 $solicitudXmasc = new SolixMascDAO();
 
-                //echo $solicitudId;
                 $soli = $solicitud->GetById($solicitudId);
-                //var_dump($soli);
-                //var_dump($soli);da null si refersh
-                //echo "<br> -----_______-------- <br>";
                 $reserva = new Reserva($soli);
-                //var_dump($reserva); 
                 $reservaDAO = new ReservaDAO();
                 $reservaDAO->add($reserva); 
                 $resul = $solicitud->removeSolicitudById($solicitudId);
-                //$resul2 = $solicitudXmasc->removeSolicitudMascIntById($idIntermedia); //!//andaba pero removia solo 1
-                $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($solicitudId); //nueva y la q va creo
+                $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($solicitudId);
                 $intermediaMascotasXreserva = new ResxMascDAO();
                 $intermediaMascotasXreserva->add($arrayMascotas, $solicitudId);
                 ///********///

@@ -14,8 +14,8 @@ class MascotaDAO
     public function Add(Mascota $mascota)
     {
         try {
-            $query = "INSERT INTO " . $this->tableName . " (id, nombre, especie, raza, dueno, tamano, observaciones)
-             VALUES (:id, :nombre, :especie, :raza, :dueno, :tamano, :observaciones);";
+            $query = "INSERT INTO " . $this->tableName . " (id, nombre, especie, raza, dueno, tamano, observaciones, fotoMascota, video, planVacunacion)
+             VALUES (:id, :nombre, :especie, :raza, :dueno, :tamano, :observaciones, :fotoMascota, :video, :planVacunacion);";
 
             $parameters["id"] = $mascota->getId();
             $parameters["nombre"] = $mascota->getNombre();
@@ -24,9 +24,9 @@ class MascotaDAO
             $parameters["dueno"] = $mascota->getDniDueno();
             $parameters["tamano"] = $mascota->getTamano();
             $parameters["observaciones"] = $mascota->getObservaciones();
-            //$parameters["fotoMascota"] = $mascota->getFotoMascota();
-            //$parameters["video"] = $mascota->getVideo();
-            //$parameters["planVacunacion"] = $mascota->getPlanVacunacion();
+            $parameters["fotoMascota"] = $mascota->getFotoMascota();
+            $parameters["video"] = $mascota->getVideo();
+            $parameters["planVacunacion"] = $mascota->getPlanVacunacion();
             ///
             $this->connection = Connection::GetInstance();
             $this->connection->ExecuteNonQuery($query, $parameters);
@@ -52,9 +52,9 @@ class MascotaDAO
                 $mascota->setDniDueno($row["dueno"]);
                 $mascota->setTamano($row["tamano"]);
                 $mascota->setObservaciones($row["observaciones"]);
-                //$mascota->setFotoMascota($row["fotoMascota"]);
-                //$mascota->setVideo($row["video"]);
-                //$mascota->setPlanVacunacion($row["planVacunacion"]);
+                $mascota->setFotoMascota($row["fotoMascota"]);
+                $mascota->setVideo($row["video"]);
+                $mascota->setPlanVacunacion($row["planVacunacion"]);
                 array_push($mascotaList, $mascota);
             }
             return $mascotaList;
@@ -86,6 +86,9 @@ class MascotaDAO
                     $mascota->setDniDueno($row["dueno"]);
                     $mascota->setTamano($row["tamano"]);
                     $mascota->setObservaciones($row["observaciones"]);
+                    $mascota->setFotoMascota($row["fotoMascota"]);
+                $mascota->setVideo($row["video"]);
+                $mascota->setPlanVacunacion($row["planVacunacion"]);
                     array_push($mascotaList, $mascota);
                     ////////
                 }
@@ -120,6 +123,9 @@ class MascotaDAO
                 $mascota->setDniDueno($row["dueno"]);
                 $mascota->setTamano($row["tamano"]);
                 $mascota->setObservaciones($row["observaciones"]);
+                $mascota->setFotoMascota($row["fotoMascota"]);
+                $mascota->setVideo($row["video"]);
+                $mascota->setPlanVacunacion($row["planVacunacion"]);
                 array_push($mascotaList, $mascota);
             }
             if (isset($mascotaList))
@@ -151,6 +157,9 @@ class MascotaDAO
                 $mascota->setDniDueno($row["dueno"]);
                 $mascota->setTamano($row["tamano"]);
                 $mascota->setObservaciones($row["observaciones"]);
+                $mascota->setFotoMascota($row["fotoMascota"]);
+                $mascota->setVideo($row["video"]);
+                $mascota->setPlanVacunacion($row["planVacunacion"]);
             }
 
             return $mascota;
