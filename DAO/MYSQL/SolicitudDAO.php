@@ -206,6 +206,7 @@ class SolicitudDAO
             throw $ex;
         }
     }
+    
 
     public function removeSolicitudById($idSolicitud)
     {
@@ -232,6 +233,10 @@ class SolicitudDAO
     ///////////////////////////////////////////FUNCIONES JSONJSONJSON/////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    
+    
+    
+    
     /*public function __construct()
     {
         $this->filename = dirname(__DIR__) . "\Data\Solicitud" . ".json";

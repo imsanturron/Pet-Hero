@@ -99,7 +99,7 @@ class GuardianDAO
                 $guardian->setDisponibilidadInicio($row["FechaInicio"]);
                 $guardian->setDisponibilidadFin($row["FechaFin"]);
                 $guardian->setTamanoACuidar($row["tamanoACuidar"]);
-                
+                ////////
             }
 
             return $guardian;
@@ -136,7 +136,7 @@ class GuardianDAO
                 $guardian->setDisponibilidadInicio($row["FechaInicio"]);
                 $guardian->setDisponibilidadFin($row["FechaFin"]);
                 $guardian->setTamanoACuidar($row["tamanoACuidar"]);
-                
+                ////////
             }
 
             return $guardian;

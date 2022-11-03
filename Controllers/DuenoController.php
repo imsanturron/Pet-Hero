@@ -52,10 +52,11 @@ class DuenoController
             } else if ($opcion == "agregarMascota") {
                 require_once(VIEWS_PATH . "agregarMascotas.php");
             } else if ($opcion == "verGuardianes") {
-                
+                //$listaguardianes=$this->duenoDAO->getAll();
+                //require_once(VIEWS_PATH . "verGuardianes.php");
                 require_once(VIEWS_PATH . "filtrarPorFecha.php");
             } else if ($opcion == "verPerfil") {
-                
+                ///sin terminar
                 require_once(VIEWS_PATH . "perfilDueno.php");
             } else if ($opcion == "verSolicitudes") {
                 require_once(VIEWS_PATH . "verSolicitudes.php");
@@ -71,6 +72,8 @@ class DuenoController
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             $valid = AuthController::ValidarFecha($desde, $hasta); //arreglar
             if ($valid) {
+                //$guardianDao = new GuardianDAO();
+                //$listaguardianes = $guardianDao->GetAll(); no me deja asi no se xq
                 require_once(VIEWS_PATH . "verGuardianes.php");
             } else {
                 $alert = new Alert("warning", "Fecha invalida");
@@ -98,10 +101,11 @@ class DuenoController
         $mascotas = new MascotaDAO();
         $arrayMascotas = $mascotas->getArrayByIds($animales); 
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
-            $valid = AuthController::ValidarMismaRaza($arrayMascotas, $dni, $desde, $hasta); 
+            $valid = AuthController::ValidarMismaRaza($arrayMascotas, $dni, $desde, $hasta); //chequear con mascotas q ya tenga
             $valid2 = AuthController::VerifGuardianSoliNuestraRepetida($dni); 
-          
-            if ($valid && $valid2) {
+            //$valid3 = AuthController::VerifMascotaNoEstaReservadaEnFecha($arrayMascotas, $desde, $hasta); 
+            ///ver ocupacion de mascotas y de guardianes.
+            if ($valid && $valid2) { //&& $valid3
 
                 $guardianes = new GuardianDAO();
                 $guardian = $guardianes->getByDni($dni);

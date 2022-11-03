@@ -89,14 +89,16 @@ class GuardianController
                     $alert = new Alert("success", "Disponibilidad actualizada");
                     $solicitud = new SolicitudDAO(); //borrar solicitudes que no estan en mi nuevo rango disponible
                     $solicitudes = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
+                    $solicitudXmasc = new SolixMascDAO();
                     foreach($solicitudes as $soli){
                         if(AuthController::ValidarFecha($soli->getFechaInicio(), $desde)
                             || AuthController::ValidarFecha($hasta, $soli->getFechaFin())){
                                  $solicitud->removeSolicitudById($soli->getId()); //creo q bien, checkear
+                                 $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
                                  $alert = new Alert("success", "Disponibilidad actualizada + solis removidas");
                             }
                     }
-                    
+                    /////////
                 } else {
                     $alert = new Alert("warning", "Error actualizando disponibilidad");
                 }
@@ -127,7 +129,7 @@ class GuardianController
                 $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($solicitudId);
                 $intermediaMascotasXreserva = new ResxMascDAO();
                 $intermediaMascotasXreserva->add($arrayMascotas, $solicitudId);
-                
+                ///********///
                 if ($resul && $resul2) {
                     $alert = new Alert("success", "Solicitud aceptada");
                 } else {

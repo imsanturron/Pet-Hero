@@ -18,8 +18,8 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
         $guardian = $_SESSION['loggedUser'];
         $reservas = new ReservaDAO();
         $ress = $reservas->getReservasByDniGuardian($guardian->getDni());
-        $mascota = new MascotaDAO(); ///get all by id desp
-        $mascotas = $mascota->GetAll(); ///get all by id desp
+        $mascota = new MascotaDAO(); 
+        $mascotas = $mascota->GetAll(); 
         $resXmascDAO = new ResxMascDAO();
         $mascXres = $resXmascDAO->GetAll();
         $ingreso = false; //SIRVE PARA VERIFICAR SI EL DUEÑO TIENE ALGUNA SOLICITUD
@@ -27,8 +27,8 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
         $dueno = $_SESSION['loggedUser'];
         $reservas = new ReservaDAO();
         $ress = $reservas->getReservasByDniDueno($dueno->getDni());
-        $mascota = new MascotaDAO(); ///get all by id desp
-        $mascotas = $mascota->GetAll(); ///get all by id desp
+        $mascota = new MascotaDAO(); 
+        $mascotas = $mascota->GetAll(); 
         $resXmascDAO = new ResxMascDAO();
         $mascXres = $resXmascDAO->GetAll();
         $ingreso = false; //SIRVE PARA VERIFICAR SI EL DUEÑO TIENE ALGUNA SOLICITUD

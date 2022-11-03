@@ -88,6 +88,7 @@ class DuenoDAO
                 $dueno->setTelefono($row["telefono"]);
                 $dueno->setTipo($row["tipo"]);
 
+                ////////
             }
 
             return $dueno;

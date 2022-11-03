@@ -15,10 +15,10 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
     if ($_SESSION['tipo']  == 'g') {
         $guardian = $_SESSION['loggedUser'];
         $solicitudes = new SolicitudDAO();
-        //$solis = $solicitudes->GetAll(); ///get all by id desp
+        //$solis = $solicitudes->GetAll(); 
         $solis = $solicitudes->getSolicitudesByDniGuardian($guardian->getDni());
-        $mascota = new MascotaDAO(); ///get all by id desp
-        $mascotas = $mascota->GetAll(); ///get all by id desp
+        $mascota = new MascotaDAO(); 
+        $mascotas = $mascota->GetAll(); 
         //$mascotas = $mascota->getMascotasByIdSolicitud();
         $mascXsoliDAO = new SolixMascDAO();
         $mascXsoli = $mascXsoliDAO->GetAll();
@@ -26,11 +26,10 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
     } else {
         $dueno = $_SESSION['loggedUser'];
         $solicitudes = new SolicitudDAO();
-        //$solis = $solicitudes->GetAll(); ///get all by id desp
+        //$solis = $solicitudes->GetAll(); 
         $solis = $solicitudes->getSolicitudesByDniDueno($dueno->getDni());
-        $mascota = new MascotaDAO(); ///get all by id desp
-        $mascotas = $mascota->GetAll(); ///get all by id desp
-        //$mascotas = $mascota->getMascotasByIdSolicitud();
+        $mascota = new MascotaDAO(); 
+        $mascotas = $mascota->GetAll(); 
         $mascXsoliDAO = new SolixMascDAO();
         $mascXsoli = $mascXsoliDAO->GetAll();
         $ingreso = false; //SIRVE PARA VERIFICAR SI EL DUEÑO TIENE ALGUNA SOLICITUD
