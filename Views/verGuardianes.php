@@ -12,10 +12,11 @@ $listaguardianes = $guardianDao->GetAll();
 ?>
 
 <main class="py-5">
-
+<a href="<?php echo FRONT_ROOT ?>Dueno/volverAVerFechasNoUsar"> Toca para volver a buscar </a>
     <section id="listado" class="mb-5">
         <div class="container">
             <h2 class="mb-4">Listado de guardianes Disponibles</h2>
+            Recuerda, solo puedes enviar una solicitud al mismo guardian <br>
             <table class="table bg-light-alpha">
                 <thead>
                     <th>Nombre</th>
@@ -23,6 +24,7 @@ $listaguardianes = $guardianDao->GetAll();
                     <th>Disponibilidad</th>
                     <th>Precio</th>
                     <th>Direccion</th>
+                    <th>Tamaño aceptado</th>
                     <th>Reputacion (falta)</th>
                     <th>Opcion</th>
                 </thead>
@@ -51,6 +53,7 @@ $listaguardianes = $guardianDao->GetAll();
                                         </td>
                                         <td><?php echo $guardianx->getPrecio(); ?></td>
                                         <td><?php echo $guardianx->getDireccion(); ?></td>
+                                        <td><?php echo $guardianx->getTamanoACuidar(); ?></td>
                                         <td><?php //php echo $guardianx->getReputacion(); 
                                             ?></td>
                                         <?php if ($guardianx->getDisponibilidadInicio()) { ?>

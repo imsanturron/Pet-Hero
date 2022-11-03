@@ -13,7 +13,7 @@ $listaMascotas = $mascotasDao->GetAll();
 
      <section id="listado" class="mb-5">
           <div class="container">
-               <h2 class="mb-4">Listado de mascotas</h2>
+               <h2 class="mb-4">Listado de mascotas:</h2>
                <table class="table bg-light-alpha">
                     <thead>
                          <th>Nombre</th>
@@ -21,12 +21,15 @@ $listaMascotas = $mascotasDao->GetAll();
                          <th>Tamaño</th>
                          <th>Observaciones</th>
                          <th>Foto</th>
+                         <th>Plan de vacunacion</th>
+                         <th>Video</th>
+                         <th>Opcion</th>
                     </thead>
                     <tbody>
                          <form action="<?php echo FRONT_ROOT ?>Mascota/Remove" method="POST">
                               <?php
                               if (isset($listaMascotas) && !empty($listaMascotas)) {
-                              
+
                                    foreach ($listaMascotas as $mascota) {
                               ?>
                                         <?php if ($mascota->getdniDueno() == $_SESSION["loggedUser"]->getDni()) { ?>
@@ -35,34 +38,29 @@ $listaMascotas = $mascotasDao->GetAll();
                                                   <td><?php echo $mascota->getRaza(); ?></td>
                                                   <td><?php echo $mascota->getTamano(); ?></td>
                                                   <td><?php echo $mascota->getObservaciones(); ?></td>
-                                                  <td><img src="<?php echo IMG_PATH . $mascota->getFotoMascota() ?>"></td>
+                                                  <td><img src="<?php echo FRONT_ROOT . IMG_PATH . $mascota->getFotoMascota() ?>"></td>
+                                                  <td><img src="<?php echo FRONT_ROOT . IMG_PATH . $mascota->getPlanVacunacion() ?>"></td>
                                                   <td>
-                                                       <button type="submit" class="btn btn-danger" value="<?php echo $mascota->getId(); ?>"> Eliminar </button>
+                                                       <?php if ($mascota->getVideo()) { ?>
+                                                            <video controls width="220" height="140">
+                                                                 <source src="<?php echo FRONT_ROOT . VIDEO_PATH . $mascota->getVideo() ?>" type="video/mp4">
+                                                            </video>
+                                                       <?php } ?>
+                                                  </td>
+                                                  <td>
+                                                       <input type="hidden" name="id" value="<?php echo $mascota->getId(); ?>">
+                                                       <button type="submit" class="btn btn-danger" ?> Eliminar </button>
                                                   </td>
                                              </tr>
                               <?php
                                         }
                                    }
-                              }
+                              } else
+                                   echo "<h2>No tiene mascotas cargadas!</h2>";
                               ?>
                          </form>
                     </tbody>
                </table>
           </div>
      </section>
-     <div class="alert alert-<?php echo $alert->getTipo() ?>">
-          <?php echo $alert->getMensaje() ?>
-     </div>
-     <div class="container">
-          <div class="bg-light-alpha p-1">
-               <div class="row">
-                    <div class="col-lg-3">
-                         <div class="form-group text-white">
-                              <label for="" class="ml-1"><b>IMPORTE TOTAL FACTURADO</b></label>
-                              <input type="text" value="<?php echo 23; ?>" class="form-control ml-1 text-strong" disabled>
-                         </div>
-                    </div>
-               </div>
-          </div>
-     </div>
 </main>

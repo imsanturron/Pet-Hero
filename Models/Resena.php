@@ -2,6 +2,9 @@
 
 class Resena
 {
+    private $id; //PK
+    private $dniDueno; //FK
+    private $dniGuardian; //FK
     private $puntaje; ///del 1 al 10
     private $fecha; ///que se hizo la observacion
     private $observacion; ///comentarios
@@ -38,6 +41,60 @@ class Resena
     public function setObservacion($observacion): self
     {
         $this->observacion = $observacion;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of dniDueno
+     */
+    public function getDniDueno()
+    {
+        return $this->dniDueno;
+    }
+
+    /**
+     * Set the value of dniDueno
+     */
+    public function setDniDueno($dniDueno): self
+    {
+        $this->dniDueno = $dniDueno;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of id
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set the value of id
+     */
+    public function setId($id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of dniGuardian
+     */
+    public function getDniGuardian()
+    {
+        return $this->dniGuardian;
+    }
+
+    /**
+     * Set the value of dniGuardian
+     */
+    public function setDniGuardian($dniGuardian): self
+    {
+        $this->dniGuardian = $dniGuardian;
 
         return $this;
     }

@@ -22,4 +22,12 @@ class HomeController
             require_once(VIEWS_PATH . "registroDueno.php");
         }
     }
+
+    /*public function verMascotasSoliRes($idSolicitud)
+    {
+        if (isset($_SESSION["loggedUser"]))
+            require_once(VIEWS_PATH . "registroGuardian.php");
+        else
+            $this->Index();
+    }*/
 }
