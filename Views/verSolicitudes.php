@@ -56,7 +56,7 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                         <th>Desde</th>
                         <th>Hasta</th>
                         <th>Direccion de guarda</th>
-                       <? // <th>Mascotas de solicitud</th> ?>
+                       <!--<? // <th>Mascotas de solicitud</th> ?> -->
                         <th>Especie</th>
                         <th>Nombre</th>
                         <th>Raza</th>
@@ -80,7 +80,7 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                                         <td><?php echo $solicitud->getFechaInicio(); ?></td>
                                         <td><?php echo $solicitud->getFechaFin(); ?></td>
                                         <td><?php echo $solicitud->getDireccionGuardian(); ?></td>
-                                       <? // <td> <a href="<?php echo FRONT_ROOT ?><?//Home/verMascotasSoliRes/<?php echo $solicitud->getId(); ?> <? //"> Ver mascotas</a> </td> ?>
+                                       <!--<? // <td> <a href="<?php echo FRONT_ROOT ?><?//Home/verMascotasSoliRes/<?php echo $solicitud->getId(); ?> <? //"> Ver mascotas</a> </td> ?> -->
 
                                         <?php foreach ($mascXsoli as $tabla) { ?>
 

@@ -103,8 +103,9 @@ class DuenoController
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             $valid = AuthController::ValidarMismaRaza($arrayMascotas, $dni, $desde, $hasta); //chequear con mascotas q ya tenga
             $valid2 = AuthController::VerifGuardianSoliNuestraRepetida($dni); 
+            //$valid3 = AuthController::VerifMascotaNoEstaReservadaEnFecha($arrayMascotas, $desde, $hasta); 
             ///ver ocupacion de mascotas y de guardianes.
-            if ($valid && $valid2) {
+            if ($valid && $valid2) { //&& $valid3
 
                 $guardianes = new GuardianDAO();
                 $guardian = $guardianes->getByDni($dni);
