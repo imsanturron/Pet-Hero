@@ -126,39 +126,58 @@ class AuthController
     return true;
   }
 
-  public static function ValidarFecha($finic, $ffin = null, $despDeHoy = false) //agregar $fmedio, entre 2 fechas. poner despues de ffin en parametros, o ultimo, ver despues.
+  public static function ValidarFecha($finic, $ffin = null, $fmedio = null, $despDeHoy = false) //agregar $fmedio, entre 2 fechas. poner despues de ffin en parametros, o ultimo, ver despues.
   {
     $fini = date("Y-m-d", strtotime($finic));
     if ($ffin)
       $ff = date("Y-m-d", strtotime($ffin));
+    if ($fmedio)
+      $fmed = date("Y-m-d", strtotime($fmedio));
 
-    /*if ($ffin && $despDeHoy == false) { ///verificar si fini es antes de ff
+      /*echo "acaa";
+      var_dump($ffin);
+      var_dump($fmedio);
+      var_dump($despDeHoy);
+    if ($ffin && $fmedio = null && $despDeHoy == false) { ///verificar si fini es antes de ff
+      //echo "acaa";
       if (strtotime($fini) <= strtotime($ff))
         return true;
       else
         return false;
-    } else if ($ffin == null) {
+    } else if ($ffin == null && $fmedio = null) {
       if (strtotime($fini) >= strtotime(date("Y-m-d"))) ///verificar que fini mayor que hoy
         return true;
       else
         return false;
-    } else if ($ffin && $despDeHoy == true) { //primer if + fini despues de hoy
+    } else if ($ffin && $fmedio = null && $despDeHoy == true) { //primer if + fini despues de hoy
       if (strtotime($fini) >= strtotime(date("Y-m-d")) && strtotime($fini) <= strtotime($ff))
         return true;
       else
         return false;
-    } else if ($ffin && $fmedio) {//verificar que $fmedio esta entre $fini y $ff
+    } else if ($ffin && $fmedio && $despDeHoy == false) {//verificar que $fmedio->$fmed esta entre $fini y $ff
       if (strtotime($fini) <= strtotime($ff)
-           && strtotime($fini) <= strtotime($fmedio)
-             && strtotime($fmedio) <= strtotime($ff))
+           && strtotime($fini) <= strtotime($fmed)
+             && strtotime($fmed) <= strtotime($ff))
              return true;
              else
              return false;
-    }*/
-
-
+    } else if ($ffin && $fmedio && $despDeHoy == true){ //anterior if + fini >= hoy
+      if (strtotime($fini) >= strtotime(date("Y-m-d"))
+        && strtotime($fini) <= strtotime($ff)
+          && strtotime($fini) <= strtotime($fmed)
+            && strtotime($fmed) <= strtotime($ff))
+              return true;
+            else
+              return false;
+    }
+    //echo "acaa";
+*/
     //var_dump(strtotime(date("Y-m-d")));
     //var_dump($ff);
+    /*if (strtotime($ff) >= strtotime(date("Y-m-d")))
+      echo 1;
+    else
+      echo 0;*/
     //var_dump(date("Y-m-d"));
 
     $fini = explode("-", $finic);

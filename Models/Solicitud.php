@@ -21,6 +21,7 @@ class Solicitud //implements JsonSerializable
     protected $direccionGuardian;
     protected $telefonoDueno;
     protected $telefonoGuardian;
+    //protected $pagado = false; //booleano de pago
 
 
     public function  __construct(Guardian $guardian = null, Dueno $dueno = null, $desde = "", $hasta = "")
