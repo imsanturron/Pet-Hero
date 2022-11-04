@@ -21,7 +21,7 @@ class Solicitud //implements JsonSerializable
     protected $direccionGuardian;
     protected $telefonoDueno;
     protected $telefonoGuardian;
-    //protected $pagado = false; //booleano de pago
+    protected $esPago = false; //booleano de pago
 
 
     public function  __construct(Guardian $guardian = null, Dueno $dueno = null, $desde = "", $hasta = "")
@@ -174,6 +174,24 @@ class Solicitud //implements JsonSerializable
     public function setTelefonoDueno($telefonoDueno): self
     {
         $this->telefonoDueno = $telefonoDueno;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of esPago
+     */
+    public function getEsPago()
+    {
+        return $this->esPago;
+    }
+
+    /**
+     * Set the value of esPago
+     */
+    public function setEsPago($esPago): self
+    {
+        $this->esPago = $esPago;
 
         return $this;
     }

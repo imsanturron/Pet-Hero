@@ -5,6 +5,7 @@ namespace Controllers;
 use Models\Dueno as Dueno;
 use Models\Solicitud as Solicitud;
 use Models\Guardian as Guardian;
+use Models\Reserva as Reserva;
 use Models\Alert as Alert;
 //use DAO\JSON\DuenoDAO as DuenoDAO;
 use DAO\MYSQL\DuenoDAO as DuenoDAO;
@@ -12,10 +13,14 @@ use DAO\MYSQL\DuenoDAO as DuenoDAO;
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
 //use DAO\JSON\MascotaDAO;
 use DAO\MYSQL\MascotaDAO;
+use DAO\MYSQL\PagoDAO;
 use DAO\MYSQL\SolicitudDAO;
 use DAO\MYSQL\SolixMascDAO;
+use DAO\MYSQL\ResxMascDAO;
+use DAO\MYSQL\ReservaDAO;
 //use DAO\JSON\UserDAO as UserDAO;
 use DAO\MYSQL\UserDAO as UserDAO;
+use Models\Pago;
 use Models\SolixMasc;
 
 class DuenoController
@@ -62,6 +67,8 @@ class DuenoController
                 require_once(VIEWS_PATH . "verSolicitudes.php");
             } else if ($opcion == "verReservas") {
                 require_once(VIEWS_PATH . "verReservas.php");
+            } else if ($opcion == "verSolicitudesAceptadasAPagar") {
+                require_once(VIEWS_PATH . "pagosPendientes.php");
             }
         } else
             $this->home();
@@ -99,10 +106,10 @@ class DuenoController
     public function ElegirGuardianFinal($animales, $dni, $desde, $hasta)
     {
         $mascotas = new MascotaDAO();
-        $arrayMascotas = $mascotas->getArrayByIds($animales); 
+        $arrayMascotas = $mascotas->getArrayByIds($animales);
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             $valid = AuthController::ValidarMismaRaza($arrayMascotas, $dni, $desde, $hasta); //chequear con mascotas q ya tenga
-            $valid2 = AuthController::VerifGuardianSoliNuestraRepetida($dni); 
+            $valid2 = AuthController::VerifGuardianSoliNuestraRepetida($dni);
             //$valid3 = AuthController::VerifMascotaNoEstaReservadaEnFecha($arrayMascotas, $desde, $hasta); 
             ///ver ocupacion de mascotas y de guardianes.
             if ($valid && $valid2) { //&& $valid3
@@ -126,6 +133,48 @@ class DuenoController
             }
         } else
             $this->home();
+    }
+
+    public function realizarPago($formaDePago, $idSolicitud, $idPago, $primerPago, $operacion) //revisar - hacer validaciones de pago tambien una vez que se paga
+    {
+        ///hacer vista cargar tarjeta
+        ///recibir array mascotas
+        $mascotas = new MascotaDAO();
+        //$arrayMascotas = $mascotas->getArrayByIds($animales); //animales = array ids hace falta
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
+            if ($operacion == "pagar") {
+                $solicitud = new SolicitudDAO();
+                $solicitudXmasc = new SolixMascDAO();
+                $pago = new PagoDAO();
+
+                echo "--> " . $idSolicitud;
+                $soli = $solicitud->GetById($idSolicitud);
+                var_dump($soli);
+                echo "--> " . $soli->getId();
+                $reserva = new Reserva($soli);
+                $reservaDAO = new ReservaDAO();
+                $reservaDAO->add($reserva);
+
+                if ($primerPago == false || $primerPago == null)
+                    $pago->updatePrimerPagoReservaById($idPago);
+                else
+                    $pago->updatePagoFinalReservaById($idPago);
+
+                //$pago->updateFormaDePago($formaDePago, $idPago);
+                $resul = $solicitud->removeSolicitudById($idSolicitud);
+                $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSolicitud);
+                //$intermediaMascotasXreserva = new ResxMascDAO(); hacer
+                //$intermediaMascotasXreserva->add($arrayMascotas, $idSolicitud); //recibir mascotas
+            } else if ($operacion == "cancelar") {
+                $solicitud = new SolicitudDAO();
+                $solicitudXmasc = new SolixMascDAO();
+                $pago = new PagoDAO();
+                $resul = $solicitud->removeSolicitudById($idSolicitud);
+                $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSolicitud);
+                $resul3 = $pago->removePagoById($idPago);
+                ///ver si mostrar si rechazo pago
+            }
+        }
     }
 
     public function login(Alert $alert = null)

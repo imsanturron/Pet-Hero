@@ -15,6 +15,8 @@ use DAO\MYSQL\ReservaDAO as ReservaDAO;
 use DAO\MYSQL\SolixMascDAO as SolixMascDAO;
 use DAO\MYSQL\MascotaDAO as MascotaDAO;
 use DAO\MYSQL\ResxMascDAO as ResxMascDAO;
+use DAO\MYSQL\PagoDAO as PagoDAO;
+use Models\Pago as pago;
 
 class GuardianController
 {
@@ -70,6 +72,8 @@ class GuardianController
                 $solicitudes = new SolicitudDAO;
                 $solis = $solicitudes->GetAll(); ///get all by id desp
                 require_once(VIEWS_PATH . "verSolicitudes.php");
+            }else if ($opcion == "verPrimerosPagosPendientes") {
+                require_once(VIEWS_PATH . "pagosPendientes.php");
             }
         }
     }
@@ -122,13 +126,18 @@ class GuardianController
                 $solicitudXmasc = new SolixMascDAO();
 
                 $soli = $solicitud->GetById($solicitudId);
-                $reserva = new Reserva($soli);
+                echo "--->" . $soli->getId();
+                $pagos = new PagoDAO();
+                $pago = new Pago($soli, $_SESSION["loggedUser"]);
+                $solicitud->updateAPagoById($soli->getId());
+                $pagos->Add($pago);
+                /*$reserva = new Reserva($soli);
                 $reservaDAO = new ReservaDAO();
                 $reservaDAO->add($reserva); 
                 $resul = $solicitud->removeSolicitudById($solicitudId);
                 $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($solicitudId);
                 $intermediaMascotasXreserva = new ResxMascDAO();
-                $intermediaMascotasXreserva->add($arrayMascotas, $solicitudId);
+                $intermediaMascotasXreserva->add($arrayMascotas, $solicitudId);*/
                 ///********///
                 if ($resul && $resul2) {
                     $alert = new Alert("success", "Solicitud aceptada");

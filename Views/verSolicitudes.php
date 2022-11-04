@@ -56,7 +56,8 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                         <th>Desde</th>
                         <th>Hasta</th>
                         <th>Direccion de guarda</th>
-                       <!--<? // <th>Mascotas de solicitud</th> ?> -->
+                        <!--<? // <th>Mascotas de solicitud</th> 
+                            ?> -->
                         <th>Especie</th>
                         <th>Nombre</th>
                         <th>Raza</th>
@@ -72,7 +73,19 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                                 <form action="<?php echo FRONT_ROOT ?>Dueno/cancelarSolicitud" method="POST">
                                 <?php } ?>
 
-                                <?php foreach ($solis as $solicitud) { ?>
+                                <?php foreach ($solis as $solicitud) {
+                                     if($solicitud->getEsPago() == false || $solicitud->getEsPago() == null){
+                                    ?>
+                                    <?php foreach ($mascXsoli as $tabla) {
+                                        if ($tabla->getIdSolicitud() == $solicitud->getId()) {  ?>
+                                            <input type="hidden" name="idIntermedia" value="<?php echo $tabla->getIdSolixMasc(); ?>">
+                                            <?php $idMascotaX = $tabla->getIdMascota();  ?>
+                                            <?php foreach ($mascotas as $masc) {
+                                                if ($masc->getId() == $idMascotaX) { ?>
+                                    <?php }
+                                            } //contar para hacer el rowspan
+                                        }
+                                    } ?>
                                     <tr>
 
                                         <td><?php echo $solicitud->getNombreDueno(); ?></td>
@@ -80,7 +93,7 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                                         <td><?php echo $solicitud->getFechaInicio(); ?></td>
                                         <td><?php echo $solicitud->getFechaFin(); ?></td>
                                         <td><?php echo $solicitud->getDireccionGuardian(); ?></td>
-                                       <!--<? // <td> <a href="<?php echo FRONT_ROOT ?><?//Home/verMascotasSoliRes/<?php echo $solicitud->getId(); ?> <? //"> Ver mascotas</a> </td> ?> -->
+                                        
 
                                         <?php foreach ($mascXsoli as $tabla) { ?>
 
@@ -114,7 +127,7 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                                             <?php } ?>
                                         </td>
                                     </tr>
-                                <?php  } ?>
+                                <?php  }} ?>
                             <?php } else {
                             echo "NO TIENE SOLICITUDES";
                         } ?>
