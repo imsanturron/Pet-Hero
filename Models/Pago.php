@@ -2,18 +2,32 @@
 
 class Pago
 {
-    private $id; //PK
+    private $id; //PK mismo que solicitud y reserva
     private $dniDueno; //FK
     private $dniGuardian; //FK
-    private $idSolicitud; //FK
     private $precioGuardian;
     private $montoAPagar; //50% de precio guardian
     private $primerPagoReserva; //booleano
     private $pagoFinal; //booleano
-    private $fecha;
+    //private $fecha; //en que lo pago O como vencimiento
     private $formaDePago;
 
-    
+    public function  __construct(Solicitud $solicitud = null, Guardian $guardian = null)
+    {
+        if (isset($solicitud) && isset($guardian)) {
+            $operacion = 0;
+            $this->id = $solicitud->getId();
+            $this->dniDueno = $solicitud->getDniDueno();
+            $this->dniGuardian = $solicitud->getDniGuardian();
+            $this->precioGuardian = $guardian->getPrecio();
+            $operacion = $guardian->getPrecio();
+            $this->montoAPagar = ($operacion/2);
+            $this->primerPagoReserva = false;
+            $this->pagoFinal = false;
+            //$this->fecha = false;
+            $this->formaDePago = "";
+        }
+    }
 
     /**
      * Get the value of id

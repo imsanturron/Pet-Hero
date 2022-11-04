@@ -27,13 +27,13 @@ class AuthController
     require_once(VIEWS_PATH . "home.php");
   }
 
-  public function Login($username, $password)
+  public function Login($username, $password) //si esta vacio rompe
   {
     try {
+      $bool = false;
       $users = new UserDAO;
       $tipo = $users->getTipoByUsername($username);
       //print_r($tipo);
-      $bool = false;
 
       if ($tipo) {  ///hacer validaciones cuando inician sesion, como de fecha por disponibilidades, etc.
         if ($tipo == 'g') {
@@ -68,11 +68,11 @@ class AuthController
           }
         }
       }
-    } catch (Exception $e) {
+    } catch (Exception $ex) {
       $alert = new Alert("warning", "datos incorrectos");
     }
     if ($bool == false) {
-      $alert = new Alert("warning", "Fecha invalida");
+      $alert = new Alert("warning", "Error iniciando sesion");
       $this->Index($alert);
     }
   }
