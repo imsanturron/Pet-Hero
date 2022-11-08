@@ -3,13 +3,15 @@
 namespace Controllers;
 
 //use DAO\JSON\GuardianDAO as GuardianDao;
-use DAO\MYSQL\GuardianDAO as GuardianDao;
+use DAO\MYSQL\GuardianDAO as GuardianDAO;
 //use DAO\JSON\DuenoDAO as DuenoDAO;
 use DAO\MYSQL\DuenoDAO as DuenoDAO;
-use DAO\MYSQL\MascotaDAO;
+use DAO\MYSQL\MascotaDAO as MascotaDAO;
 use DAO\MYSQL\ReservaDAO;
+use DAO\MYSQL\PagoDAO;
 use DAO\MYSQL\ResxMascDAO;
 use DAO\MYSQL\SolicitudDAO;
+use DAO\MYSQL\SolixMascDAO;
 //use DAO\JSON\UserDAO as UserDAO;
 use DAO\MYSQL\UserDAO as UserDAO;
 use Exception;
@@ -45,6 +47,7 @@ class AuthController
             $bool = true;
             $_SESSION["loggedUser"] = $guardianx;
             $_SESSION["tipo"] = "g";
+            $this->validacionesLogin();
             ///alerta buena
             require_once(VIEWS_PATH . "loginGuardian.php");
           } else {
@@ -60,6 +63,7 @@ class AuthController
             $bool = true;
             $_SESSION["loggedUser"] = $duenox;
             $_SESSION["tipo"] = "d";
+            $this->validacionesLogin();
             ///alerta buena
             require_once(VIEWS_PATH . "loginDueno.php");
           } else {
@@ -77,39 +81,97 @@ class AuthController
     }
   }
 
-  /*private function validacionesLogin() //agrandar luego con pagos
+  private function validacionesLogin() //agrandar luego con pagos
   {
     $bool = false; //actualizar adentro
     if (isset($_SESSION["loggedUser"])) {
       if ($_SESSION["tipo"] == 'g') {
         $guardian = new Guardian();
         $guardian = $_SESSION["loggedUser"];
-        //$solicitud = new SolicitudDAO();
-        //$solicitudes = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
-        if(AuthController::ValidarFecha($guardian->getDisponibilidadFin())){
-          ///borrar todas las solicitudes, las solis intermedias y setear en null
-          //la disponibilidad
-        } else if(AuthController::ValidarFecha($guardian->getDisponibilidadInicio())){
-            ///ver que solicitudes, y solis intermedias hay que borrar
-            //y advertir que la fecha inicio se paso
+        $guardianDAO = new GuardianDAO();
+        $reservaDAO = new ReservaDAO();
+        $pagoDAO = new PagoDAO();
+        $solicitud = new SolicitudDAO();
+        $soliXmasc = new SolixMascDAO();
+
+        $solicitudes = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
+        if (!AuthController::ValidarFecha($guardian->getDisponibilidadFin())) { //ver foranea para reducir
+          $solicitudesABorrar = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
+
+          if (isset($solicitudesABorrar)) {
+            foreach ($solicitudesABorrar as $soli) {  //borrar intermedias
+              $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
+              if ($soli->getEsPago())
+                $pagoDAO->removePagoById($soli->getId());
+            }
+            $solicitud->removeSolicitudesByDniGuardian($guardian->getDni());
+          }
+          $guardianDAO->setDisponibilidadEnNull($guardian->getDni());
+        } else if (!AuthController::ValidarFecha($guardian->getDisponibilidadInicio())) {
+
+          $solicitudesAChequear = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
+
+          if (isset($solicitudesAChequear)) {
+            foreach ($solicitudesAChequear as $soli) {  //chequear y borrar intermedias y solicitudes
+              if (AuthController::ValidarFecha($soli->getFechaInicio())) {
+                if ($soli->getEsPago())
+                  $pagoDAO->removePagoById($soli->getId());
+
+                $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
+                $solicitud->removeSolicitudById($soli->getId());
+              }
+            }
+          }
+          //advertir que la fecha inicio se paso
         }
-        //chequear reservas para cambiarles el estado
+        $reservas = $reservaDAO->getReservasByDniGuardian($guardian->getDni());
+        if (isset($reservas)) {
+          foreach ($reservas as $res) {
+            if (AuthController::ValidarFecha($res->getFechaFin())) {
+              $reservaDAO->updateEstado($res->getId(), "finalizado");
+            } else if (AuthController::ValidarFecha($res->getFechaInicio())) {
+              $reservaDAO->updateEstado($res->getId(), "actual");
+            }
+          }
+        }
       } else {
         //caso dueño
         $dueno = new Dueno();
         $dueno = $_SESSION["loggedUser"];
         $solicitud = new SolicitudDAO();
+        $duenoDAO = new DuenoDAO();
+        $reservaDAO = new ReservaDAO();
+        $pagoDAO = new PagoDAO();
+        $solicitud = new SolicitudDAO();
+        $soliXmasc = new SolixMascDAO();
         $solicitudes = $solicitud->getSolicitudesByDniDueno($dueno->getDni());
-        foreach($solicitudes as $soli){
-          if(AuthController::ValidarFecha($soli->getFechaInicio)){
-             //remover solicitud
+
+        if (isset($solicitudes)) {
+          foreach ($solicitudes as $soli) {
+            if (!AuthController::ValidarFecha($soli->getFechaInicio())) {
+              $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
+              if ($soli->getEsPago())
+                $pagoDAO->removePagoById($soli->getId());
+
+              $solicitud->removeSolicitudById($soli->getId());
+            }
           }
         }
-        //chequear reservas para cambiarles el estado
+
+        $reservas = $reservaDAO->getReservasByDniDueno($dueno->getDni());
+        if (isset($reservas)) {
+          foreach ($reservas as $res) {
+            if (AuthController::ValidarFecha($res->getFechaFin())) {
+              $reservaDAO->updateEstado($res->getId(), "finalizado");
+            } else if (AuthController::ValidarFecha($res->getFechaInicio())) {
+              $reservaDAO->updateEstado($res->getId(), "actual");
+            }
+          }
+        }
       }
     }
-    return $bool;
-  }*/
+    return $bool; //////////
+  }
 
   public static function ValidarUsuario($username, $dni, $email)
   {
@@ -134,81 +196,76 @@ class AuthController
     if ($fmedio)
       $fmed = date("Y-m-d", strtotime($fmedio));
 
-      /*echo "acaa";
-      var_dump($ffin);
-      var_dump($fmedio);
-      var_dump($despDeHoy);
-    if ($ffin && $fmedio = null && $despDeHoy == false) { ///verificar si fini es antes de ff
-      //echo "acaa";
+    /*echo "acaa";
+    var_dump($fini);
+    var_dump($ffin);
+    var_dump($fmedio);
+    var_dump($despDeHoy);*/
+
+    /*if ($ffin && $fmedio == null && $despDeHoy == false)
+      echo "<br>a";
+
+    if ($ffin == null && $fmedio = null)
+      echo "<br>b";
+
+    if ($ffin && $fmedio = null && $despDeHoy == true)
+      echo "<br>c";
+
+    if ($ffin && $fmedio && $despDeHoy == false)
+      echo "<br>d";
+
+    if ($ffin && $fmedio && $despDeHoy == true)
+      echo "<br>e";*/
+
+    /*if((strtotime($fini) <= strtotime($ff)))
+      echo "<br>a";
+      
+      if((strtotime($fini) >= strtotime($ff)))
+      echo "<br>b";
+      
+      if((strtotime($fini) == strtotime($ff)))
+      echo "<br>c";
+      
+      if((strtotime($fini) != strtotime($ff)))
+      echo "<br>d";*/
+    //echo "<br> c1: " . (strtotime($fini) <= strtotime($ff)); //da 1 cuando si y no muestra nada cuando no
+    //echo "<br> c2: " . (strtotime($fini) >= strtotime($ff));
+    //echo "<br> c3: " . (strtotime($fini) == strtotime($ff));
+    //echo "<br> c4: " . (strtotime($fini) != strtotime($ff));
+    if ($ffin && $fmedio == null && $despDeHoy == false) { ///verificar si fini es antes de ff
       if (strtotime($fini) <= strtotime($ff))
         return true;
       else
         return false;
-    } else if ($ffin == null && $fmedio = null) {
+    } else if ($ffin == null && $fmedio == null) {
       if (strtotime($fini) >= strtotime(date("Y-m-d"))) ///verificar que fini mayor que hoy
         return true;
       else
         return false;
-    } else if ($ffin && $fmedio = null && $despDeHoy == true) { //primer if + fini despues de hoy
+    } else if ($ffin && $fmedio == null && $despDeHoy == true) { //primer if + fini despues de hoy
       if (strtotime($fini) >= strtotime(date("Y-m-d")) && strtotime($fini) <= strtotime($ff))
         return true;
       else
         return false;
-    } else if ($ffin && $fmedio && $despDeHoy == false) {//verificar que $fmedio->$fmed esta entre $fini y $ff
-      if (strtotime($fini) <= strtotime($ff)
-           && strtotime($fini) <= strtotime($fmed)
-             && strtotime($fmed) <= strtotime($ff))
-             return true;
-             else
-             return false;
-    } else if ($ffin && $fmedio && $despDeHoy == true){ //anterior if + fini >= hoy
-      if (strtotime($fini) >= strtotime(date("Y-m-d"))
+    } else if ($ffin && $fmedio && $despDeHoy == false) { //verificar que $fmedio->$fmed esta entre $fini y $ff
+      if (
+        strtotime($fini) <= strtotime($ff)
+        && strtotime($fini) <= strtotime($fmed)
+        && strtotime($fmed) <= strtotime($ff)
+      )
+        return true;
+      else
+        return false;
+    } else if ($ffin && $fmedio && $despDeHoy == true) { //anterior if + fini >= hoy
+      if (
+        strtotime($fini) >= strtotime(date("Y-m-d"))
         && strtotime($fini) <= strtotime($ff)
-          && strtotime($fini) <= strtotime($fmed)
-            && strtotime($fmed) <= strtotime($ff))
-              return true;
-            else
-              return false;
-    }
-    //echo "acaa";
-*/
-    //var_dump(strtotime(date("Y-m-d")));
-    //var_dump($ff);
-    /*if (strtotime($ff) >= strtotime(date("Y-m-d")))
-      echo 1;
-    else
-      echo 0;*/
-    //var_dump(date("Y-m-d"));
-
-    $fini = explode("-", $finic);
-    if ($ffin)
-      $ff = explode("-", $ffin);
-
-    if ($ffin && $despDeHoy == false) {
-
-      if ($fini[0] < $ff[0])
-        return true;
-      else if ($fini[0] == $ff[0] && $fini[1] < $ff[1])
-        return true;
-      elseif ($fini[0] == $ff[0] && $fini[1] == $ff[1] && $fini[2] <= $ff[2])
+        && strtotime($fini) <= strtotime($fmed)
+        && strtotime($fmed) <= strtotime($ff)
+      )
         return true;
       else
         return false;
-    } else if ($ffin == null) {
-
-      $fechaHoy = date("Y-m-d", strtotime("now"));
-      $compar = explode("-", $fechaHoy); ///echo $compar[3];
-      if ($compar[0] < $fini[0])
-        return true;
-      else if ($compar[0] == $fini[0] && $compar[1] < $fini[1])
-        return true;
-      elseif ($compar[0] == $fini[0] && $compar[1] == $fini[1] && $compar[2] <= $fini[2])
-        return true;
-      else
-        return false;
-      ///seguir caso de las 2 fechas y verificar este
-    } else if ($ffin && $despDeHoy == true) {
-      return true;
     }
   }
 
@@ -273,7 +330,7 @@ class AuthController
       return true;
   }
 
-  /*public static function VerifMascotaNoEstaReservadaEnFecha($arrayMascotas, $fini, $ffin){
+   public static function VerifMascotaNoEstaReservadaEnFecha($arrayMascotas, $fini, $ffin){
     $reservaXmascotas = new ResxMascDAO();
     $resXmasc = $reservaXmascotas->GetAll();
     $reserva = new ReservaDAO();
@@ -282,15 +339,15 @@ class AuthController
       foreach($resXmasc as $rmi){
         if($rmi->getIdMascota() == $masc->getId()){
           $res =  $reserva->GetById($rmi->getIdReserva());
-          if((AuthController::ValidarFecha($res->getFechaInicio(), $fini) //cambia con fmedio en validar fecha
-              && AuthController::ValidarFecha($ffin, $res->getFechaFin()))){
+          if(AuthController::ValidarFecha($res->getFechaInicio(), $res->getFechaFin(), $fini) //cambia con fmedio en validar fecha
+              || AuthController::ValidarFecha($res->getFechaInicio(), $res->getFechaFin(), $ffin)){
                return false; //la mascota esta reservada en esa fecha
           }
         }
       }
     }
     return true;
-  }*/
+  }
 
   public function Logout()
   {

@@ -179,6 +179,23 @@ class ReservaDAO
         }
     }
 
+    function updateEstado($id, $nuevoEstado){
+        try {
+            $query = "UPDATE " . $this->tableName . " SET estado = :estado WHERE id = :id;";
+
+            $parameters["estado"] = $nuevoEstado;
+            $parameters["id"] = $id;
+
+            $this->connection = Connection::GetInstance();
+
+            $this->connection->ExecuteNonQuery($query, $parameters);
+            return true;
+        } catch (Exception $ex) {
+            return false;
+            //throw $ex;
+        }
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////FUNCIONES JSONJSONJSON/////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////

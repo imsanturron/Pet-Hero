@@ -132,21 +132,14 @@ class GuardianController
                 echo "--->" . $soli->getId();
                 $pagos = new PagoDAO();
                 $pago = new Pago($soli, $_SESSION["loggedUser"]);
-                $solicitud->updateAPagoById($soli->getId());
-                $pagos->Add($pago);
-                /*$reserva = new Reserva($soli);
-                $reservaDAO = new ReservaDAO();
-                $reservaDAO->add($reserva); 
-                $resul = $solicitud->removeSolicitudById($solicitudId);
-                $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($solicitudId);
-                $intermediaMascotasXreserva = new ResxMascDAO();
-                $intermediaMascotasXreserva->add($arrayMascotas, $solicitudId);*/
-                ///********///
-                if ($resul && $resul2) { ///arreglar esto
+                $solicitud->updateAPagoById($soli->getId()); //podemos ver si bien
+                $pagos->Add($pago); //podemos ver si bien
+                
+                //if ($resul && $resul2) { ///arreglar esto
                     $alert = new Alert("success", "Solicitud aceptada");
-                } else {
-                    $alert = new Alert("warning", "No se borro alguna solicitud");
-                }
+                //} else {
+                //    $alert = new Alert("warning", "No se borro alguna solicitud");
+                //}
             } else if ($operacion == "rechazar") {
 
                 $solicitud = new SolicitudDAO();
