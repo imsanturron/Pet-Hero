@@ -3,9 +3,11 @@ include('nav-bar.php');
 
 use Config\Autoload as Autoload;
 //use DAO\JSON\MascotaDAO;
-use DAO\MYSQL\MascotaDAO;
-use DAO\MYSQL\SolicitudDAO;
-use DAO\MYSQL\PagoDAO;
+use DAO\MYSQL\MascotaDAO as MascotaDAO;
+use DAO\MYSQL\SolicitudDAO as SolicitudDAO;
+use DAO\MYSQL\ReservaDAO as ReservaDAO;
+use DAO\MYSQL\PagoDAO as PagoDAO;
+use DAO\MYSQL\SolixMascDAO as SolixMascDAO;
 use Models\Guardian as Guardian;
 use Models\Dueno as Dueno;
 use Models\Mascota as Mascota;
@@ -18,6 +20,12 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
         $solicitud = new SolicitudDAO();
         $solis = $solicitud->getSolicitudesByDniGuardian($guardian->getDni()); ///get all by id desp
         $pagos = $pago->getPagosByDniGuardian($guardian->getDni());
+        $mascXsoliDAO = new SolixMascDAO();
+        $mascXsoli = $mascXsoliDAO->GetAll();
+        $mascota = new MascotaDAO(); ///get all by id desp
+        $mascotas = $mascota->GetAll(); ///get all by id desp
+        $reservas = new ReservaDAO();
+        $ress = $reservas->getReservasByDniGuardian($guardian->getDni());
         /*$mascota = new MascotaDAO(); ///get all by id desp
         $mascotas = $mascota->GetAll(); ///get all by id desp
         //$mascotas = $mascota->getMascotasByIdSolicitud();
@@ -31,6 +39,12 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
         $solis = $solicitud->getSolicitudesByDniDueno($dueno->getDni()); ///get all by id desp
         //$solis = $solicitudes->GetAll(); ///get all by id desp
         $pagos = $pago->getPagosByDniDueno($dueno->getDni());
+        $mascXsoliDAO = new SolixMascDAO();
+        $mascXsoli = $mascXsoliDAO->GetAll();
+        $mascota = new MascotaDAO(); ///get all by id desp
+        $mascotas = $mascota->GetAll(); ///get all by id desp
+        $reservas = new ReservaDAO();
+        $ress = $reservas->getReservasByDniDueno($dueno->getDni());
         /*$mascota = new MascotaDAO(); ///get all by id desp
         $mascotas = $mascota->GetAll(); ///get all by id desp
         //$mascotas = $mascota->getMascotasByIdSolicitud();
@@ -59,7 +73,9 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                         <th>Forma de pago</th>
                         <th>Primer pago realizado (confirma reserva)</th>
                         <th>Pago final realizado</th>
-                        <th>Opcion</th>
+                        <?php if ($_SESSION["tipo"]  == "d") { ?>
+                            <th>Opcion</th>
+                        <?php } ?>
                     </thead>
                     <tbody>
                         <?php if (isset($_SESSION['loggedUser']) && $_SESSION['tipo']  == 'd') { ?>
@@ -70,15 +86,54 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
 
                                 foreach ($pagos as $pago) {
                                     $soli = $solicitud->GetById($pago->getId());
+                                    if (!$soli)
+                                        $reser = $reservas->GetById($pago->getId());
                             ?>
+                                    <?php foreach ($mascXsoli as $tabla) { ?>
+
+                                        <?php if ($tabla->getIdSolicitud() == $soli->getId()) {  ?>
+                                            <?php $idMascotaX = $tabla->getIdMascota();  ?>
+                                            <?php foreach ($mascotas as $masc) {
+                                                if ($masc->getId() == $idMascotaX) { ?>
+                                                    <input type="hidden" name="animales[]" value="<?php echo $masc->getId(); ?>">
+                                    <?php
+                                                }
+                                            }
+                                        }
+                                    }
+                                    ?>
                                     <tr>
-                                        <td><?php echo $pago->getId(); //ver si cambiar por numero grande
+                                        <td><?php echo $pago->getId(); ?></td>
+                                        <td><?php
+                                            if ($soli)
+                                                echo $soli->getNombreDueno();
+                                            else
+                                                echo $reser->getNombreDueno();
                                             ?></td>
-                                        <td><?php echo $soli->getNombreDueno(); ?></td>
-                                        <td><?php echo $soli->getNombreGuardian(); ?></td>
-                                        <td><?php echo $soli->getFechaInicio(); ?></td>
-                                        <td><?php echo $soli->getFechaFin(); ?></td>
-                                        <td><?php echo $soli->getDireccionGuardian(); ?></td>
+                                        <td><?php
+                                            if ($soli)
+                                                echo $soli->getNombreGuardian();
+                                            else
+                                                echo $reser->getNombreGuardian();
+                                            ?></td>
+                                        <td><?php
+                                            if ($soli)
+                                                echo $soli->getFechaInicio();
+                                            else
+                                                echo $reser->getFechaInicio();
+                                            ?></td>
+                                        <td><?php
+                                            if ($soli)
+                                                echo $soli->getFechaFin();
+                                            else
+                                                echo $reser->getFechaFin();
+                                            ?></td>
+                                        <td><?php
+                                            if ($soli)
+                                                echo $soli->getDireccionGuardian();
+                                            else
+                                                echo $reser->getDireccionGuardian();
+                                            ?></td>
                                         <td><?php echo $pago->getPrecioGuardian(); ?></td>
                                         <td><?php echo $pago->getMontoAPagar(); ?></td>
                                         <?php if ($_SESSION['tipo']  == 'd' && $pago->getFormaDePago() == null) { ?>
@@ -91,19 +146,33 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                                         <?php } else { ?>
                                             <td><?php echo $pago->getFormaDePago(); ?></td>
                                         <?php } ?>
-                                        <td><?php echo $pago->getPrimerPagoReserva(); ?></td>
-                                        <td><?php echo $pago->getPagoFinal(); ?></td>
                                         <td>
-                                            <?php if ($_SESSION["tipo"]  == "d") { ?>
+                                            <?php
+                                            if ($pago->getPrimerPagoReserva())
+                                                echo "Realizado";
+                                            else
+                                                echo "No realizado";
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <?php
+                                            if ($pago->getPagoFinal())
+                                                echo "Realizado";
+                                            else
+                                                echo "No realizado";
+                                            ?>
+                                        </td>
+                                        <?php if ($_SESSION["tipo"]  == "d") { ?>
+                                            <td>
                                                 <input type="hidden" name="idSolicitud" value="<?php echo $soli->getId(); ?>">
                                                 <input type="hidden" name="idPago" value="<?php echo $pago->getId(); ?>">
                                                 <input type="hidden" name="primerPago" value="<?php echo $pago->getPrimerPagoReserva(); ?>">
                                                 <button type="submit" name="operacion" value="pagar" class="btn btn-danger" ?> Pagar </button>
                                                 <?php if ($pago->getPrimerPagoReserva() == null) { ?>
                                                     <button type="submit" name="operacion" value="cancelar" class="btn btn-danger" ?> Cancelar </button>
-                                            <?php }
+                                            </td>
+                                    <?php }
                                             } ?>
-                                        </td>
                                     </tr>
                         <?php
 

@@ -22,6 +22,11 @@ class MascotaController
         require_once(VIEWS_PATH . "home.php");
     }
 
+    public function loginDueno()
+    {
+        require_once(VIEWS_PATH . "loginDueno.php");
+    }
+
     /*public function opcionMenuPrincipal($opcion)
     {
         $opcion = $_POST['opcion'];
@@ -33,11 +38,6 @@ class MascotaController
             require_once(VIEWS_PATH . "verGuardianes.php");
         }
     }*/
-
-    public function loginDueno()
-    {
-        require_once(VIEWS_PATH . "loginDueno.php");
-    }
 
     public function idFotoFechaYCheck($fotoM = "")
     {

@@ -50,25 +50,34 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                         <th>Desde</th>
                         <th>Hasta</th>
                         <th>Direccion de guarda</th>
+                        <th>Nombre de mascota</th>
                         <th>Especie</th>
-                        <th>Nombre</th>
                         <th>Raza</th>
                         <th>Observaciones</th>
-                        <th>Opcion</th>
-
 
                     </thead>
                     <tbody> <? //cambiar action a ver info mascota/dueño o borrar 
                             ?>
                         <form action="<?php echo FRONT_ROOT ?>Guardian/operarSolicitud" method="POST">
-                            <?php foreach ($ress as $reserva) { ?>
+                            <?php foreach ($ress as $reserva) {
+                                $count = 0; ?>
+                                <?php foreach ($mascXres as $tabla) {
+                                    if ($tabla->getIdReserva() == $reserva->getId()) {  ?>
+                                        <?php $idMascotaX = $tabla->getIdMascota();  ?>
+                                <?php foreach ($mascotas as $masc) {
+                                            if ($masc->getId() == $idMascotaX) {
+                                                $count++;
+                                            }
+                                        } //contar para hacer el rowspan
+                                    }
+                                } ?>
                                 <tr>
 
-                                    <td><?php echo $reserva->getNombreDueno(); ?></td>
-                                    <td><?php echo $reserva->getNombreGuardian(); ?></td>
-                                    <td><?php echo $reserva->getFechaInicio(); ?></td>
-                                    <td><?php echo $reserva->getFechaFin(); ?></td>
-                                    <td><?php echo $reserva->getDireccionGuardian(); ?></td>
+                                    <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getNombreDueno(); ?></td>
+                                    <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getNombreGuardian(); ?></td>
+                                    <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getFechaInicio(); ?></td>
+                                    <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getFechaFin(); ?></td>
+                                    <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getDireccionGuardian(); ?></td>
 
                                     <?php foreach ($mascXres as $tabla) { ?>
 
@@ -77,26 +86,19 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                                             <?php foreach ($mascotas as $masc) {
                                                 if ($masc->getId() == $idMascotaX) { ?>
 
-                                                    <td><?php echo $masc->getEspecie(); ?></td>
                                                     <td><?php echo $masc->getNombre(); ?></td>
+                                                    <td><?php echo $masc->getEspecie(); ?></td>
                                                     <td><?php echo $masc->getRaza(); ?></td>
-                                                    <td><?php echo $masc->getObservaciones(); ?></td> <? //TAMAÑO Y FOTOS 
-                                                                                                        ?>
-                                                    <input type="hidden" name="animales[]" value="<?php echo $masc->getId(); ?>">
-                                    <?php }
+                                                    <td><?php echo $masc->getObservaciones(); ?></td>
+                                </tr>
+                <?php }
                                             }
                                         }
                                     } ?>
-                                    <td>
-                                        <?php //<input type="hidden" name="dni" value="<?php echo $guardianx->getDni(); "> 
-                                        ?>
-                                        <input type="hidden" name="reservaId" value="<?php echo $reserva->getId(); ?>">
-                                    </td>
-                                </tr>
-                            <?php  } ?>
-                        <?php } else {
-                        echo "NO TIENE RESERVAS";
-                    } ?>
+            <?php  } ?>
+        <?php } else {
+                    echo "NO TIENE RESERVAS";
+                } ?>
 
                         </form>
                     </tbody>
