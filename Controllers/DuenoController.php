@@ -47,6 +47,22 @@ class DuenoController
         require_once(VIEWS_PATH . "filtrarPorFecha.php");
     }
 
+    
+    public function login(Alert $alert = null)
+    {
+        require_once(VIEWS_PATH . "loginDueno.php");
+    }
+
+    public function registro(Alert $alert = null)
+    {
+        require_once(VIEWS_PATH . "registroDueno.php");
+    }
+
+    public function home(Alert $alert = null)
+    {
+        require_once(VIEWS_PATH . "home.php");
+    }
+
     public function opcionMenuPrincipal($opcion)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
@@ -90,11 +106,6 @@ class DuenoController
             $this->home();
     }
 
-    public function home(Alert $alert = null)
-    {
-        require_once(VIEWS_PATH . "home.php");
-    }
-
     public function ElegirGuardian($dni, $desde, $hasta)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
@@ -135,22 +146,23 @@ class DuenoController
             $this->home();
     }
 
-    public function realizarPago($formaDePago, $idSolicitud, $idPago, $primerPago, $operacion) //revisar - hacer validaciones de pago tambien una vez que se paga
+    public function realizarPago($animales, $formaDePago, $idSolicitud, $idPago, $primerPago, $operacion) //revisar - hacer validaciones de pago tambien una vez que se paga
     {
         ///hacer vista cargar tarjeta
-        ///recibir array mascotas
+        //print_r($animales);
+        //echo "<br> --> forma de pago: " . $formaDePago;
         $mascotas = new MascotaDAO();
-        //$arrayMascotas = $mascotas->getArrayByIds($animales); //animales = array ids hace falta
+        $arrayMascotas = $mascotas->getArrayByIds($animales); 
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             if ($operacion == "pagar") {
                 $solicitud = new SolicitudDAO();
                 $solicitudXmasc = new SolixMascDAO();
                 $pago = new PagoDAO();
 
-                echo "--> " . $idSolicitud;
+                //echo "--> " . $idSolicitud;
                 $soli = $solicitud->GetById($idSolicitud);
-                var_dump($soli);
-                echo "--> " . $soli->getId();
+                //var_dump($soli);
+                //echo "--> " . $soli->getId();
                 $reserva = new Reserva($soli);
                 $reservaDAO = new ReservaDAO();
                 $reservaDAO->add($reserva);
@@ -160,11 +172,13 @@ class DuenoController
                 else
                     $pago->updatePagoFinalReservaById($idPago);
 
-                //$pago->updateFormaDePago($formaDePago, $idPago);
+                $pago->updateFormaDePagoReservaById($formaDePago, $idPago);
                 $resul = $solicitud->removeSolicitudById($idSolicitud);
                 $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSolicitud);
-                //$intermediaMascotasXreserva = new ResxMascDAO(); hacer
-                //$intermediaMascotasXreserva->add($arrayMascotas, $idSolicitud); //recibir mascotas
+                $intermediaMascotasXreserva = new ResxMascDAO(); 
+                $intermediaMascotasXreserva->add($arrayMascotas, $idSolicitud);
+                ///HACER ALERTAS
+                $this->login();
             } else if ($operacion == "cancelar") {
                 $solicitud = new SolicitudDAO();
                 $solicitudXmasc = new SolixMascDAO();
@@ -173,18 +187,10 @@ class DuenoController
                 $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSolicitud);
                 $resul3 = $pago->removePagoById($idPago);
                 ///ver si mostrar si rechazo pago
+                ///HACER ALERTAS
+                $this->login();
             }
         }
-    }
-
-    public function login(Alert $alert = null)
-    {
-        require_once(VIEWS_PATH . "loginDueno.php");
-    }
-
-    public function registro(Alert $alert = null)
-    {
-        require_once(VIEWS_PATH . "registroDueno.php");
     }
 
     public function Add($username, $password, $nombre, $dni, $email, $direccion, $telefono)

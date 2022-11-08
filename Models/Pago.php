@@ -2,7 +2,7 @@
 
 class Pago
 {
-    private $id; //PK mismo que solicitud y reserva
+    private $id; //PK mismo que solicitud y reserva --  //ver si cambiar por numero grande
     private $dniDueno; //FK
     private $dniGuardian; //FK
     private $precioGuardian;

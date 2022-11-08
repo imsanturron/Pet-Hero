@@ -115,10 +115,13 @@ class GuardianController
             $this->home();
     }
 
-    public function operarSolicitud($idIntermedia, $animales, $solicitudId, $operacion)
+    public function operarSolicitud($solicitudId, $operacion, $animales)
     {
         $mascotas = new MascotaDAO();
         $arrayMascotas = $mascotas->getArrayByIds($animales);
+        print_r($animales);
+        echo "<br> --> soliid: " . $solicitudId;
+        echo "<br> --> operacion: " . $operacion;
 
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
             if ($operacion == "aceptar") {
@@ -139,7 +142,7 @@ class GuardianController
                 $intermediaMascotasXreserva = new ResxMascDAO();
                 $intermediaMascotasXreserva->add($arrayMascotas, $solicitudId);*/
                 ///********///
-                if ($resul && $resul2) {
+                if ($resul && $resul2) { ///arreglar esto
                     $alert = new Alert("success", "Solicitud aceptada");
                 } else {
                     $alert = new Alert("warning", "No se borro alguna solicitud");
@@ -149,7 +152,7 @@ class GuardianController
                 $solicitud = new SolicitudDAO();
                 $solicitudXmasc = new SolixMascDAO();
                 $resul = $solicitud->removeSolicitudById($solicitudId);
-                $resul2 = $solicitudXmasc->removeSolicitudMascIntById($idIntermedia); //!//
+                $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($solicitudId);
 
                 if ($resul && $resul2) {
                     $alert = new Alert("success", "Solicitud borrada con exito");
