@@ -251,6 +251,48 @@ class SolicitudDAO
         }
     }
 
+    public function removeSolicitudesByDniDueno($dniDueno)
+    {
+
+        try {
+            $solicitud = null;
+
+            $query = "DELETE FROM " . $this->tableName . " WHERE dniDueno = :dniDueno";
+
+            $parameters["dniDueno"] = $dniDueno;
+
+            $this->connection = Connection::GetInstance();
+
+            $resultSet = $this->connection->Execute($query, $parameters);
+
+
+            return true;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public function removeSolicitudesByDniGuardian($dniGuardian)
+    {
+
+        try {
+            $solicitud = null;
+
+            $query = "DELETE FROM " . $this->tableName . " WHERE dniGuardian = :dniGuardian";
+
+            $parameters["dniGuardian"] = $dniGuardian;
+
+            $this->connection = Connection::GetInstance();
+
+            $resultSet = $this->connection->Execute($query, $parameters);
+
+
+            return true;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////FUNCIONES JSONJSONJSON/////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
