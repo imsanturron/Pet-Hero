@@ -9,6 +9,20 @@ class Resena
     private $fecha; ///que se hizo la observacion
     private $observacion; ///comentarios
 
+    public function __construct($id = null, $dniDueno = null, $dniGuardian = null, $puntaje = null, $observacion = "")
+    {
+      // parent::__construct($solicitud->getAnimales(), $solicitud->getFechaInicio(),$solicitud->getFechaFin());
+  
+      if ($id && $dniDueno && $dniGuardian) {
+        $this->setId($id);
+        $this->setDniDueno($dniDueno);
+        $this->setDniGuardian($dniGuardian);
+        $this->setPuntaje($puntaje);
+        $this->setFecha(date("Y-m-d"));
+        $this->setObservacion($observacion);
+      }
+    }
+
     public function getPuntaje()
     {
         return $this->puntaje;

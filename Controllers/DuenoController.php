@@ -12,15 +12,16 @@ use DAO\MYSQL\DuenoDAO as DuenoDAO;
 //use DAO\JSON\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
 //use DAO\JSON\MascotaDAO;
-use DAO\MYSQL\MascotaDAO;
-use DAO\MYSQL\PagoDAO;
-use DAO\MYSQL\SolicitudDAO;
-use DAO\MYSQL\SolixMascDAO;
-use DAO\MYSQL\ResxMascDAO;
-use DAO\MYSQL\ReservaDAO;
-//use DAO\JSON\UserDAO as UserDAO;
+use DAO\MYSQL\MascotaDAO as MascotaDAO;
+use DAO\MYSQL\PagoDAO as PagoDAO;
+use DAO\MYSQL\SolicitudDAO as SolicitudDAO;
+use DAO\MYSQL\SolixMascDAO as SolixMascDAO;
+use DAO\MYSQL\ResxMascDAO as ResxMascDAO;
+use DAO\MYSQL\ReservaDAO as ReservaDAO;
+use DAO\MYSQL\ResenaDAO as ResenaDao;
 use DAO\MYSQL\UserDAO as UserDAO;
 use Models\Pago;
+use Models\Resena;
 use Models\SolixMasc;
 
 class DuenoController
@@ -240,18 +241,31 @@ class DuenoController
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             if ($operacion == "crear") {
                 $reservaDAO = new ReservaDAO();
-                $reserva = $reservaDAO->GetById($idReserva);
-                $reservaDAO->updateCrearReserva(); //setear en false
-                $reservaDAO->updateResHechaOrechazada(); //setear en true
+                $reservaDAO->updateCrearResena($idReserva, false); 
+                $reservaDAO->updateResHechaOrechazada($idReserva, true); 
                 ///ver si se le pasa atributo xq antes no andaba
-                require_once(VIEWS_PATH . "generarReviewAGuardianX.php");
+                $_SESSION["dniguard"] = $dniGuard;
+                $_SESSION["idreserva"] = $idReserva; //ver q pasa con validaciones si abajo se sale
+                require_once(VIEWS_PATH . "generarReviewAGuardianX.php"); //PREGUNTAR PROFE VARIABLES
                 ///Y luego crear reseña, tambien persistir.
             } else if ($operacion == "noCrear") {
                 $reservaDAO = new ReservaDAO();
-                $reserva = $reservaDAO->GetById($idReserva);
-                $reservaDAO->updateCrearReserva(); //setear en false
-                $reservaDAO->updateResHechaOrechazada(); //setear en true
+                $reservaDAO->updateCrearResena($idReserva, false);
+                $reservaDAO->updateResHechaOrechazada($idReserva, true);
             }
+            $this->login();
+        } else
+            $this->login();
+    }
+
+    public function asentarResena($puntos, $observaciones)
+    {
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
+            $resenaDAO = new ResenaDAO();
+            $dueno = new Dueno();
+            $dueno = $_SESSION["loggedUser"];
+            $resena = new Resena($_SESSION["idreserva"], $dueno->getDni(), $_SESSION["dniguard"], $puntos, $observaciones);
+            $resenaDAO->Add($resena);
             $this->login();
         } else
             $this->login();

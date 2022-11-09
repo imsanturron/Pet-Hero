@@ -16,8 +16,8 @@ class ReservaDAO
     public function Add(Reserva $reserva)
     {
         try {
-            $query = "INSERT INTO " . $this->tableName . " (id, FechaInicio, FechaFin, nombreDueno, dniDueno, nombreGuardian, dniGuardian, direccionGuardian, telefonoDueno, telefonoGuardian, estado)
-             VALUES (:id, :FechaInicio, :FechaFin, :nombreDueno, :dniDueno, :nombreGuardian, :dniGuardian, :direccionGuardian, :telefonoDueno, :telefonoGuardian, :estado);";
+            $query = "INSERT INTO " . $this->tableName . " (id, FechaInicio, FechaFin, nombreDueno, dniDueno, nombreGuardian, dniGuardian, direccionGuardian, telefonoDueno, telefonoGuardian, estado, crearResena, hechaOrechazada)
+             VALUES (:id, :FechaInicio, :FechaFin, :nombreDueno, :dniDueno, :nombreGuardian, :dniGuardian, :direccionGuardian, :telefonoDueno, :telefonoGuardian, :estado, :crearResena, :hechaOrechazada);";
 
             $parameters["id"] = $reserva->getId();
             //$parameters["animales"] = $reserva->getAnimales();
@@ -31,6 +31,8 @@ class ReservaDAO
             $parameters["telefonoDueno"] = $reserva->getTelefonoDueno();
             $parameters["telefonoGuardian"] = $reserva->getTelefonoGuardian();
             $parameters["estado"] = $reserva->getEstado();
+            $parameters["crearResena"] = $reserva->getCrearResena();
+            $parameters["hechaOrechazada"] = $reserva->getResHechaOrechazada();
             $this->connection = Connection::GetInstance();
             $this->connection->ExecuteNonQuery($query, $parameters);
         } catch (Exception $ex) {
@@ -60,6 +62,8 @@ class ReservaDAO
                 $reserva->setTelefonoDueno($row["telefonoDueno"]);
                 $reserva->setTelefonoGuardian($row["telefonoGuardian"]);
                 $reserva->setEstado($row["estado"]);
+                $reserva->setCrearResena($row["crearResena"]);
+                $reserva->setResHechaOrechazada($row["hechaOrechazada"]);
                 array_push($reservaList, $reserva);
             }
             return $reservaList;
@@ -95,6 +99,8 @@ class ReservaDAO
                 $reserva->setTelefonoDueno($row["telefonoDueno"]);
                 $reserva->setTelefonoGuardian($row["telefonoGuardian"]);
                 $reserva->setEstado($row["estado"]);
+                $reserva->setCrearResena($row["crearResena"]);
+                $reserva->setResHechaOrechazada($row["hechaOrechazada"]);
             }
 
             return $reserva;
@@ -130,6 +136,8 @@ class ReservaDAO
                 $reserva->setTelefonoDueno($row["telefonoDueno"]);
                 $reserva->setTelefonoGuardian($row["telefonoGuardian"]);
                 $reserva->setEstado($row["estado"]);
+                $reserva->setCrearResena($row["crearResena"]);
+                $reserva->setResHechaOrechazada($row["hechaOrechazada"]);
                 array_push($reservaList, $reserva);
             }
             if (isset($reservaList))
@@ -168,6 +176,8 @@ class ReservaDAO
                 $reserva->setTelefonoDueno($row["telefonoDueno"]);
                 $reserva->setTelefonoGuardian($row["telefonoGuardian"]);
                 $reserva->setEstado($row["estado"]);
+                $reserva->setCrearResena($row["crearResena"]);
+                $reserva->setResHechaOrechazada($row["hechaOrechazada"]);
                 array_push($reservaList, $reserva);
             }
             if (isset($reservaList))
@@ -184,6 +194,40 @@ class ReservaDAO
             $query = "UPDATE " . $this->tableName . " SET estado = :estado WHERE id = :id;";
 
             $parameters["estado"] = $nuevoEstado;
+            $parameters["id"] = $id;
+
+            $this->connection = Connection::GetInstance();
+
+            $this->connection->ExecuteNonQuery($query, $parameters);
+            return true;
+        } catch (Exception $ex) {
+            return false;
+            //throw $ex;
+        }
+    }
+
+    function updateCrearResena($id, $nuevoEstado){
+        try {
+            $query = "UPDATE " . $this->tableName . " SET crearResena = :crearResena WHERE id = :id;";
+
+            $parameters["crearResena"] = $nuevoEstado;
+            $parameters["id"] = $id;
+
+            $this->connection = Connection::GetInstance();
+
+            $this->connection->ExecuteNonQuery($query, $parameters);
+            return true;
+        } catch (Exception $ex) {
+            return false;
+            //throw $ex;
+        }
+    }
+
+    function updateResHechaOrechazada($id, $nuevoEstado){
+        try {
+            $query = "UPDATE " . $this->tableName . " SET hechaOrechazada = :hechaOrechazada WHERE id = :id;";
+
+            $parameters["hechaOrechazada"] = $nuevoEstado;
             $parameters["id"] = $id;
 
             $this->connection = Connection::GetInstance();

@@ -1,6 +1,6 @@
 <?php
 
-namespace DAO;
+namespace DAO\MYSQL;
 
 use DAO\MYSQL\Connection as Connection;
 use \Exception as Exception;
@@ -9,20 +9,20 @@ use Models\Resena as Resena;
 class ResenaDAO
 {
     private $connection;
-    private $tableName = "pagos";
+    private $tableName = "resenas";
 
-    public function Add(Resena $pago)
+    public function Add(Resena $resena)
     {
         try {
             $query = "INSERT INTO " . $this->tableName . " (id, dniDueno, dniGuardian, puntaje, fecha, observacion)
              VALUES (:id, :dniDueno, :dniGuardian, :puntaje, :fecha, :observacion);";
 
-            $parameters["id"] = $pago->getId();
-            $parameters["dniDueno"] = $pago->getDniDueno();
-            $parameters["dniGuardian"] = $pago->getDniGuardian();
-            $parameters["puntaje"] = $pago->getPuntaje();
-            $parameters["fecha"] = $pago->getFecha();
-            $parameters["observacion"] = $pago->getObservacion();
+            $parameters["id"] = $resena->getId();
+            $parameters["dniDueno"] = $resena->getDniDueno();
+            $parameters["dniGuardian"] = $resena->getDniGuardian();
+            $parameters["puntaje"] = $resena->getPuntaje();
+            $parameters["fecha"] = $resena->getFecha();
+            $parameters["observacion"] = $resena->getObservacion();
             $this->connection = Connection::GetInstance();
             $this->connection->ExecuteNonQuery($query, $parameters);
         } catch (Exception $ex) {

@@ -129,6 +129,8 @@ class AuthController
           foreach ($reservas as $res) {
             if (AuthController::ValidarFecha($res->getFechaFin())) {
               $reservaDAO->updateEstado($res->getId(), "finalizado");
+              if ($res->getHechaOrechazada() == false && $res->getCrearResena() == false)
+                $res->setCrearResena(true);
             } else if (AuthController::ValidarFecha($res->getFechaInicio())) {
               $reservaDAO->updateEstado($res->getId(), "actual");
             }
@@ -163,6 +165,8 @@ class AuthController
           foreach ($reservas as $res) {
             if (AuthController::ValidarFecha($res->getFechaFin())) {
               $reservaDAO->updateEstado($res->getId(), "finalizado");
+              if ($res->getHechaOrechazada() == false && $res->getCrearResena() == false)
+                $res->setCrearResena(true);
             } else if (AuthController::ValidarFecha($res->getFechaInicio())) {
               $reservaDAO->updateEstado($res->getId(), "actual");
             }
@@ -330,18 +334,21 @@ class AuthController
       return true;
   }
 
-   public static function VerifMascotaNoEstaReservadaEnFecha($arrayMascotas, $fini, $ffin){
+  public static function VerifMascotaNoEstaReservadaEnFecha($arrayMascotas, $fini, $ffin)
+  {
     $reservaXmascotas = new ResxMascDAO();
     $resXmasc = $reservaXmascotas->GetAll();
     $reserva = new ReservaDAO();
 
-    foreach($arrayMascotas as $masc){
-      foreach($resXmasc as $rmi){
-        if($rmi->getIdMascota() == $masc->getId()){
+    foreach ($arrayMascotas as $masc) {
+      foreach ($resXmasc as $rmi) {
+        if ($rmi->getIdMascota() == $masc->getId()) {
           $res =  $reserva->GetById($rmi->getIdReserva());
-          if(AuthController::ValidarFecha($res->getFechaInicio(), $res->getFechaFin(), $fini) //cambia con fmedio en validar fecha
-              || AuthController::ValidarFecha($res->getFechaInicio(), $res->getFechaFin(), $ffin)){
-               return false; //la mascota esta reservada en esa fecha
+          if (
+            AuthController::ValidarFecha($res->getFechaInicio(), $res->getFechaFin(), $fini) //cambia con fmedio en validar fecha
+            || AuthController::ValidarFecha($res->getFechaInicio(), $res->getFechaFin(), $ffin)
+          ) {
+            return false; //la mascota esta reservada en esa fecha
           }
         }
       }
