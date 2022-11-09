@@ -60,11 +60,11 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                             ?>
                         <form action="<?php echo FRONT_ROOT ?>Guardian/operarSolicitud" method="POST">
                             <?php foreach ($ress as $reserva) {
-                                $count = 0; ?>
-                                <?php foreach ($mascXres as $tabla) {
-                                    if ($tabla->getIdReserva() == $reserva->getId()) {  ?>
-                                        <?php $idMascotaX = $tabla->getIdMascota();  ?>
-                                <?php foreach ($mascotas as $masc) {
+                                $count = 0;
+                                foreach ($mascXres as $tabla) {
+                                    if ($tabla->getIdReserva() == $reserva->getId()) {
+                                        $idMascotaX = $tabla->getIdMascota();
+                                        foreach ($mascotas as $masc) {
                                             if ($masc->getId() == $idMascotaX) {
                                                 $count++;
                                             }

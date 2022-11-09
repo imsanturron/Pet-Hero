@@ -5,6 +5,8 @@ use Models\Solicitud as Solicitud;
 class Reserva extends Solicitud
 {
     private $estado; ///"finalizado", "actual", "proximo"
+    private $crearReserva; ///boolean  -- si debe crearse es true
+    private $resHechaOrechazada; //bool. ve si ya se hizo o rechazo la reseña. Podria ser atributo de reserva tamb
 
     public function __construct(Solicitud $solicitud = null)
     {
@@ -24,6 +26,8 @@ class Reserva extends Solicitud
 
         ///setear estado comaparando con fecha actual.
         $this->estado = "proximo";
+        $this->crearReserva = false;
+        $this->resHechaOrechazada = false;
     }
     }
 
@@ -55,4 +59,40 @@ class Reserva extends Solicitud
       }
       return $ret;
     }*/
+
+    /**
+     * Get the value of crearReserva
+     */
+    public function getCrearReserva()
+    {
+        return $this->crearReserva;
+    }
+
+    /**
+     * Set the value of crearReserva
+     */
+    public function setCrearReserva($crearReserva): self
+    {
+        $this->crearReserva = $crearReserva;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of resHechaOrechazada
+     */
+    public function getResHechaOrechazada()
+    {
+        return $this->resHechaOrechazada;
+    }
+
+    /**
+     * Set the value of resHechaOrechazada
+     */
+    public function setResHechaOrechazada($resHechaOrechazada): self
+    {
+        $this->resHechaOrechazada = $resHechaOrechazada;
+
+        return $this;
+    }
 }

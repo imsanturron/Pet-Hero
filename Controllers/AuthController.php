@@ -82,7 +82,7 @@ class AuthController
   }
 
   private function validacionesLogin() //agrandar luego con pagos
-  {
+  {    ///CAMBIAR TEMA RESERVAS CON VALIDACIONES HECHAS PARA RESEÑA
     $bool = false; //actualizar adentro
     if (isset($_SESSION["loggedUser"])) {
       if ($_SESSION["tipo"] == 'g') {

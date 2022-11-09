@@ -2,7 +2,7 @@
 
 class Resena
 {
-    private $id; //PK
+    private $id; //PK   --> id de reserva/solicitud/pago
     private $dniDueno; //FK
     private $dniGuardian; //FK
     private $puntaje; ///del 1 al 10
