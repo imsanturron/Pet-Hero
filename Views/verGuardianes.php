@@ -1,10 +1,7 @@
 <?php
 include('nav-bar.php');
-?>
-<?php
 
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
-//use DAO\JSON\GuardianDAO as GuardianDAO;
 use Models\Guardian as Guardian;
 
 $guardianDao = new GuardianDAO();

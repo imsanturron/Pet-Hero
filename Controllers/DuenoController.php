@@ -47,7 +47,7 @@ class DuenoController
         require_once(VIEWS_PATH . "filtrarPorFecha.php");
     }
 
-    
+
     public function login(Alert $alert = null)
     {
         require_once(VIEWS_PATH . "loginDueno.php");
@@ -85,6 +85,8 @@ class DuenoController
                 require_once(VIEWS_PATH . "verReservas.php");
             } else if ($opcion == "verSolicitudesAceptadasAPagar") {
                 require_once(VIEWS_PATH . "pagosPendientes.php");
+            } else if ($opcion == "generarNuevaReview") {
+                require_once(VIEWS_PATH . "generarReview.php");
             }
         } else
             $this->home();
@@ -121,7 +123,7 @@ class DuenoController
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             $valid = AuthController::ValidarMismaRaza($arrayMascotas, $dni, $desde, $hasta); //chequear con mascotas q ya tenga
             $valid2 = AuthController::VerifGuardianSoliNuestraRepetida($dni);
-            $valid3 = AuthController::VerifMascotaNoEstaReservadaEnFecha($arrayMascotas, $desde, $hasta); 
+            $valid3 = AuthController::VerifMascotaNoEstaReservadaEnFecha($arrayMascotas, $desde, $hasta);
             ///ver ocupacion de mascotas y de guardianes.
             if ($valid && $valid2 && $valid3) {
 
@@ -152,7 +154,7 @@ class DuenoController
         //print_r($animales);
         //echo "<br> --> forma de pago: " . $formaDePago;
         $mascotas = new MascotaDAO();
-        $arrayMascotas = $mascotas->getArrayByIds($animales); 
+        $arrayMascotas = $mascotas->getArrayByIds($animales);
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             if ($operacion == "pagar") {
                 $solicitud = new SolicitudDAO();
@@ -175,7 +177,7 @@ class DuenoController
                 $pago->updateFormaDePagoReservaById($formaDePago, $idPago);
                 $resul = $solicitud->removeSolicitudById($idSolicitud);
                 $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSolicitud);
-                $intermediaMascotasXreserva = new ResxMascDAO(); 
+                $intermediaMascotasXreserva = new ResxMascDAO();
                 $intermediaMascotasXreserva->add($arrayMascotas, $idSolicitud);
                 ///HACER ALERTAS
                 $this->login();
@@ -231,6 +233,28 @@ class DuenoController
             $alert = new Alert("warning", "No se borro alguna solicitud");
         }
         $this->login($alert);
+    }
+
+    public function crearResena($idReserva, $dniGuard, $operacion)
+    {
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
+            if ($operacion == "crear") {
+                $reservaDAO = new ReservaDAO();
+                $reserva = $reservaDAO->GetById($idReserva);
+                $reservaDAO->updateCrearReserva(); //setear en false
+                $reservaDAO->updateResHechaOrechazada(); //setear en true
+                ///ver si se le pasa atributo xq antes no andaba
+                require_once(VIEWS_PATH . "generarReviewAGuardianX.php");
+                ///Y luego crear reseña, tambien persistir.
+            } else if ($operacion == "noCrear") {
+                $reservaDAO = new ReservaDAO();
+                $reserva = $reservaDAO->GetById($idReserva);
+                $reservaDAO->updateCrearReserva(); //setear en false
+                $reservaDAO->updateResHechaOrechazada(); //setear en true
+            }
+            $this->login();
+        } else
+            $this->login();
     }
 
     public function Remove($dni)
