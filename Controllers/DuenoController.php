@@ -238,12 +238,9 @@ class DuenoController
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             if ($operacion == "crear") {
-                $reservaDAO = new ReservaDAO();
-                $reservaDAO->updateCrearResena($idReserva, false);
-                $reservaDAO->updateResHechaOrechazada($idReserva, true);
                 ///ver si se le pasa atributo xq antes no andaba
                 $_SESSION["dniguard"] = $dniGuard;
-                $_SESSION["idreserva"] = $idReserva; //ver q pasa con validaciones si abajo se sale
+                $_SESSION["idreserva"] = $idReserva; 
                 require_once(VIEWS_PATH . "generarReviewAGuardianX.php"); //PREGUNTAR PROFE VARIABLES
                 ///Y luego crear reseña, tambien persistir.
             } else if ($operacion == "noCrear") {
@@ -259,8 +256,12 @@ class DuenoController
     public function asentarResena($puntos, $observaciones)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
+            $reservaDAO = new ReservaDAO();
+            $reservaDAO->updateCrearResena($_SESSION["idreserva"], false);
+            $reservaDAO->updateResHechaOrechazada($_SESSION["idreserva"], true);
+
             $guardianDAO = new GuardianDAO();
-            $guardianDAO->updateCantResenasMas1($_SESSION["dniguard"]);
+            $guardianDAO->updateCantResenasMas1($_SESSION["dniguard"]); //no cambiar el orden
             $guardianDAO->updatePuntajeTotalMasPuntaje($_SESSION["dniguard"], $puntos);
             $guardianDAO->updatePuntajePromedio($_SESSION["dniguard"]);
             $resenaDAO = new ResenaDAO();

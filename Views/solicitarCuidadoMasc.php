@@ -42,7 +42,7 @@ $guardian = $guardianes->getByDni($dni);
                                         <td><?php echo $mascota->getRaza(); ?></td>
                                         <td><?php echo $mascota->getTamano(); ?></td>
                                         <td><?php echo $mascota->getObservaciones(); ?></td>
-                                        <td><img src="<?php echo FRONT_ROOT . IMG_PATH . $mascota->getFotoMascota() ?>" width="220" height="140"></td>
+                                        <td><img src="<?php echo FRONT_ROOT . IMG_PATH . $mascota->getFotoMascota() ?>" style="width:120px;height:auto;"></td>
                                         <td>
                                             <input type="checkbox" name="animales[]" value="<?php echo $mascota->getId(); ?>">
                                             <?php // <input type="checkbox" name="animales" value="<?php $mascota; ?>

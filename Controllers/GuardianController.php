@@ -199,9 +199,6 @@ class GuardianController
     {
         $mascotas = new MascotaDAO();
         $arrayMascotas = $mascotas->getArrayByIds($animales);
-        print_r($animales);
-        echo "<br> --> soliid: " . $solicitudId;
-        echo "<br> --> operacion: " . $operacion;
 
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
             if ($operacion == "aceptar") {
@@ -209,7 +206,6 @@ class GuardianController
                 $solicitudXmasc = new SolixMascDAO();
 
                 $soli = $solicitud->GetById($solicitudId);
-                echo "--->" . $soli->getId();
                 $pagos = new PagoDAO();
                 $pago = new Pago($soli, $_SESSION["loggedUser"]);
                 $solicitud->updateAPagoById($soli->getId()); //podemos ver si bien
