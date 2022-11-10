@@ -4,8 +4,10 @@ include('nav-bar.php');
 use Config\Autoload as Autoload;
 use DAO\MYSQL\MascotaDAO;
 
+if (isset($_SESSION['loggedUser']) && $_SESSION["tipo"] == 'd') {
 $mascotasDao = new MascotaDAO();
-$listaMascotas = $mascotasDao->GetAll();
+$listaMascotas = $mascotasDao->getMascotasByDniDueno($_SESSION['loggedUser']->getDni());
+}
 ?>
 
 <main class="py-5">
@@ -28,10 +30,8 @@ $listaMascotas = $mascotasDao->GetAll();
                          <form action="<?php echo FRONT_ROOT ?>Mascota/Remove" method="POST">
                               <?php
                               if (isset($listaMascotas) && !empty($listaMascotas)) {
-
                                    foreach ($listaMascotas as $mascota) {
                               ?>
-                                        <?php if ($mascota->getdniDueno() == $_SESSION["loggedUser"]->getDni()) { ?>
                                              <tr>
                                                   <td><?php echo $mascota->getNombre(); ?></td>
                                                   <td><?php echo $mascota->getRaza(); ?></td>
@@ -52,7 +52,6 @@ $listaMascotas = $mascotasDao->GetAll();
                                                   </td>
                                              </tr>
                               <?php
-                                        }
                                    }
                               } else
                                    echo "<h2>No tiene mascotas cargadas!</h2>";

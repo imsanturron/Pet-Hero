@@ -20,7 +20,7 @@ class PagoDAO
             $parameters["id"] = $pago->getId();
             $parameters["dniDueno"] = $pago->getDniDueno();
             $parameters["dniGuardian"] = $pago->getDniGuardian();
-            $parameters["precioGuardian"] = $pago->getMontoAPagar();
+            $parameters["precioGuardian"] = $pago->getPrecioGuardian();
             $parameters["montoAPagar"] = $pago->getMontoAPagar();
             $parameters["primerPagoReserva"] = $pago->getPrimerPagoReserva();
             $parameters["pagoFinal"] = $pago->getPagoFinal();

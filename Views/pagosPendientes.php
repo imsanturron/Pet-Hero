@@ -58,6 +58,8 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
         <section id="listado" class="mb-5">
             <div class="container">
                 <h2 class="mb-4">Listado de pagos pendientes:</h2>
+                ¡Atencion! Antes de realizado el primer pago, la reserva no sera confirmada.
+                Seguira siendo de momento, una solicitud.
                 <table class="table bg-light-alpha">
                     <thead>
                         <th>Id unico del pago</th>
@@ -69,8 +71,8 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                         <th>Precio total</th>
                         <th>Monto a pagar actual</th>
                         <th>Forma de pago</th>
-                        <th>Primer pago realizado (confirma reserva)</th>
-                        <th>Pago final realizado</th>
+                        <th>Primer pago (confirma reserva)</th>
+                        <th>Pago final de reserva</th>
                         <?php if ($_SESSION["tipo"]  == "d") { ?>
                             <th>Opcion</th>
                         <?php } ?>

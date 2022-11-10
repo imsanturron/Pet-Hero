@@ -17,13 +17,11 @@ class Pago
     public function  __construct(Solicitud $solicitud = null, Guardian $guardian = null)
     {
         if (isset($solicitud) && isset($guardian)) {
-            $operacion = 0;
             $this->id = $solicitud->getId();
             $this->dniDueno = $solicitud->getDniDueno();
             $this->dniGuardian = $solicitud->getDniGuardian();
             $this->precioGuardian = $guardian->getPrecio();
-            $operacion = $guardian->getPrecio();
-            $this->montoAPagar = ($operacion / 2);
+            $this->montoAPagar = ($guardian->getPrecio() / 2);
             $this->primerPagoReserva = false;
             $this->pagoFinal = false;
             //$this->fecha = false;
