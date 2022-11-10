@@ -6,10 +6,8 @@ use Models\Guardian;
 use Models\Alert as Alert;
 use Models\Solicitud as Solicitud;
 use Models\Reserva as Reserva;
-//use DAO\JSON\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\SolicitudDAO;
-//use DAO\JSON\UserDAO as UserDAO;
 use DAO\MYSQL\UserDAO as UserDAO;
 use DAO\MYSQL\ReservaDAO as ReservaDAO;
 use DAO\MYSQL\SolixMascDAO as SolixMascDAO;
@@ -72,8 +70,10 @@ class GuardianController
                 $solicitudes = new SolicitudDAO;
                 $solis = $solicitudes->GetAll(); ///get all by id desp
                 require_once(VIEWS_PATH . "verSolicitudes.php");
-            }else if ($opcion == "verPrimerosPagosPendientes") {
+            } else if ($opcion == "verPrimerosPagosPendientes") {
                 require_once(VIEWS_PATH . "pagosPendientes.php");
+            } else if ($opcion == "cambiarTamanoACuidar") {
+                require_once(VIEWS_PATH . "cambiarTamanoACuidar.php");
             }
         }
     }
@@ -94,13 +94,15 @@ class GuardianController
                     $solicitud = new SolicitudDAO(); //borrar solicitudes que no estan en mi nuevo rango disponible
                     $solicitudes = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
                     $solicitudXmasc = new SolixMascDAO();
-                    foreach($solicitudes as $soli){
-                        if(AuthController::ValidarFecha($soli->getFechaInicio(), $desde)
-                            || AuthController::ValidarFecha($hasta, $soli->getFechaFin())){
-                                 $solicitud->removeSolicitudById($soli->getId()); //creo q bien, checkear
-                                 $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
-                                 $alert = new Alert("success", "Disponibilidad actualizada + solis removidas");
-                            }
+                    foreach ($solicitudes as $soli) {
+                        if (
+                            AuthController::ValidarFecha($soli->getFechaInicio(), $desde)
+                            || AuthController::ValidarFecha($hasta, $soli->getFechaFin())
+                        ) {
+                            $solicitud->removeSolicitudById($soli->getId()); //creo q bien, checkear
+                            $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
+                            $alert = new Alert("success", "Disponibilidad actualizada + solis removidas");
+                        }
                     }
                     /////////
                 } else {
@@ -110,6 +112,31 @@ class GuardianController
             } else {
                 $alert = new Alert("warning", "La fecha seleccionada es invalida");
                 $this->login($alert);
+            }
+        } else
+            $this->home();
+    }
+
+    public function cambiarTamanoAResguardar($tamanoMasc) //el tamaño sera siempre distinto al anterior
+    {
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
+            $guardian = new Guardian();
+            $guardian = $_SESSION["loggedUser"];
+            $guardianDAO = new GuardianDAO();
+            $guardianDAO->updateTamanoACuidar($guardian->getDni(), $tamanoMasc);
+            $solicitudDAO = new SolicitudDAO();
+            $soliXmasc = new SolixMascDAO();
+            $pagoDAO = new PagoDAO();
+
+            $solicitudes = $solicitudDAO->getSolicitudesByDniGuardian($guardian->getDni());
+            if (isset($solicitudes)) {
+                foreach ($solicitudes as $soli) {  //borrar intermedias
+                    $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
+                    if ($soli->getEsPago())
+                        $pagoDAO->removePagoById($soli->getId());
+                }
+                $solicitudDAO->removeSolicitudesByDniGuardian($guardian->getDni()); //borrar todas las solis de tamaño viejo
+                ////ver distinto tamaño en mascotas a cuidar
             }
         } else
             $this->home();
@@ -134,9 +161,9 @@ class GuardianController
                 $pago = new Pago($soli, $_SESSION["loggedUser"]);
                 $solicitud->updateAPagoById($soli->getId()); //podemos ver si bien
                 $pagos->Add($pago); //podemos ver si bien
-                
+
                 //if ($resul && $resul2) { ///arreglar esto
-                    $alert = new Alert("success", "Solicitud aceptada");
+                $alert = new Alert("success", "Solicitud aceptada");
                 //} else {
                 //    $alert = new Alert("warning", "No se borro alguna solicitud");
                 //}

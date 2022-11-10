@@ -1,8 +1,6 @@
 <?php
 include('nav-bar.php');
 
-use Config\Autoload as Autoload;
-//use DAO\JSON\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\MascotaDAO as MascotaDAO;
 use DAO\MYSQL\SolicitudDAO as SolicitudDAO;

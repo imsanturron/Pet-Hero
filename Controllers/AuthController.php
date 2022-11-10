@@ -2,9 +2,7 @@
 
 namespace Controllers;
 
-//use DAO\JSON\GuardianDAO as GuardianDao;
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
-//use DAO\JSON\DuenoDAO as DuenoDAO;
 use DAO\MYSQL\DuenoDAO as DuenoDAO;
 use DAO\MYSQL\MascotaDAO as MascotaDAO;
 use DAO\MYSQL\ReservaDAO;
@@ -12,7 +10,6 @@ use DAO\MYSQL\PagoDAO;
 use DAO\MYSQL\ResxMascDAO;
 use DAO\MYSQL\SolicitudDAO;
 use DAO\MYSQL\SolixMascDAO;
-//use DAO\JSON\UserDAO as UserDAO;
 use DAO\MYSQL\UserDAO as UserDAO;
 use Exception;
 use Models\Guardian as Guardian;
