@@ -23,12 +23,12 @@ include('nav-bar.php');
           <table>
             <thead>
               <tr>
-                <th>Especie</th>
-                <th>Nombre</th>
-                <th>Raza</th>
-                <th>Tamaño</th>
-                <th>Imagen</th> 
-                <th>Plan de vacunacion</th> 
+                <th>Especie*</th>
+                <th>Nombre*</th>
+                <th>Raza*</th>
+                <th>Tamaño*</th>
+                <th>Imagen*</th> 
+                <th>Plan de vacunacion*</th> 
                 <th>Video</th> 
                 <th>Observaciones</th>
               </tr>

@@ -61,6 +61,31 @@ class DuenoController
         require_once(VIEWS_PATH . "home.php");
     }
 
+    public function Add($username, $password, $nombre, $dni, $email, $direccion, $telefono)
+    {
+        $valid = AuthController::ValidarUsuario($username, $dni, $email);
+        if ($valid) {
+            $dueno = new Dueno();
+            $dueno->setUserName($username);
+            $dueno->setPassword($password);
+            $dueno->setNombre($nombre);
+            $dueno->setDni($dni);
+            $dueno->setEmail($email);
+            $dueno->setDireccion($direccion);
+            $dueno->setTelefono($telefono);
+
+            $this->duenoDAO->Add($dueno);
+            $userDAO = new UserDAO;
+            $userDAO->add($dueno);
+
+            $alert = new Alert("success", "Usuario creado");
+            $this->home($alert);
+        } else {
+            $alert = new Alert("warning", "Error! Usuario ya existente");
+            $this->home($alert);
+        }
+    }
+
     public function opcionMenuPrincipal($opcion)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
@@ -148,84 +173,12 @@ class DuenoController
             $this->home();
     }
 
-    public function realizarPago($animales, $formaDePago, $idSolicitud, $idPago, $primerPago, $operacion) //revisar - hacer validaciones de pago tambien una vez que se paga
-    {
-        ///hacer vista cargar tarjeta
-        //print_r($animales);
-        //echo "<br> --> forma de pago: " . $formaDePago;
-        $mascotas = new MascotaDAO();
-        $arrayMascotas = $mascotas->getArrayByIds($animales);
-        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
-            if ($operacion == "pagar") {
-                $solicitud = new SolicitudDAO();
-                $solicitudXmasc = new SolixMascDAO();
-                $pago = new PagoDAO();
-
-                //echo "--> " . $idSolicitud;
-                $soli = $solicitud->GetById($idSolicitud);
-                //var_dump($soli);
-                //echo "--> " . $soli->getId();
-                $reserva = new Reserva($soli);
-                $reservaDAO = new ReservaDAO();
-                $reservaDAO->add($reserva);
-
-                if ($primerPago == false || $primerPago == null)
-                    $pago->updatePrimerPagoReservaById($idPago);
-                else
-                    $pago->updatePagoFinalReservaById($idPago);
-
-                $pago->updateFormaDePagoReservaById($formaDePago, $idPago);
-                $resul = $solicitud->removeSolicitudById($idSolicitud);
-                $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSolicitud);
-                $intermediaMascotasXreserva = new ResxMascDAO();
-                $intermediaMascotasXreserva->add($arrayMascotas, $idSolicitud);
-                ///HACER ALERTAS
-                $this->login();
-            } else if ($operacion == "cancelar") {
-                $solicitud = new SolicitudDAO();
-                $solicitudXmasc = new SolixMascDAO();
-                $pago = new PagoDAO();
-                $resul = $solicitud->removeSolicitudById($idSolicitud);
-                $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSolicitud);
-                $resul3 = $pago->removePagoById($idPago);
-                ///ver si mostrar si rechazo pago
-                ///HACER ALERTAS
-                $this->login();
-            }
-        }
-    }
-
-    public function Add($username, $password, $nombre, $dni, $email, $direccion, $telefono)
-    {
-        $valid = AuthController::ValidarUsuario($username, $dni, $email);
-        if ($valid) {
-            $dueno = new Dueno();
-            $dueno->setUserName($username);
-            $dueno->setPassword($password);
-            $dueno->setNombre($nombre);
-            $dueno->setDni($dni);
-            $dueno->setEmail($email);
-            $dueno->setDireccion($direccion);
-            $dueno->setTelefono($telefono);
-
-            $this->duenoDAO->Add($dueno);
-            $userDAO = new UserDAO;
-            $userDAO->add($dueno);
-
-            $alert = new Alert("success", "Usuario creado");
-            $this->home($alert);
-        } else {
-            $alert = new Alert("warning", "Error! Usuario ya existente");
-            $this->home($alert);
-        }
-    }
-
-    public function cancelarSolicitud($idIntermedia, $solicitudId)
+    public function cancelarSolicitud($solicitudId)
     {
         $solicitud = new SolicitudDAO();
         $solicitudXmasc = new SolixMascDAO();
         $resul = $solicitud->removeSolicitudById($solicitudId);
-        $resul2 = $solicitudXmasc->removeSolicitudMascIntById($idIntermedia); //!//
+        $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($solicitudId); //!//
 
         if ($resul && $resul2) {
             $alert = new Alert("success", "Solicitud borrada con exito");
@@ -235,13 +188,59 @@ class DuenoController
         $this->login($alert);
     }
 
+    public function realizarPago($animales, $formaDePago, $idSoliRes, $idPago, $primerPago, $operacion) //revisar - hacer validaciones de pago tambien una vez que se paga
+    {
+        ///hacer vista cargar tarjeta
+        //print_r($animales);
+        //echo "<br> --> forma de pago: " . $formaDePago;
+        $mascotas = new MascotaDAO();
+        $arrayMascotas = $mascotas->getArrayByIds($animales);
+
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
+            if ($operacion == "pagar") {
+                $pago = new PagoDAO();
+
+                if ($primerPago == false || $primerPago == null) {
+                    $solicitud = new SolicitudDAO();
+                    $solicitudXmasc = new SolixMascDAO();
+
+                    $soli = $solicitud->GetById($idSoliRes);
+                    $reserva = new Reserva($soli);
+                    $reservaDAO = new ReservaDAO();
+                    $reservaDAO->add($reserva);
+                    $pago->updatePrimerPagoReservaById($idPago);
+                    $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSoliRes);
+                    $resul = $solicitud->removeSolicitudById($idSoliRes);
+                    $intermediaMascotasXreserva = new ResxMascDAO();
+                    $intermediaMascotasXreserva->add($arrayMascotas, $idSoliRes);
+                } else {
+                    $pago->updatePagoFinalReservaById($idPago);
+                }
+
+                $pago->updateFormaDePagoReservaById($formaDePago, $idPago);
+                ///HACER ALERTAS
+                $this->login();
+            } else if ($operacion == "cancelar") {
+                $solicitud = new SolicitudDAO();
+                $solicitudXmasc = new SolixMascDAO();
+                $pago = new PagoDAO();
+                $resul = $solicitud->removeSolicitudById($idSoliRes);
+                $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSoliRes);
+                $resul3 = $pago->removePagoById($idPago);
+                ///ver si mostrar si rechazo pago
+                ///HACER ALERTAS
+                $this->login();
+            }
+        }
+    }
+
     public function crearResena($idReserva, $dniGuard, $operacion)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             if ($operacion == "crear") {
                 $reservaDAO = new ReservaDAO();
-                $reservaDAO->updateCrearResena($idReserva, false); 
-                $reservaDAO->updateResHechaOrechazada($idReserva, true); 
+                $reservaDAO->updateCrearResena($idReserva, false);
+                $reservaDAO->updateResHechaOrechazada($idReserva, true);
                 ///ver si se le pasa atributo xq antes no andaba
                 $_SESSION["dniguard"] = $dniGuard;
                 $_SESSION["idreserva"] = $idReserva; //ver q pasa con validaciones si abajo se sale

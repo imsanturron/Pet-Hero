@@ -1,4 +1,5 @@
 <?php
+include('nav-bar.php');
 
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\MascotaDAO as MascotaDAO;

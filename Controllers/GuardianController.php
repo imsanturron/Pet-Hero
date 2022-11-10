@@ -39,17 +39,46 @@ class GuardianController
     {
         require_once(VIEWS_PATH . "loginGuardian.php");
     }
+
     public function registro(Alert $alert = null)
     {
         require_once(VIEWS_PATH . "registroGuardian.php");
     }
+
     public function verReservas(Alert $alert = null)
     {
         require_once(VIEWS_PATH . "verReservas.php");
     }
+
     public function verSolicitudes(Alert $alert = null)
     {
         require_once(VIEWS_PATH . "verSolicitudes.php");
+    }
+
+    public function Add($username, $password, $nombre, $dni, $email, $direccion, $telefono, $precio, $tamanoMasc)
+    {
+        $valid = AuthController::ValidarUsuario($username, $dni, $email);
+        if ($valid) {
+            $guardian = new Guardian();
+            $guardian->setUserName($username);
+            $guardian->setPassword($password);
+            $guardian->setNombre($nombre);
+            $guardian->setDni($dni);
+            $guardian->setEmail($email);
+            $guardian->setDireccion($direccion);
+            $guardian->setTelefono($telefono);
+            $guardian->setPrecio($precio);
+            $guardian->setTamanoACuidar($tamanoMasc);
+
+            $this->guardianDAO->add($guardian);
+            $userDAO = new UserDAO;
+            $userDAO->Add($guardian);
+            $alert = new Alert("success", "Usuario creado");
+            $this->home($alert);
+        } else {
+            $alert = new Alert("warning", "Error! Este usuario ya existe");
+            $this->home($alert);
+        }
     }
 
     public function opcionMenuPrincipal($opcion) ///cambiar tamaño mascota a cuidar
@@ -78,40 +107,64 @@ class GuardianController
         }
     }
 
-    public function elegirDisponibilidad($desde, $hasta)
+    public function elegirDisponibilidad($desde, $hasta, $noDisp = null)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
-            $valid = AuthController::ValidarFecha($desde, $hasta); //arreglar
-            if ($valid) {
+            if ($noDisp) {
+                $guardianDAO = new GuardianDAO();
                 $guardian = new Guardian();
                 $guardian = $_SESSION["loggedUser"];
-                $guardian->setDisponibilidadInicio($desde);
-                $guardian->setDisponibilidadFin($hasta);
-                $bien = $this->guardianDAO->updateDisponibilidad($_SESSION["loggedUser"]->getDni(), $desde, $hasta);
-                $_SESSION["loggedUser"] = $guardian;
-                if ($bien) {
-                    $alert = new Alert("success", "Disponibilidad actualizada");
-                    $solicitud = new SolicitudDAO(); //borrar solicitudes que no estan en mi nuevo rango disponible
-                    $solicitudes = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
-                    $solicitudXmasc = new SolixMascDAO();
-                    foreach ($solicitudes as $soli) {
-                        if (
-                            AuthController::ValidarFecha($soli->getFechaInicio(), $desde)
-                            || AuthController::ValidarFecha($hasta, $soli->getFechaFin())
-                        ) {
-                            $solicitud->removeSolicitudById($soli->getId()); //creo q bien, checkear
-                            $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
-                            $alert = new Alert("success", "Disponibilidad actualizada + solis removidas");
-                        }
+                $soliXmasc = new SolixMascDAO();
+                $pagoDAO = new PagoDAO();
+                $solicitud = new SolicitudDAO();
+                $solicitudesABorrar = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
+
+                if (isset($solicitudesABorrar)) {
+                    foreach ($solicitudesABorrar as $soli) {  //borrar intermedias
+                        $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
+                        if ($soli->getEsPago())
+                            $pagoDAO->removePagoById($soli->getId());
                     }
-                    /////////
-                } else {
-                    $alert = new Alert("warning", "Error actualizando disponibilidad");
+                    $solicitud->removeSolicitudesByDniGuardian($guardian->getDni());
                 }
-                $this->login($alert);
+                $guardianDAO->setDisponibilidadEnNull($guardian->getDni());
+                //alerta
+                $this->login();
             } else {
-                $alert = new Alert("warning", "La fecha seleccionada es invalida");
-                $this->login($alert);
+                $valid = AuthController::ValidarFecha($desde, $hasta); //arreglar
+                if ($valid) {
+                    $guardian = new Guardian();
+                    $guardian = $_SESSION["loggedUser"];
+                    $bien = $this->guardianDAO->updateDisponibilidad($guardian->getDni(), $desde, $hasta);
+                    if ($bien) {
+                        $alert = new Alert("success", "Disponibilidad actualizada");
+                        $solicitud = new SolicitudDAO(); //borrar solicitudes que no estan en mi nuevo rango disponible
+                        $solicitudes = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
+                        $solicitudXmasc = new SolixMascDAO();
+                        $pagoDAO = new PagoDAO();
+                        foreach ($solicitudes as $soli) {
+                            if (
+                                !AuthController::ValidarFecha($desde, $hasta, $soli->getFechaInicio())
+                                || !AuthController::ValidarFecha($desde, $hasta, $soli->getFechaFin())
+                            ) {
+                                if ($soli->getEsPago())
+                                    $pagoDAO->removePagoById($soli->getId());
+
+                                $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
+                                $solicitud->removeSolicitudById($soli->getId()); //creo q bien, checkear
+                                $alert = new Alert("success", "Disponibilidad actualizada + solis removidas");
+                            }
+                        }
+                        /////////
+                    } else {
+                        $alert = new Alert("warning", "Error actualizando disponibilidad");
+                    }
+
+                    $this->login($alert);
+                } else {
+                    $alert = new Alert("warning", "La fecha seleccionada es invalida");
+                    $this->login($alert);
+                }
             }
         } else
             $this->home();
@@ -186,31 +239,7 @@ class GuardianController
         $this->login($alert);
     }
 
-    public function Add($username, $password, $nombre, $dni, $email, $direccion, $telefono, $precio, $tamanoMasc)
-    {
-        $valid = AuthController::ValidarUsuario($username, $dni, $email);
-        if ($valid) {
-            $guardian = new Guardian();
-            $guardian->setUserName($username);
-            $guardian->setPassword($password);
-            $guardian->setNombre($nombre);
-            $guardian->setDni($dni);
-            $guardian->setEmail($email);
-            $guardian->setDireccion($direccion);
-            $guardian->setTelefono($telefono);
-            $guardian->setPrecio($precio);
-            $guardian->setTamanoACuidar($tamanoMasc);
 
-            $this->guardianDAO->add($guardian);
-            $userDAO = new UserDAO;
-            $userDAO->Add($guardian);
-            $alert = new Alert("success", "Usuario creado");
-            $this->home($alert);
-        } else {
-            $alert = new Alert("warning", "Error! Este usuario ya existe");
-            $this->home($alert);
-        }
-    }
 
     public function Remove($dni)
     {

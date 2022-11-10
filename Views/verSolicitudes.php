@@ -115,8 +115,9 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                                                                                                                 ?>
                                                             <?php if ($_SESSION['tipo'] == 'g') { ?>
                                                                 <input type="hidden" name="animales[]" value="<?php echo $masc->getId(); ?>">
+                                                                <?php } ?>
                                         </tr>
-        <?php }
+        <?php 
                                                         }
                                                     }
                                                 }
