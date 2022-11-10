@@ -26,27 +26,12 @@ class MascotaController
         require_once(VIEWS_PATH . "loginDueno.php");
     }
 
-    public function idFotoFechaYCheck($fotoM = "")
-    {
-        $a = DateTime::createFromFormat('U.u', microtime(true));
-        $res = $a->format("m-d-Y H:i:s.u"); //files no pueden tener :
-        $retorn = str_replace(' ', '', $res);
-        //$imageFileType = strtolower(pathinfo($_FILES['fotoM']['name'], PATHINFO_EXTENSION));
-        /*if ($_FILES["fotoM"]["size"] > 50000000) {
-            echo "Sorry, your file is too large.";
-            $uploadOk = 0;
-        }*/
-        return $retorn /*. '.' . $imageFileType*/;
-    }
-
     public function Add($especie, $nombre, $raza, $tamano, $fotoM, $planVacunacion, $video = null, $observaciones = "")
     {
         $error = false;
         if (isset($_SESSION["loggedUser"])) {
 
             $bytes = bin2hex(random_bytes(20));
-            //$filename = ROOT . IMG_PATH . $this->idFotoFechaYCheck($fotoM)/* . basename($_FILES['fotoM']['name'])*/;
-            //$filename = ROOT . IMG_PATH . $this->idFotoFechaYCheck() . '_' . basename($_FILES['fotoM']['name']);
             $fotoM = $bytes . '_' . basename($_FILES['fotoM']['name']);
             $filenameFM = ROOT . IMG_PATH . $fotoM;
             //echo "filename ---> " . $filenameFM;

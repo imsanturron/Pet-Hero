@@ -31,7 +31,7 @@ $reserva = $reservaDAO->GetById($_SESSION["idreserva"]);
             <tbody align="center">
               <tr>
                 <td style="max-width: 100px;">
-                  <input type="range" list="tickmarks" name="puntos">
+                  <input type="range" list="tickmarks" name="puntos" required>
                   <datalist id="tickmarks">
                     <option value="0">
                     <option value="10">

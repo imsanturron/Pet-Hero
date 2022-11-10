@@ -6,14 +6,14 @@
 <div class="div-login">
   <form action="<?php echo FRONT_ROOT ?>Guardian/add" method="post">
 
-    <input class="input-login" type="text" name="username" placeholder="Nombre Usuario" minlength="3" required>
-    <input class="input-login" type="password" name="password" placeholder="Contraseña" minlength="4" required>
-    <input class="input-login" type="text" name="nombre" placeholder="Nombre" minlength="2" required>
-    <input name="dni" placeholder="DNI" pattern=".{6,12}" required title="6 to 12 characters">
-    <input class="input-login" type="email" name="email" placeholder="Email" minlength="3" required>
-    <input class="input-login" type="text" name="direccion" placeholder="Direccion" required>
+    <input class="input-login" type="text" name="username" placeholder="Nombre Usuario*" minlength="3" required>
+    <input class="input-login" type="password" name="password" placeholder="Contraseña*" minlength="4" required>
+    <input class="input-login" type="text" name="nombre" placeholder="Nombre*" minlength="2" required>
+    <input name="dni" placeholder="DNI*" pattern=".{6,12}" required title="6 to 12 characters">
+    <input class="input-login" type="email" name="email" placeholder="Email*" minlength="3" required>
+    <input class="input-login" type="text" name="direccion" placeholder="Direccion*" required>
     <input name="telefono" placeholder="Telefono"  pattern=".{6,20}" required title="6 to 20 characters">
-    <input class="input-login" type="number" name="precio" placeholder="Precio" min="1" max="999999" required>
+    <input class="input-login" type="number" name="precio" placeholder="Precio*" min="1" max="999999" required>
     Tamaño a cuidar
     <select name="tamanoMasc" required>
       <option value="chico"> Chico </option>

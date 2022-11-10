@@ -92,7 +92,19 @@ class AuthController
         $soliXmasc = new SolixMascDAO();
 
         $solicitudes = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
-        if (!AuthController::ValidarFecha($guardian->getDisponibilidadFin())) { //ver foranea para reducir
+        if (!$guardian->getDisponibilidadFin() && !$guardian->getDisponibilidadInicio()) {
+          $solicitudesABorrar = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
+
+          if (isset($solicitudesABorrar)) {
+            foreach ($solicitudesABorrar as $soli) {  //borrar intermedias
+              $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
+              if ($soli->getEsPago())
+                $pagoDAO->removePagoById($soli->getId());
+            }
+            $solicitud->removeSolicitudesByDniGuardian($guardian->getDni());
+          }
+          //advertir que disponibilidad es null
+        } else if (!AuthController::ValidarFecha($guardian->getDisponibilidadFin())) { //ver foranea para reducir
           $solicitudesABorrar = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
 
           if (isset($solicitudesABorrar)) {
@@ -104,6 +116,7 @@ class AuthController
             $solicitud->removeSolicitudesByDniGuardian($guardian->getDni());
           }
           $guardianDAO->setDisponibilidadEnNull($guardian->getDni());
+          ///advertir que disponibilidad es null
         } else if (!AuthController::ValidarFecha($guardian->getDisponibilidadInicio())) {
 
           $solicitudesAChequear = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
@@ -126,7 +139,7 @@ class AuthController
           foreach ($reservas as $res) {
             if (AuthController::ValidarFecha($res->getFechaFin())) {
               $reservaDAO->updateEstado($res->getId(), "finalizado");
-              if ($res->getHechaOrechazada() == false && $res->getCrearResena() == false)
+              if ($res->getResHechaOrechazada() == false && $res->getCrearResena() == false)
                 $res->setCrearResena(true);
             } else if (AuthController::ValidarFecha($res->getFechaInicio())) {
               $reservaDAO->updateEstado($res->getId(), "actual");
@@ -162,7 +175,7 @@ class AuthController
           foreach ($reservas as $res) {
             if (AuthController::ValidarFecha($res->getFechaFin())) {
               $reservaDAO->updateEstado($res->getId(), "finalizado");
-              if ($res->getHechaOrechazada() == false && $res->getCrearResena() == false)
+              if ($res->getResHechaOrechazada() == false && $res->getCrearResena() == false)
                 $res->setCrearResena(true);
             } else if (AuthController::ValidarFecha($res->getFechaInicio())) {
               $reservaDAO->updateEstado($res->getId(), "actual");
@@ -273,7 +286,8 @@ class AuthController
   public static function ValidarMismaRaza($animales, $dniGuard, $desde, $hasta)
   {
     if (isset($animales) && !empty($animales)) {
-      $comparador = array();
+      $comparador = array(); //compara raza
+      //$comparador2 = array(); //compara tamaño x si guardian lo cambio y distinto tamaño tiene misma raza
       $guardianes = new GuardianDAO();
       $guardian = $guardianes->getByDni($dniGuard);
       $reserva = new ReservaDAO();
@@ -311,7 +325,6 @@ class AuthController
       }
       return true;
     }
-
     return false;
   }
 

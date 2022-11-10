@@ -162,7 +162,11 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                                         </td>
                                         <?php if ($_SESSION["tipo"]  == "d") { ?>
                                             <td>
-                                                <input type="hidden" name="idSolicitud" value="<?php echo $soli->getId(); ?>">
+                                                <?php if ($soli) { ?>
+                                                    <input type="hidden" name="idSoliRes" value="<?php echo $soli->getId(); ?>">
+                                                <?php } else { ?>
+                                                    <input type="hidden" name="idSoliRes" value="<?php echo $reser->getId(); ?>">
+                                                <?php } ?>
                                                 <input type="hidden" name="idPago" value="<?php echo $pago->getId(); ?>">
                                                 <input type="hidden" name="primerPago" value="<?php echo $pago->getPrimerPagoReserva(); ?>">
                                                 <button type="submit" name="operacion" value="pagar" class="btn btn-danger" ?> Pagar </button>
