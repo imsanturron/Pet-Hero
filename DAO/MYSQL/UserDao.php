@@ -96,7 +96,10 @@ class UserDAO
         $usuario->setTipo($row["tipo"]);
       }
 
-      return $usuario->getTipo();
+      if ($usuario)
+        return $usuario->getTipo();
+      else
+        return null;
     } catch (Exception $ex) {
       throw $ex;
     }

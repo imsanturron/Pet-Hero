@@ -164,6 +164,25 @@ class GuardianDAO
         }
     }
 
+    public function setDisponibilidadEnNull($dni)
+    {
+        try {
+            $query = "UPDATE " . $this->tableName . " SET FechaInicio = :FechaInicio, FechaFin = :FechaFin WHERE dni = :dni;";
+
+            $parameters["FechaInicio"] = null;
+            $parameters["FechaFin"] = null;
+            $parameters["dni"] = $dni;
+
+            $this->connection = Connection::GetInstance();
+
+            $this->connection->ExecuteNonQuery($query, $parameters);
+            return true;
+        } catch (Exception $ex) {
+            return false;
+            //throw $ex;
+        }
+    }
+
     public function removeGuardianByDni($dni){
 
         try

@@ -2,7 +2,6 @@
 
 namespace Controllers;
 
-//use DAO\JSON\MascotaDAO as MascotaDAO;
 use DAO\MYSQL\MascotaDAO as MascotaDAO;
 use DateTime as DateTime;
 use Models\Alert as Alert;
@@ -22,6 +21,11 @@ class MascotaController
         require_once(VIEWS_PATH . "home.php");
     }
 
+    public function loginDueno()
+    {
+        require_once(VIEWS_PATH . "loginDueno.php");
+    }
+
     /*public function opcionMenuPrincipal($opcion)
     {
         $opcion = $_POST['opcion'];
@@ -33,11 +37,6 @@ class MascotaController
             require_once(VIEWS_PATH . "verGuardianes.php");
         }
     }*/
-
-    public function loginDueno()
-    {
-        require_once(VIEWS_PATH . "loginDueno.php");
-    }
 
     public function idFotoFechaYCheck($fotoM = "")
     {

@@ -16,8 +16,8 @@ class SolicitudDAO
     public function Add(Solicitud $solicitud)
     {
         try {
-            $query = "INSERT INTO " . $this->tableName . " (FechaInicio, FechaFin, nombreDueno, dniDueno, nombreGuardian, dniGuardian, direccionGuardian, telefonoDueno, telefonoGuardian)
-             VALUES ( :FechaInicio, :FechaFin, :nombreDueno, :dniDueno, :nombreGuardian, :dniGuardian, :direccionGuardian, :telefonoDueno, :telefonoGuardian);";
+            $query = "INSERT INTO " . $this->tableName . " (FechaInicio, FechaFin, nombreDueno, dniDueno, nombreGuardian, dniGuardian, direccionGuardian, telefonoDueno, telefonoGuardian, esPago)
+             VALUES ( :FechaInicio, :FechaFin, :nombreDueno, :dniDueno, :nombreGuardian, :dniGuardian, :direccionGuardian, :telefonoDueno, :telefonoGuardian, :esPago);";
 
             // $parameters["id"] = $solicitud->getId(); ///ver tema de ids
             //$parameters["animales"] = $solicitud->getAnimales();
@@ -31,6 +31,7 @@ class SolicitudDAO
             $parameters["direccionGuardian"] = $solicitud->getDireccionGuardian();
             $parameters["telefonoDueno"] = $solicitud->getTelefonoDueno();
             $parameters["telefonoGuardian"] = $solicitud->getTelefonoGuardian();
+            $parameters["esPago"] = false;
             $this->connection = Connection::GetInstance();
             $this->connection->ExecuteNonQuery($query, $parameters);
         } catch (Exception $ex) {
@@ -59,6 +60,7 @@ class SolicitudDAO
                 $solicitud->setDireccionGuardian($row["direccionGuardian"]);
                 $solicitud->setTelefonoDueno($row["telefonoDueno"]);
                 $solicitud->setTelefonoGuardian($row["telefonoGuardian"]);
+                $solicitud->setEsPago($row["esPago"]);
                 array_push($solicitudList, $solicitud);
             }
             return $solicitudList;
@@ -92,6 +94,7 @@ class SolicitudDAO
                 $solicitud->setDireccionGuardian($row["direccionGuardian"]);
                 $solicitud->setTelefonoDueno($row["telefonoDueno"]);
                 $solicitud->setTelefonoGuardian($row["telefonoGuardian"]);
+                $solicitud->setEsPago($row["esPago"]);
                 ////////
             }
 
@@ -156,6 +159,7 @@ class SolicitudDAO
                 $solicitud->setDireccionGuardian($row["direccionGuardian"]);
                 $solicitud->setTelefonoDueno($row["telefonoDueno"]);
                 $solicitud->setTelefonoGuardian($row["telefonoGuardian"]);
+                $solicitud->setEsPago($row["esPago"]);
                 array_push($solicitudList, $solicitud);
                 ////////
             }
@@ -195,6 +199,7 @@ class SolicitudDAO
                 $solicitud->setDireccionGuardian($row["direccionGuardian"]);
                 $solicitud->setTelefonoDueno($row["telefonoDueno"]);
                 $solicitud->setTelefonoGuardian($row["telefonoGuardian"]);
+                $solicitud->setEsPago($row["esPago"]);
                 array_push($solicitudList, $solicitud);
                 ////////
             }
@@ -207,6 +212,24 @@ class SolicitudDAO
         }
     }
 
+    function updateAPagoById($id){
+        try {
+            $query = "UPDATE " . $this->tableName . " SET esPago = :esPago WHERE id = :id;";
+
+            $parameters["esPago"] = true;
+            $parameters["id"] = $id;
+
+            $this->connection = Connection::GetInstance();
+
+            $this->connection->ExecuteNonQuery($query, $parameters);
+            return true;
+        } catch (Exception $ex) {
+            return false;
+            //throw $ex;
+        }
+    }
+
+    
     public function removeSolicitudById($idSolicitud)
     {
 
@@ -216,6 +239,48 @@ class SolicitudDAO
             $query = "DELETE FROM " . $this->tableName . " WHERE id = :id";
 
             $parameters["id"] = $idSolicitud;
+
+            $this->connection = Connection::GetInstance();
+
+            $resultSet = $this->connection->Execute($query, $parameters);
+
+
+            return true;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public function removeSolicitudesByDniDueno($dniDueno)
+    {
+
+        try {
+            $solicitud = null;
+
+            $query = "DELETE FROM " . $this->tableName . " WHERE dniDueno = :dniDueno";
+
+            $parameters["dniDueno"] = $dniDueno;
+
+            $this->connection = Connection::GetInstance();
+
+            $resultSet = $this->connection->Execute($query, $parameters);
+
+
+            return true;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public function removeSolicitudesByDniGuardian($dniGuardian)
+    {
+
+        try {
+            $solicitud = null;
+
+            $query = "DELETE FROM " . $this->tableName . " WHERE dniGuardian = :dniGuardian";
+
+            $parameters["dniGuardian"] = $dniGuardian;
 
             $this->connection = Connection::GetInstance();
 

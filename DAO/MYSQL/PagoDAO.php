@@ -1,6 +1,6 @@
 <?php
 
-namespace DAO;
+namespace DAO\MYSQL;
 
 use DAO\MYSQL\Connection as Connection;
 use \Exception as Exception;
@@ -14,14 +14,16 @@ class PagoDAO
     public function Add(Pago $pago)
     {
         try {
-            $query = "INSERT INTO " . $this->tableName . " (id, dniDueno, dniGuardian, monto, fecha, formaDePago)
-             VALUES (:id, :dniDueno, :dniGuardian, :monto, :fecha, :formaDePago);";
+            $query = "INSERT INTO " . $this->tableName . " (id, dniDueno, dniGuardian, precioGuardian, montoAPagar,primerPagoReserva, pagoFinal, formaDePago)
+             VALUES (:id, :dniDueno, :dniGuardian, :precioGuardian, :montoAPagar, :primerPagoReserva, :pagoFinal, :formaDePago);";
 
             $parameters["id"] = $pago->getId();
             $parameters["dniDueno"] = $pago->getDniDueno();
             $parameters["dniGuardian"] = $pago->getDniGuardian();
-            $parameters["monto"] = $pago->getMonto();
-            $parameters["fecha"] = $pago->getFecha();
+            $parameters["precioGuardian"] = $pago->getMontoAPagar();
+            $parameters["montoAPagar"] = $pago->getMontoAPagar();
+            $parameters["primerPagoReserva"] = $pago->getPrimerPagoReserva();
+            $parameters["pagoFinal"] = $pago->getPagoFinal();
             $parameters["formaDePago"] = $pago->getFormaDePago();
             $this->connection = Connection::GetInstance();
             $this->connection->ExecuteNonQuery($query, $parameters);
@@ -43,8 +45,10 @@ class PagoDAO
                 $pago->setId($row["id"]);
                 $pago->setDniDueno($row["dniDueno"]);
                 $pago->setDniGuardian($row["dniGuardian"]);
-                $pago->setMonto($row["monto"]);
-                $pago->setFecha($row["fecha"]);
+                $pago->setPrecioGuardian($row["precioGuardian"]);
+                $pago->setMontoAPagar($row["montoAPagar"]);
+                $pago->setPrimerPagoReserva($row["primerPagoReserva"]);
+                $pago->setPagoFinal($row["pagoFinal"]);
                 $pago->setFormaDePago($row["formaDePago"]);
                 array_push($pagoList, $pago);
             }
@@ -72,10 +76,11 @@ class PagoDAO
                 $pago->setId($row["id"]);
                 $pago->setDniDueno($row["dniDueno"]);
                 $pago->setDniGuardian($row["dniGuardian"]);
-                $pago->setMonto($row["monto"]);
-                $pago->setFecha($row["fecha"]);
+                $pago->setPrecioGuardian($row["precioGuardian"]);
+                $pago->setMontoAPagar($row["montoAPagar"]);
+                $pago->setPrimerPagoReserva($row["primerPagoReserva"]);
+                $pago->setPagoFinal($row["pagoFinal"]);
                 $pago->setFormaDePago($row["formaDePago"]);
-                ////////
             }
 
             return $pago;
@@ -102,8 +107,10 @@ class PagoDAO
                 $pago->setId($row["id"]);
                 $pago->setDniDueno($row["dniDueno"]);
                 $pago->setDniGuardian($row["dniGuardian"]);
-                $pago->setMonto($row["monto"]);
-                $pago->setFecha($row["fecha"]);
+                $pago->setPrecioGuardian($row["precioGuardian"]);
+                $pago->setMontoAPagar($row["montoAPagar"]);
+                $pago->setPrimerPagoReserva($row["primerPagoReserva"]);
+                $pago->setPagoFinal($row["pagoFinal"]);
                 $pago->setFormaDePago($row["formaDePago"]);
                 array_push($pagoList, $pago);
             }
@@ -134,8 +141,10 @@ class PagoDAO
                 $pago->setId($row["id"]);
                 $pago->setDniDueno($row["dniDueno"]);
                 $pago->setDniGuardian($row["dniGuardian"]);
-                $pago->setMonto($row["monto"]);
-                $pago->setFecha($row["fecha"]);
+                $pago->setPrecioGuardian($row["precioGuardian"]);
+                $pago->setMontoAPagar($row["montoAPagar"]);
+                $pago->setPrimerPagoReserva($row["primerPagoReserva"]);
+                $pago->setPagoFinal($row["pagoFinal"]);
                 $pago->setFormaDePago($row["formaDePago"]);
                 array_push($pagoList, $pago);
             }
@@ -143,6 +152,78 @@ class PagoDAO
                 return $pagoList;
             else
                 return null;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    function updatePrimerPagoReservaById($id){
+        try {
+            $query = "UPDATE " . $this->tableName . " SET primerPagoReserva = :primerPagoReserva WHERE id = :id;";
+
+            $parameters["primerPagoReserva"] = true;
+            $parameters["id"] = $id;
+
+            $this->connection = Connection::GetInstance();
+
+            $this->connection->ExecuteNonQuery($query, $parameters);
+            return true;
+        } catch (Exception $ex) {
+            return false;
+            //throw $ex;
+        }
+    }
+
+    function updatePagoFinalReservaById($id){
+        try {
+            $query = "UPDATE " . $this->tableName . " SET pagoFinal = :pagoFinal WHERE id = :id;";
+
+            $parameters["pagoFinal"] = true;
+            $parameters["id"] = $id;
+
+            $this->connection = Connection::GetInstance();
+
+            $this->connection->ExecuteNonQuery($query, $parameters);
+            return true;
+        } catch (Exception $ex) {
+            return false;
+            //throw $ex;
+        }
+    }
+
+    function updateFormaDePagoReservaById($formaPago, $id){
+        try {
+            $query = "UPDATE " . $this->tableName . " SET formaDePago = :formaDePago WHERE id = :id;";
+
+            $parameters["formaDePago"] = $formaPago;
+            $parameters["id"] = $id;
+
+            $this->connection = Connection::GetInstance();
+
+            $this->connection->ExecuteNonQuery($query, $parameters);
+            return true;
+        } catch (Exception $ex) {
+            return false;
+            //throw $ex;
+        }
+    }
+
+    public function removePagoById($idPago)
+    {
+
+        try {
+            $solicitud = null;
+
+            $query = "DELETE FROM " . $this->tableName . " WHERE id = :id";
+
+            $parameters["id"] = $idPago;
+
+            $this->connection = Connection::GetInstance();
+
+            $resultSet = $this->connection->Execute($query, $parameters);
+
+
+            return true;
         } catch (Exception $ex) {
             throw $ex;
         }

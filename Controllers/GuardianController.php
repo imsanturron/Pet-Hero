@@ -15,6 +15,8 @@ use DAO\MYSQL\ReservaDAO as ReservaDAO;
 use DAO\MYSQL\SolixMascDAO as SolixMascDAO;
 use DAO\MYSQL\MascotaDAO as MascotaDAO;
 use DAO\MYSQL\ResxMascDAO as ResxMascDAO;
+use DAO\MYSQL\PagoDAO as PagoDAO;
+use Models\Pago as pago;
 
 class GuardianController
 {
@@ -70,6 +72,8 @@ class GuardianController
                 $solicitudes = new SolicitudDAO;
                 $solis = $solicitudes->GetAll(); ///get all by id desp
                 require_once(VIEWS_PATH . "verSolicitudes.php");
+            }else if ($opcion == "verPrimerosPagosPendientes") {
+                require_once(VIEWS_PATH . "pagosPendientes.php");
             }
         }
     }
@@ -111,10 +115,13 @@ class GuardianController
             $this->home();
     }
 
-    public function operarSolicitud($idIntermedia, $animales, $solicitudId, $operacion)
+    public function operarSolicitud($solicitudId, $operacion, $animales)
     {
         $mascotas = new MascotaDAO();
         $arrayMascotas = $mascotas->getArrayByIds($animales);
+        print_r($animales);
+        echo "<br> --> soliid: " . $solicitudId;
+        echo "<br> --> operacion: " . $operacion;
 
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
             if ($operacion == "aceptar") {
@@ -122,25 +129,23 @@ class GuardianController
                 $solicitudXmasc = new SolixMascDAO();
 
                 $soli = $solicitud->GetById($solicitudId);
-                $reserva = new Reserva($soli);
-                $reservaDAO = new ReservaDAO();
-                $reservaDAO->add($reserva); 
-                $resul = $solicitud->removeSolicitudById($solicitudId);
-                $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($solicitudId);
-                $intermediaMascotasXreserva = new ResxMascDAO();
-                $intermediaMascotasXreserva->add($arrayMascotas, $solicitudId);
-                ///********///
-                if ($resul && $resul2) {
+                echo "--->" . $soli->getId();
+                $pagos = new PagoDAO();
+                $pago = new Pago($soli, $_SESSION["loggedUser"]);
+                $solicitud->updateAPagoById($soli->getId()); //podemos ver si bien
+                $pagos->Add($pago); //podemos ver si bien
+                
+                //if ($resul && $resul2) { ///arreglar esto
                     $alert = new Alert("success", "Solicitud aceptada");
-                } else {
-                    $alert = new Alert("warning", "No se borro alguna solicitud");
-                }
+                //} else {
+                //    $alert = new Alert("warning", "No se borro alguna solicitud");
+                //}
             } else if ($operacion == "rechazar") {
 
                 $solicitud = new SolicitudDAO();
                 $solicitudXmasc = new SolixMascDAO();
                 $resul = $solicitud->removeSolicitudById($solicitudId);
-                $resul2 = $solicitudXmasc->removeSolicitudMascIntById($idIntermedia); //!//
+                $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($solicitudId);
 
                 if ($resul && $resul2) {
                     $alert = new Alert("success", "Solicitud borrada con exito");

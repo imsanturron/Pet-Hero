@@ -97,6 +97,34 @@ class DuenoDAO
         }
     }
 
+
+    public function modificarPerfil(Dueno $dueno){
+
+        try {
+
+                $query = "UPDATE ".$this->tableName." SET username= :username, password= :password,nombre= :nombre,dni= :dni,email= :email, direccion= :direccion, telefono= :telefono 
+                 WHERE dni = ". $_SESSION["dni"].";";
+
+
+                 $parameters["username"] = $dueno->getNombre();
+                 $parameters["password"] = $dueno->getPassword();
+                 $parameters["nombre"] = $dueno->getNombre();
+                 $parameters["dni"] = $dueno->getDni();
+                 $parameters["email"] = $dueno->getEmail();
+                 $parameters["direccion"] = $dueno->getDireccion();
+                 $parameters["telefono"] = $dueno->getTelefono();
+
+  
+        
+            $this->connection = Connection::GetInstance();
+
+            $this->connection->ExecuteNonQuery($query, $parameters);
+
+        } catch (Excepcion $ex){
+            throw $ex;
+        }
+    }
+
     public function removeDuenoByDni($dni){
 
         try
