@@ -62,17 +62,11 @@ class Reserva extends Solicitud
       return $ret;
     }*/
 
-  /**
-   * Get the value of crearReserva
-   */
   public function getCrearResena()
   {
     return $this->crearResena;
   }
 
-  /**
-   * Set the value of crearReserva
-   */
   public function setCrearResena($crearResena): self
   {
     $this->crearResena = $crearResena;
@@ -80,17 +74,11 @@ class Reserva extends Solicitud
     return $this;
   }
 
-  /**
-   * Get the value of resHechaOrechazada
-   */
   public function getResHechaOrechazada()
   {
     return $this->resHechaOrechazada;
   }
 
-  /**
-   * Set the value of resHechaOrechazada
-   */
   public function setResHechaOrechazada($resHechaOrechazada): self
   {
     $this->resHechaOrechazada = $resHechaOrechazada;

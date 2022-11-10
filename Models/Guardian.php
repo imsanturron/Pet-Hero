@@ -8,12 +8,17 @@ class Guardian extends User
     private $disponibilidadFin;
     private $precio;
     private $TamanoACuidar;
-    private $reputacion; ///tipo reseña o id de reseñas
+    private $cantResenas; ///tipo reseña o id de reseñas
+    private $puntajeTotal;
+    private $puntajePromedio;
 
     function __construct()
     {
         parent::__construct();
         $this->tipo = 'g';
+        $this->cantResenas = 0;
+        $this->puntajeTotal = 0;
+        $this->puntajePromedio = 0;
     }
 
     public function getPrecio()
@@ -33,12 +38,7 @@ class Guardian extends User
         return $this->disponibilidadFin;
     }
 
-    /**
-     * Set the value of disponibilidadFin
-     *
-     * @return  self
-     */
-    public function setDisponibilidadFin($disponibilidadFin)
+    public function setDisponibilidadFin($disponibilidadFin): self
     {
         $this->disponibilidadFin = $disponibilidadFin;
 
@@ -50,12 +50,7 @@ class Guardian extends User
         return $this->disponibilidadInicio;
     }
 
-    /**
-     * Set the value of disponibilidadInicio
-     *
-     * @return  self
-     */
-    public function setDisponibilidadInicio($disponibilidadInicio)
+    public function setDisponibilidadInicio($disponibilidadInicio): self
     {
         $this->disponibilidadInicio = $disponibilidadInicio;
 
@@ -74,14 +69,39 @@ class Guardian extends User
         return $this;
     }
 
-    public function getReputacion()
+
+    public function getCantResenas()
     {
-        return $this->reputacion;
+        return $this->cantResenas;
     }
 
-    public function setReputacion($reputacion): self
+    public function setCantResenas($cantResenas): self
     {
-        $this->reputacion = $reputacion;
+        $this->cantResenas = $cantResenas;
+
+        return $this;
+    }
+
+    public function getPuntajeTotal()
+    {
+        return $this->puntajeTotal;
+    }
+
+    public function setPuntajeTotal($puntajeTotal): self
+    {
+        $this->puntajeTotal = $puntajeTotal;
+
+        return $this;
+    }
+
+    public function getPuntajePromedio()
+    {
+        return $this->puntajePromedio;
+    }
+
+    public function setPuntajePromedio($puntajePromedio): self
+    {
+        $this->puntajePromedio = $puntajePromedio;
 
         return $this;
     }

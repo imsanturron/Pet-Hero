@@ -11,7 +11,6 @@ class Solicitud //implements JsonSerializable
 {
 
     protected $id;
-    //protected $animales;
     protected $fechaInicio;
     protected $fechaFin;
     protected $nombreDueno;
@@ -57,18 +56,6 @@ class Solicitud //implements JsonSerializable
 
         return $this;
     }
-
-    /*public function getAnimales()
-    {
-        return $this->animales;
-    }
-
-    public function setAnimales($animales): self
-    {
-        $this->animales = $animales;
-
-        return $this;
-    }*/
 
     public function getFechaInicio()
     {
@@ -178,17 +165,11 @@ class Solicitud //implements JsonSerializable
         return $this;
     }
 
-    /**
-     * Get the value of esPago
-     */
     public function getEsPago()
     {
         return $this->esPago;
     }
 
-    /**
-     * Set the value of esPago
-     */
     public function setEsPago($esPago): self
     {
         $this->esPago = $esPago;

@@ -26,18 +26,6 @@ class MascotaController
         require_once(VIEWS_PATH . "loginDueno.php");
     }
 
-    /*public function opcionMenuPrincipal($opcion)
-    {
-        $opcion = $_POST['opcion'];
-        if ($opcion == "verm") {
-            require_once(VIEWS_PATH . "verMascotas.php");
-        } else if ($opcion == "agregarm"){
-            require_once(VIEWS_PATH . "agregarMascotas.php");
-        } else if($opcion == "verg"){
-            require_once(VIEWS_PATH . "verGuardianes.php");
-        }
-    }*/
-
     public function idFotoFechaYCheck($fotoM = "")
     {
         $a = DateTime::createFromFormat('U.u', microtime(true));
@@ -53,6 +41,7 @@ class MascotaController
 
     public function Add($especie, $nombre, $raza, $tamano, $fotoM, $planVacunacion, $video = null, $observaciones = "")
     {
+        $error = false;
         if (isset($_SESSION["loggedUser"])) {
 
             $bytes = bin2hex(random_bytes(20));
@@ -72,17 +61,20 @@ class MascotaController
 
                 if ($sizeFM > 1000000) { //1mb
                     echo "error 1";
+                    $error = true;
                 } else {
                     //$filename = ""
                     if (move_uploaded_file($_FILES['fotoM']['tmp_name'], $filenameFM)) {
                         //$fotoM = $this->idFotoFechaYCheck($fotoM)/* . basename($_FILES['fotoM']['name'])*/;
                     } else {
                         echo "error 2";
+                        $error = true;
                         ///dar error desconocido, el q me diho q podia ser carpeta no creada
                     }
                 }
             } else {
                 echo "error 3";
+                $error = true;
                 ///dar otro error
             }
 
@@ -99,16 +91,19 @@ class MascotaController
 
                     if ($sizePV > 1000000) { // 1mb
                         echo "error 4";
+                        $error = true;
                     } else {
                         if (move_uploaded_file($_FILES['planVacunacion']['tmp_name'], $filenamePV)) {
                             //$planVacunacion = $this->idFotoFechaYCheck($planVacunacion) . basename($_FILES['planVacunacion']['nanme']);
                         } else {
                             echo "error 5";
+                            $error = true;
                             ///dar error desconocido, el q me diho q podia ser carpeta no creada
                         }
                     }
                 } else {
                     echo "error 6";
+                    $error = true;
                 }
             }
             if ($video && file_exists($_FILES['video']['tmp_name'])) {
@@ -122,16 +117,19 @@ class MascotaController
 
                     if ($sizeV > 10000000) { //10mb
                         echo "error 7";
+                        $error = true;
                     } else {
                         if (move_uploaded_file($_FILES['video']['tmp_name'], $filenameV)) {
                             //$video = $this->idFotoFechaYCheck($fotoM) . basename($_FILES['fotoM']['name']);
                         } else {
                             echo "error 8";
+                            $error = true;
                             ///dar error desconocido, el q me diho q podia ser carpeta no creada
                         }
                     }
                 } else {
                     echo "error 9";
+                    $error = true;
                 }
             } else
                 $video = null; //sino da error raro cuando no mando
@@ -148,7 +146,11 @@ class MascotaController
             $mascota->setVideo($video);
 
             $this->mascotaDAO->Add($mascota);
-            $alert = new Alert("success", "Mascota agregada");
+            if ($error == false)
+                $alert = new Alert("success", "Mascota agregada");
+            else
+                $alert = new Alert("warning", "Mascota agregada y error subiendo algun file");
+
             $this->loginDueno($alert);
         } else
             $this->Index();

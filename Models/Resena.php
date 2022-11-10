@@ -1,4 +1,6 @@
-<?php namespace Models;
+<?php
+
+namespace Models;
 
 class Resena
 {
@@ -11,16 +13,16 @@ class Resena
 
     public function __construct($id = null, $dniDueno = null, $dniGuardian = null, $puntaje = null, $observacion = "")
     {
-      // parent::__construct($solicitud->getAnimales(), $solicitud->getFechaInicio(),$solicitud->getFechaFin());
-  
-      if ($id && $dniDueno && $dniGuardian) {
-        $this->setId($id);
-        $this->setDniDueno($dniDueno);
-        $this->setDniGuardian($dniGuardian);
-        $this->setPuntaje($puntaje);
-        $this->setFecha(date("Y-m-d"));
-        $this->setObservacion($observacion);
-      }
+        // parent::__construct($solicitud->getAnimales(), $solicitud->getFechaInicio(),$solicitud->getFechaFin());
+
+        if ($id && $dniDueno && $dniGuardian) {
+            $this->setId($id);
+            $this->setDniDueno($dniDueno);
+            $this->setDniGuardian($dniGuardian);
+            $this->setPuntaje($puntaje);
+            $this->setFecha(date("Y-m-d"));
+            $this->setObservacion($observacion);
+        }
     }
 
     public function getPuntaje()
@@ -59,17 +61,11 @@ class Resena
         return $this;
     }
 
-    /**
-     * Get the value of dniDueno
-     */
     public function getDniDueno()
     {
         return $this->dniDueno;
     }
 
-    /**
-     * Set the value of dniDueno
-     */
     public function setDniDueno($dniDueno): self
     {
         $this->dniDueno = $dniDueno;
@@ -77,17 +73,11 @@ class Resena
         return $this;
     }
 
-    /**
-     * Get the value of id
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * Set the value of id
-     */
     public function setId($id): self
     {
         $this->id = $id;
@@ -95,17 +85,11 @@ class Resena
         return $this;
     }
 
-    /**
-     * Get the value of dniGuardian
-     */
     public function getDniGuardian()
     {
         return $this->dniGuardian;
     }
 
-    /**
-     * Set the value of dniGuardian
-     */
     public function setDniGuardian($dniGuardian): self
     {
         $this->dniGuardian = $dniGuardian;

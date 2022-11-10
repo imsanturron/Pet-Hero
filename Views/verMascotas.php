@@ -2,7 +2,6 @@
 include('nav-bar.php');
 
 use Config\Autoload as Autoload;
-//use DAO\JSON\MascotaDAO;
 use DAO\MYSQL\MascotaDAO;
 
 $mascotasDao = new MascotaDAO();

@@ -7,11 +7,8 @@ use Models\Solicitud as Solicitud;
 use Models\Guardian as Guardian;
 use Models\Reserva as Reserva;
 use Models\Alert as Alert;
-//use DAO\JSON\DuenoDAO as DuenoDAO;
 use DAO\MYSQL\DuenoDAO as DuenoDAO;
-//use DAO\JSON\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
-//use DAO\JSON\MascotaDAO;
 use DAO\MYSQL\MascotaDAO as MascotaDAO;
 use DAO\MYSQL\PagoDAO as PagoDAO;
 use DAO\MYSQL\SolicitudDAO as SolicitudDAO;
@@ -121,6 +118,8 @@ class DuenoController
     {
         $mascotas = new MascotaDAO();
         $arrayMascotas = $mascotas->getArrayByIds($animales);
+        //$guardian = new Guardian(); PARA IMPLEMENTAR EN OTROS LADOS
+        //$guardian->setDireccion("asd")->setDni("dad")->setEmail("kasmkak");
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             $valid = AuthController::ValidarMismaRaza($arrayMascotas, $dni, $desde, $hasta); //chequear con mascotas q ya tenga
             $valid2 = AuthController::VerifGuardianSoliNuestraRepetida($dni);
@@ -261,6 +260,10 @@ class DuenoController
     public function asentarResena($puntos, $observaciones)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
+            $guardianDAO = new GuardianDAO();
+            $guardianDAO->updateCantResenasMas1($_SESSION["dniguard"]);
+            $guardianDAO->updatePuntajeTotalMasPuntaje($_SESSION["dniguard"], $puntos);
+            $guardianDAO->updatePuntajePromedio($_SESSION["dniguard"]);
             $resenaDAO = new ResenaDAO();
             $dueno = new Dueno();
             $dueno = $_SESSION["loggedUser"];
