@@ -64,3 +64,6 @@ $reserva = $reservaDAO->GetById($_SESSION["idreserva"]);
 <div class="alert alert-<?php echo $alert->getTipo() ?>">
   <?php echo $alert->getMensaje() ?>
 </div>
+<?php
+require_once(VIEWS_PATH."footer.php");
+?>

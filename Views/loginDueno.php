@@ -1,4 +1,5 @@
 <?php
+require_once(VIEWS_PATH."header.php");
 include('nav-bar.php');
 ?>
 <form action="<?php echo FRONT_ROOT ?>Dueno/opcionMenuPrincipal" method="post" style="background-color: #EAEDED;padding: 2rem !important;">
@@ -15,3 +16,6 @@ include('nav-bar.php');
     <?php echo $alert->getMensaje() ?>
   </div>
 </form>
+<?php
+require_once(VIEWS_PATH."footer.php");
+?>

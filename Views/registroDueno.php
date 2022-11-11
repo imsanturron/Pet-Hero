@@ -1,3 +1,6 @@
+<?php
+require_once(VIEWS_PATH."header.php");
+?>
 <a href="<?php echo FRONT_ROOT ?>Home/Index">Volver al home</a>
 
   <div class="div-login"><br>
@@ -16,3 +19,6 @@
     </form>
   </div>
 </div>
+<?php
+require_once(VIEWS_PATH."footer.php");
+?>

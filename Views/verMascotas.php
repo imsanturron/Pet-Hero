@@ -1,12 +1,13 @@
 <?php
+require_once(VIEWS_PATH."header.php");
 include('nav-bar.php');
 
 use Config\Autoload as Autoload;
 use DAO\MYSQL\MascotaDAO;
 
 if (isset($_SESSION['loggedUser']) && $_SESSION["tipo"] == 'd') {
-$mascotasDao = new MascotaDAO();
-$listaMascotas = $mascotasDao->getMascotasByDniDueno($_SESSION['loggedUser']->getDni());
+//$mascotasDao = new MascotaDAO();
+//$listaMascotas = $mascotasDao->getMascotasByDniDueno($_SESSION['loggedUser']->getDni());
 }
 ?>
 
@@ -37,8 +38,8 @@ $listaMascotas = $mascotasDao->getMascotasByDniDueno($_SESSION['loggedUser']->ge
                                                   <td><?php echo $mascota->getRaza(); ?></td>
                                                   <td><?php echo $mascota->getTamano(); ?></td>
                                                   <td><?php echo $mascota->getObservaciones(); ?></td>
-                                                  <td><img src="<?php echo FRONT_ROOT . IMG_PATH . $mascota->getFotoMascota() ?>"></td>
-                                                  <td><img src="<?php echo FRONT_ROOT . IMG_PATH . $mascota->getPlanVacunacion() ?>"></td>
+                                                  <td><img src="<?php echo FRONT_ROOT . IMG_PATH . $mascota->getFotoMascota() ?>" style="width:680px;height:auto;"></td>
+                                                  <td><img src="<?php echo FRONT_ROOT . IMG_PATH . $mascota->getPlanVacunacion() ?>" style="width:680px;height:auto;"></td>
                                                   <td>
                                                        <?php if ($mascota->getVideo()) { ?>
                                                             <video controls width="220" height="140">
@@ -62,3 +63,6 @@ $listaMascotas = $mascotasDao->getMascotasByDniDueno($_SESSION['loggedUser']->ge
           </div>
      </section>
 </main>
+<?php
+require_once(VIEWS_PATH."footer.php");
+?>

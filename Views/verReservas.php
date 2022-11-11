@@ -1,4 +1,5 @@
 <?php
+require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
 
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
@@ -13,23 +14,21 @@ use Models\Mascota as Mascota;
 
 if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
     if ($_SESSION['tipo'] == 'g') {
-        $guardian = $_SESSION['loggedUser'];
-        $reservas = new ReservaDAO();
-        $ress = $reservas->getReservasByDniGuardian($guardian->getDni());
-        $mascota = new MascotaDAO(); ///get all by id desp
-        $mascotas = $mascota->GetAll(); ///get all by id desp
-        $resXmascDAO = new ResxMascDAO();
-        $mascXres = $resXmascDAO->GetAll();
-        $ingreso = false; //SIRVE PARA VERIFICAR SI EL DUEÑO TIENE ALGUNA SOLICITUD
+        //$guardian = $_SESSION['loggedUser'];
+        //$reservas = new ReservaDAO();
+        //$ress = $reservas->getReservasByDniGuardian($guardian->getDni());
+        // $mascota = new MascotaDAO(); ///get all by id desp
+        //$mascotas = $mascota->GetAll(); ///get all by id desp
+        //$resXmascDAO = new ResxMascDAO();
+        //$mascXres = $resXmascDAO->GetAll();
     } else {
-        $dueno = $_SESSION['loggedUser'];
-        $reservas = new ReservaDAO();
-        $ress = $reservas->getReservasByDniDueno($dueno->getDni());
-        $mascota = new MascotaDAO(); ///get all by id desp
-        $mascotas = $mascota->GetAll(); ///get all by id desp
-        $resXmascDAO = new ResxMascDAO();
-        $mascXres = $resXmascDAO->GetAll();
-        $ingreso = false; //SIRVE PARA VERIFICAR SI EL DUEÑO TIENE ALGUNA SOLICITUD
+        //$dueno = $_SESSION['loggedUser'];
+        //$reservas = new ReservaDAO();
+        //$ress = $reservas->getReservasByDniDueno($dueno->getDni());
+        //$mascota = new MascotaDAO(); ///get all by id desp
+        //$mascotas = $mascota->GetAll(); ///get all by id desp
+        //$resXmascDAO = new ResxMascDAO();
+        //$mascXres = $resXmascDAO->GetAll();
     }
 } ?>
 
@@ -37,7 +36,7 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
 
     <section id="listado" class="mb-5">
         <div class="container">
-            <h2 class="mb-4">Reservas de dueños</h2>
+            <h2 class="mb-4">Mis reservas</h2>
             <table class="table bg-light-alpha">
 
                 <?php if (isset($ress) && !empty($ress)) { ?>
@@ -77,11 +76,11 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                                     <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getFechaFin(); ?></td>
                                     <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getDireccionGuardian(); ?></td>
 
-                                    <?php foreach ($mascXres as $tabla) { ?>
+                                    <?php foreach ($mascXres as $tabla) {
 
-                                        <?php if ($tabla->getIdReserva() == $reserva->getId()) {  ?>
-                                            <?php $idMascotaX = $tabla->getIdMascota();  ?>
-                                            <?php foreach ($mascotas as $masc) {
+                                        if ($tabla->getIdReserva() == $reserva->getId()) {
+                                            $idMascotaX = $tabla->getIdMascota();
+                                            foreach ($mascotas as $masc) {
                                                 if ($masc->getId() == $idMascotaX) { ?>
 
                                                     <td><?php echo $masc->getNombre(); ?></td>
@@ -89,14 +88,15 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                                                     <td><?php echo $masc->getRaza(); ?></td>
                                                     <td><?php echo $masc->getObservaciones(); ?></td>
                                 </tr>
-                <?php }
+        <?php
+                                                }
                                             }
                                         }
-                                    } ?>
-            <?php  } ?>
-        <?php } else {
-                    echo "NO TIENE RESERVAS";
-                } ?>
+                                    }
+                                }
+                            } else {
+                                echo "NO TIENE RESERVAS";
+                            } ?>
 
                         </form>
                     </tbody>
@@ -116,3 +116,6 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
         </div>
     </div>
 </main>
+<?php
+require_once(VIEWS_PATH . "footer.php");
+?>

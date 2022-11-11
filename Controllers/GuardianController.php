@@ -47,11 +47,26 @@ class GuardianController
 
     public function verReservas(Alert $alert = null)
     {
+        $guardian = $_SESSION['loggedUser'];
+        $reservas = new ReservaDAO();
+        $ress = $reservas->getReservasByDniGuardian($guardian->getDni());
+        $mascota = new MascotaDAO(); ///get all by id desp
+        $mascotas = $mascota->GetAll(); ///get all by id desp
+        $resXmascDAO = new ResxMascDAO();
+        $mascXres = $resXmascDAO->GetAll();
         require_once(VIEWS_PATH . "verReservas.php");
     }
 
     public function verSolicitudes(Alert $alert = null)
     {
+        $guardian = $_SESSION['loggedUser'];
+        $solicitudes = new SolicitudDAO();
+        $solis = $solicitudes->getSolicitudesByDniGuardian($guardian->getDni());
+        $mascota = new MascotaDAO(); ///get all by id desp
+        $mascotas = $mascota->GetAll(); ///get all by id desp
+        //$mascotas = $mascota->getMascotasByIdSolicitud();
+        $mascXsoliDAO = new SolixMascDAO();
+        $mascXsoli = $mascXsoliDAO->GetAll();
         require_once(VIEWS_PATH . "verSolicitudes.php");
     }
 
@@ -84,24 +99,61 @@ class GuardianController
     public function opcionMenuPrincipal($opcion) ///cambiar tamaño mascota a cuidar
     {
         ///alerta de disponibilidad obsoleta?
-        ///checkear reservas que venzan en fecha
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
-            ///cambiar tamaño mascota a cuidar
             $opcion = $_POST['opcion'];
             if ($opcion == "indicarDisponibilidad") {
                 require_once(VIEWS_PATH . "indicarDisponibilidad.php");
+
             } else if ($opcion == "verListadReservas") {
+                $guardian = $_SESSION['loggedUser'];
+                $reservas = new ReservaDAO();
+                $ress = $reservas->getReservasByDniGuardian($guardian->getDni());
+                $mascota = new MascotaDAO(); ///get all by id desp
+                $mascotas = $mascota->GetAll(); ///get all by id desp
+                $resXmascDAO = new ResxMascDAO();
+                $mascXres = $resXmascDAO->GetAll();
                 require_once(VIEWS_PATH . "verReservas.php");
+
             } else if ($opcion == "verPerfil") {
                 ///sin terminar
                 require_once(VIEWS_PATH . "perfilGuardian.php");
+
             } else if ($opcion == "verSolicitudes") {
-                $solicitudes = new SolicitudDAO;
-                $solis = $solicitudes->GetAll(); ///get all by id desp
+                $envio = array();
+                $guardian = $_SESSION['loggedUser'];
+                $solicitudes = new SolicitudDAO();
+                $solis = $solicitudes->getSolicitudesByDniGuardian($guardian->getDni());
+                $mascota = new MascotaDAO(); ///get all by id desp
+                $mascotas = $mascota->GetAll(); ///get all by id desp
+                //$mascotas = $mascota->getMascotasByIdSolicitud();
+                $mascXsoliDAO = new SolixMascDAO();
+                $mascXsoli = $mascXsoliDAO->GetAll();
+                foreach ($solis as $solicitud) {
+                    if ($solicitud->getEsPago() == false || $solicitud->getEsPago() == null) {
+                        array_push($envio, $solicitud);
+                    }
+                }
+                $solis = $envio;
                 require_once(VIEWS_PATH . "verSolicitudes.php");
+
             } else if ($opcion == "verPrimerosPagosPendientes") {
+                $guardian = $_SESSION['loggedUser'];
+                $pago = new PagoDAO();
+                $solicitud = new SolicitudDAO();
+                $solis = $solicitud->getSolicitudesByDniGuardian($guardian->getDni()); ///get all by id desp
+                $pagos = $pago->getPagosByDniGuardian($guardian->getDni());
+                $mascXsoliDAO = new SolixMascDAO();
+                $mascXsoli = $mascXsoliDAO->GetAll();
+                $mascXresDAO = new ResxMascDAO();
+                $mascXres = $mascXresDAO->GetAll();
+                $mascota = new MascotaDAO(); ///get all by id desp
+                $mascotas = $mascota->GetAll(); ///get all by id desp
+                $reservas = new ReservaDAO();
+                $ress = $reservas->getReservasByDniGuardian($guardian->getDni());
                 require_once(VIEWS_PATH . "pagosPendientes.php");
+
             } else if ($opcion == "cambiarTamanoACuidar") {
+                $guardian = $_SESSION["loggedUser"];
                 require_once(VIEWS_PATH . "cambiarTamanoACuidar.php");
             }
         }
@@ -131,7 +183,7 @@ class GuardianController
                 //alerta
                 $this->login();
             } else {
-                $valid = AuthController::ValidarFecha($desde, $hasta); //arreglar
+                $valid = UtilsController::ValidarFecha($desde, $hasta); //arreglar
                 if ($valid) {
                     $guardian = new Guardian();
                     $guardian = $_SESSION["loggedUser"];
@@ -144,8 +196,8 @@ class GuardianController
                         $pagoDAO = new PagoDAO();
                         foreach ($solicitudes as $soli) {
                             if (
-                                !AuthController::ValidarFecha($desde, $hasta, $soli->getFechaInicio())
-                                || !AuthController::ValidarFecha($desde, $hasta, $soli->getFechaFin())
+                                !UtilsController::ValidarFecha($desde, $hasta, $soli->getFechaInicio())
+                                || !UtilsController::ValidarFecha($desde, $hasta, $soli->getFechaFin())
                             ) {
                                 if ($soli->getEsPago())
                                     $pagoDAO->removePagoById($soli->getId());

@@ -1,4 +1,5 @@
 <?php
+require_once(VIEWS_PATH."header.php");
 include('nav-bar.php');
 
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
@@ -78,3 +79,6 @@ $listaguardianes = $guardianDao->GetAll();
         </div>
     </div>
 </main>
+<?php
+require_once(VIEWS_PATH."footer.php");
+?>

@@ -1,11 +1,10 @@
 <?php
+require_once(VIEWS_PATH . "header.php");
+include('nav-bar.php');
 
 use DAO\MYSQL\MascotaDAO;
 use Models\Mascota as Mascota;
 
-include('nav-bar.php');
-$mascota = new MascotaDAO;
-$mascotas = $mascota->getMascotasByDniDueno($_SESSION["loggedUser"]->getDni());
 ?>
 <main class="py-5">
 
@@ -40,3 +39,6 @@ $mascotas = $mascota->getMascotasByDniDueno($_SESSION["loggedUser"]->getDni());
             </table>
         </div>
     </section>
+    <?php
+    require_once(VIEWS_PATH . "footer.php");
+    ?>

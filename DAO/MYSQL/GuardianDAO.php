@@ -27,14 +27,12 @@ class GuardianDAO
             $parameters["telefono"] = $guardian->getTelefono();
             $parameters["direccion"] = $guardian->getDireccion();
             $parameters["tipo"] = $guardian->getTipo();
-            //$parameters["reservas"] = $guardian->getReservas();
             $parameters["FechaInicio"] = $guardian->getDisponibilidadInicio();
             $parameters["FechaFin"] = $guardian->getDisponibilidadFin();
             $parameters["tamanoACuidar"] = $guardian->getTamanoACuidar();
             $parameters["cantResenas"] = $guardian->getCantResenas();
             $parameters["puntajeTotal"] = $guardian->getPuntajeTotal();
             $parameters["puntajePromedio"] = $guardian->getPuntajePromedio();
-            //$parameters["solicitudes"] = $guardian->getSolicitudes();
             $this->connection = Connection::GetInstance();
             $this->connection->ExecuteNonQuery($query, $parameters);
         } catch (Exception $ex) {
@@ -61,15 +59,12 @@ class GuardianDAO
                 $guardian->setTelefono($row["telefono"]);
                 $guardian->setDireccion($row["direccion"]);
                 $guardian->setTipo($row["tipo"]);
-                //$guardian->setReservas($row["reservas"]);
                 $guardian->setDisponibilidadInicio($row["FechaInicio"]);
                 $guardian->setDisponibilidadFin($row["FechaFin"]);
                 $guardian->setTamanoACuidar($row["tamanoACuidar"]);
                 $guardian->setCantResenas($row["cantResenas"]);
                 $guardian->setPuntajeTotal($row["puntajeTotal"]);
                 $guardian->setPuntajePromedio($row["puntajePromedio"]);
-                //$guardian->setReputacion($row["reputacion"]);
-                //$guardian->setSolicitudes($row["solicitudes"]);
                 array_push($guardianList, $guardian);
             }
             return $guardianList;
@@ -116,7 +111,6 @@ class GuardianDAO
             throw $ex;
         }
     }
-
 
     function getByUsername($username)
     {
@@ -350,4 +344,45 @@ class GuardianDAO
             throw $ex;
         }
     }
+
+
+    /*function getGuardianesEntreFechas($desde, $hasta)
+    {
+        try {
+            $guardianList = array();
+            
+            $query = "SELECT * FROM " . $this->tableName . " WHERE FechaInicio < :FechaInicio AND FechaFin > :FechaFin";
+
+            $parameters["FechaInicio"] = $desde;
+            $parameters["FechaFin"] = $hasta;
+            
+            $this->connection = Connection::GetInstance();
+            
+            $resultSet = $this->connection->Execute($query, $parameters);
+
+            foreach ($resultSet as $row) {
+                $guardian = new Guardian();
+                $guardian->setUsername($row["username"]);
+                $guardian->setNombre($row["nombre"]);
+                $guardian->setPassword($row["password"]);
+                $guardian->setPrecio($row["precio"]);
+                $guardian->setDni($row["dni"]);
+                $guardian->setEmail($row["email"]);
+                $guardian->setTelefono($row["telefono"]);
+                $guardian->setDireccion($row["direccion"]);
+                $guardian->setTipo($row["tipo"]);
+                $guardian->setDisponibilidadInicio($row["FechaInicio"]);
+                $guardian->setDisponibilidadFin($row["FechaFin"]);
+                $guardian->setTamanoACuidar($row["tamanoACuidar"]);
+                $guardian->setCantResenas($row["cantResenas"]);
+                $guardian->setPuntajeTotal($row["puntajeTotal"]);
+                $guardian->setPuntajePromedio($row["puntajePromedio"]);
+                array_push($guardianList, $guardian);
+            }
+            return $guardianList;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }*/
+
 }

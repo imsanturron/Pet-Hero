@@ -1,4 +1,5 @@
 <?php
+require_once(VIEWS_PATH."header.php");
 include('nav-bar.php');
 
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
@@ -11,8 +12,6 @@ use Models\Dueno as Dueno;
 use Models\Mascota as Mascota;
 
 if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == 'g') {
-    $guardianDAO = new GuardianDAO;
-    $guardian = $guardianDAO->GetByDni($_SESSION["dniguard"]);
 ?>
     <div class="wrapper row4">
         <main class="container clear">
@@ -49,3 +48,6 @@ if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == 'g') {
 <div class="alert alert-<?php echo $alert->getTipo() ?>">
     <?php echo $alert->getMensaje() ?>
 </div>
+<?php
+require_once(VIEWS_PATH."footer.php");
+?>

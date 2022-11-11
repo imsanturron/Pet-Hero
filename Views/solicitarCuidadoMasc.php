@@ -1,14 +1,10 @@
 <?php
+require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
 
 use DAO\MYSQL\MascotaDAO as MascotaDAO;
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
 use Models\Guardian as Guardian;
-
-$mascotasDao = new MascotaDAO();
-$listaMascotas = $mascotasDao->GetAll();
-$guardianes = new GuardianDAO();
-$guardian = $guardianes->getByDni($dni);
 
 ?>
 <main class="py-5">
@@ -45,7 +41,8 @@ $guardian = $guardianes->getByDni($dni);
                                         <td><img src="<?php echo FRONT_ROOT . IMG_PATH . $mascota->getFotoMascota() ?>" style="width:120px;height:auto;"></td>
                                         <td>
                                             <input type="checkbox" name="animales[]" value="<?php echo $mascota->getId(); ?>">
-                                            <?php // <input type="checkbox" name="animales" value="<?php $mascota; ?>
+                                            <?php // <input type="checkbox" name="animales" value="<?php $mascota; 
+                                            ?>
                                         </td>
                                     </tr>
                             <?php
@@ -65,3 +62,6 @@ $guardian = $guardianes->getByDni($dni);
             </table>
         </div>
     </section>
+    <?php
+    require_once(VIEWS_PATH . "footer.php");
+    ?>
