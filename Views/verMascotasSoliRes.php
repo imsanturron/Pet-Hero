@@ -1,4 +1,5 @@
 <?php
+require_once(VIEWS_PATH."header.php");
 include('nav-bar.php');
 
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
@@ -104,3 +105,6 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
         </div>
     </div>
 </main>
+<?php
+require_once(VIEWS_PATH."footer.php");
+?>

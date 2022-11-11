@@ -50,13 +50,12 @@ class SolicitudDAO
             foreach ($resultSet as $row) {
                 $solicitud = new Solicitud();
                 $solicitud->setId($row["id"]);
-                //$solicitud->setAnimales($row["animales"]);
                 $solicitud->setFechaInicio($row["FechaInicio"]);
                 $solicitud->setFechaFin($row["FechaFin"]);
                 $solicitud->setNombreDueno($row["nombreDueno"]);
                 $solicitud->setDniDueno($row["dniDueno"]);
                 $solicitud->setNombreGuardian($row["nombreGuardian"]);
-                $solicitud->setDniGuardian($row["dniGuardian"]);
+                $solicitud->setDniGuardian($row["dniGuardian"]); ///ACA VA EL ALIAS EN ""
                 $solicitud->setDireccionGuardian($row["direccionGuardian"]);
                 $solicitud->setTelefonoDueno($row["telefonoDueno"]);
                 $solicitud->setTelefonoGuardian($row["telefonoGuardian"]);

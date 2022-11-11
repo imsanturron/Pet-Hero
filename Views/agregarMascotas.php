@@ -1,4 +1,5 @@
 <?php
+require_once(VIEWS_PATH."header.php");
 include('nav-bar.php');
 ?>
 <!-- ################################################################################################ -->
@@ -80,3 +81,6 @@ include('nav-bar.php');
 <div class="alert alert-<?php echo $alert->getTipo() ?>">
   <?php echo $alert->getMensaje() ?>
 </div>
+<?php
+require_once(VIEWS_PATH."footer.php");
+?>

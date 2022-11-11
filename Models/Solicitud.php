@@ -9,7 +9,6 @@ use Models\Dueno as Dueno;
 
 class Solicitud //implements JsonSerializable
 {
-
     protected $id;
     protected $fechaInicio;
     protected $fechaFin;
@@ -21,7 +20,6 @@ class Solicitud //implements JsonSerializable
     protected $telefonoDueno;
     protected $telefonoGuardian;
     protected $esPago = false; //booleano de pago
-
 
     public function  __construct(Guardian $guardian = null, Dueno $dueno = null, $desde = "", $hasta = "")
     {

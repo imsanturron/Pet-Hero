@@ -1,4 +1,5 @@
 <?php
+require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
 ?>
 <main class="py-5">
@@ -43,3 +44,6 @@ include('nav-bar.php');
             </table>
         </div>
     </section>
+    <?php
+    require_once(VIEWS_PATH . "footer.php");
+    ?>
