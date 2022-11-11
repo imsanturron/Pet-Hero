@@ -29,10 +29,7 @@ use Models\Guardian as Guardian;
 
                             foreach ($listaMascotas as $mascota) {
                         ?>
-                                <?php if (
-                                    $mascota->getdniDueno() == $_SESSION["loggedUser"]->getDni()
-                                    && $mascota->getTamano() == $guardian->getTamanoACuidar()
-                                ) { ?>
+                                <?php if ($mascota->getTamano() == $guardian->getTamanoACuidar()) { ?>
                                     <tr>
                                         <td><?php echo $mascota->getNombre(); ?></td>
                                         <td><?php echo $mascota->getRaza(); ?></td>
@@ -41,8 +38,6 @@ use Models\Guardian as Guardian;
                                         <td><img src="<?php echo FRONT_ROOT . IMG_PATH . $mascota->getFotoMascota() ?>" style="width:120px;height:auto;"></td>
                                         <td>
                                             <input type="checkbox" name="animales[]" value="<?php echo $mascota->getId(); ?>">
-                                            <?php // <input type="checkbox" name="animales" value="<?php $mascota; 
-                                            ?>
                                         </td>
                                     </tr>
                             <?php

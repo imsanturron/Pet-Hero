@@ -70,7 +70,8 @@ class AuthController
         }
       }
     } catch (Exception $ex) {
-      $alert = new Alert("warning", "datos incorrectos");
+      $alert = new Alert("warning", "error en base de datos");
+      $this->Index($alert);
     }
     if ($bool == false) {
       $alert = new Alert("warning", "Error iniciando sesion");
@@ -80,126 +81,134 @@ class AuthController
 
   private function validacionesLogin() //agrandar luego con pagos
   {    ///CAMBIAR TEMA RESERVAS CON VALIDACIONES HECHAS PARA RESEÑA
-    $bool = false; //actualizar adentro
-    if (isset($_SESSION["loggedUser"])) {
-      if ($_SESSION["tipo"] == 'g') {
-        $guardian = new Guardian();
-        $guardian = $_SESSION["loggedUser"];
-        $guardianDAO = new GuardianDAO();
-        $reservaDAO = new ReservaDAO();
-        $pagoDAO = new PagoDAO();
-        $solicitud = new SolicitudDAO();
-        $soliXmasc = new SolixMascDAO();
+    try {
+      $bool = false; //actualizar adentro
+      if (isset($_SESSION["loggedUser"])) {
+        if ($_SESSION["tipo"] == 'g') {
+          $guardian = new Guardian();
+          $guardian = $_SESSION["loggedUser"];
+          $guardianDAO = new GuardianDAO();
+          $reservaDAO = new ReservaDAO();
+          $pagoDAO = new PagoDAO();
+          $solicitud = new SolicitudDAO();
+          $soliXmasc = new SolixMascDAO();
 
-        $solicitudes = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
-        if (!$guardian->getDisponibilidadFin() && !$guardian->getDisponibilidadInicio()) {
-          $solicitudesABorrar = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
+          $solicitudes = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
+          if (!$guardian->getDisponibilidadFin() && !$guardian->getDisponibilidadInicio()) {
+            $solicitudesABorrar = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
 
-          if (isset($solicitudesABorrar)) {
-            foreach ($solicitudesABorrar as $soli) {  //borrar intermedias
-              $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
-              if ($soli->getEsPago())
-                $pagoDAO->removePagoById($soli->getId());
+            if (isset($solicitudesABorrar)) {
+              foreach ($solicitudesABorrar as $soli) {  //borrar intermedias
+                $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
+                if ($soli->getEsPago())
+                  $pagoDAO->removePagoById($soli->getId());
+              }
+              $solicitud->removeSolicitudesByDniGuardian($guardian->getDni());
             }
-            $solicitud->removeSolicitudesByDniGuardian($guardian->getDni());
-          }
-          //advertir que disponibilidad es null
-        } else if (!UtilsController::ValidarFecha($guardian->getDisponibilidadFin())) { //ver foranea para reducir
-          $solicitudesABorrar = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
+            //advertir que disponibilidad es null
+          } else if (!UtilsController::ValidarFecha($guardian->getDisponibilidadFin())) { //ver foranea para reducir
+            $solicitudesABorrar = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
 
-          if (isset($solicitudesABorrar)) {
-            foreach ($solicitudesABorrar as $soli) {  //borrar intermedias
-              $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
-              if ($soli->getEsPago())
-                $pagoDAO->removePagoById($soli->getId());
+            if (isset($solicitudesABorrar)) {
+              foreach ($solicitudesABorrar as $soli) {  //borrar intermedias
+                $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
+                if ($soli->getEsPago())
+                  $pagoDAO->removePagoById($soli->getId());
+              }
+              $solicitud->removeSolicitudesByDniGuardian($guardian->getDni());
             }
-            $solicitud->removeSolicitudesByDniGuardian($guardian->getDni());
+            $guardianDAO->setDisponibilidadEnNull($guardian->getDni());
+            ///advertir que disponibilidad es null
+          } else if (!UtilsController::ValidarFecha($guardian->getDisponibilidadInicio())) {
+
+            $solicitudesAChequear = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
+
+            if (isset($solicitudesAChequear)) {
+              foreach ($solicitudesAChequear as $soli) {  //chequear y borrar intermedias y solicitudes
+                if (UtilsController::ValidarFecha($soli->getFechaInicio())) {
+                  if ($soli->getEsPago())
+                    $pagoDAO->removePagoById($soli->getId());
+
+                  $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
+                  $solicitud->removeSolicitudById($soli->getId());
+                }
+              }
+            }
+            //advertir que la fecha inicio se paso
           }
-          $guardianDAO->setDisponibilidadEnNull($guardian->getDni());
-          ///advertir que disponibilidad es null
-        } else if (!UtilsController::ValidarFecha($guardian->getDisponibilidadInicio())) {
+          $reservas = $reservaDAO->getReservasByDniGuardian($guardian->getDni());
+          if (isset($reservas)) {
+            foreach ($reservas as $res) {
+              if (UtilsController::ValidarFecha($res->getFechaFin())) {
+                $reservaDAO->updateEstado($res->getId(), "finalizado");
+                if ($res->getResHechaOrechazada() == false && $res->getCrearResena() == false)
+                  $res->setCrearResena(true);
+              } else if (UtilsController::ValidarFecha($res->getFechaInicio())) {
+                $reservaDAO->updateEstado($res->getId(), "actual");
+              }
+            }
+          }
+        } else {
+          //caso dueño
+          $dueno = new Dueno();
+          $dueno = $_SESSION["loggedUser"];
+          $solicitud = new SolicitudDAO();
+          $duenoDAO = new DuenoDAO();
+          $reservaDAO = new ReservaDAO();
+          $pagoDAO = new PagoDAO();
+          $solicitud = new SolicitudDAO();
+          $soliXmasc = new SolixMascDAO();
+          $solicitudes = $solicitud->getSolicitudesByDniDueno($dueno->getDni());
 
-          $solicitudesAChequear = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
-
-          if (isset($solicitudesAChequear)) {
-            foreach ($solicitudesAChequear as $soli) {  //chequear y borrar intermedias y solicitudes
-              if (UtilsController::ValidarFecha($soli->getFechaInicio())) {
+          if (isset($solicitudes)) {
+            foreach ($solicitudes as $soli) {
+              if (!UtilsController::ValidarFecha($soli->getFechaInicio())) {
+                $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
                 if ($soli->getEsPago())
                   $pagoDAO->removePagoById($soli->getId());
 
-                $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
                 $solicitud->removeSolicitudById($soli->getId());
               }
             }
           }
-          //advertir que la fecha inicio se paso
-        }
-        $reservas = $reservaDAO->getReservasByDniGuardian($guardian->getDni());
-        if (isset($reservas)) {
-          foreach ($reservas as $res) {
-            if (UtilsController::ValidarFecha($res->getFechaFin())) {
-              $reservaDAO->updateEstado($res->getId(), "finalizado");
-              if ($res->getResHechaOrechazada() == false && $res->getCrearResena() == false)
-                $res->setCrearResena(true);
-            } else if (UtilsController::ValidarFecha($res->getFechaInicio())) {
-              $reservaDAO->updateEstado($res->getId(), "actual");
-            }
-          }
-        }
-      } else {
-        //caso dueño
-        $dueno = new Dueno();
-        $dueno = $_SESSION["loggedUser"];
-        $solicitud = new SolicitudDAO();
-        $duenoDAO = new DuenoDAO();
-        $reservaDAO = new ReservaDAO();
-        $pagoDAO = new PagoDAO();
-        $solicitud = new SolicitudDAO();
-        $soliXmasc = new SolixMascDAO();
-        $solicitudes = $solicitud->getSolicitudesByDniDueno($dueno->getDni());
 
-        if (isset($solicitudes)) {
-          foreach ($solicitudes as $soli) {
-            if (!UtilsController::ValidarFecha($soli->getFechaInicio())) {
-              $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
-              if ($soli->getEsPago())
-                $pagoDAO->removePagoById($soli->getId());
-
-              $solicitud->removeSolicitudById($soli->getId());
-            }
-          }
-        }
-
-        $reservas = $reservaDAO->getReservasByDniDueno($dueno->getDni());
-        if (isset($reservas)) {
-          foreach ($reservas as $res) {
-            if (UtilsController::ValidarFecha($res->getFechaFin())) {
-              $reservaDAO->updateEstado($res->getId(), "finalizado");
-              if ($res->getResHechaOrechazada() == false && $res->getCrearResena() == false)
-                $res->setCrearResena(true);
-            } else if (UtilsController::ValidarFecha($res->getFechaInicio())) {
-              $reservaDAO->updateEstado($res->getId(), "actual");
+          $reservas = $reservaDAO->getReservasByDniDueno($dueno->getDni());
+          if (isset($reservas)) {
+            foreach ($reservas as $res) {
+              if (UtilsController::ValidarFecha($res->getFechaFin())) {
+                $reservaDAO->updateEstado($res->getId(), "finalizado");
+                if ($res->getResHechaOrechazada() == false && $res->getCrearResena() == false)
+                  $res->setCrearResena(true);
+              } else if (UtilsController::ValidarFecha($res->getFechaInicio())) {
+                $reservaDAO->updateEstado($res->getId(), "actual");
+              }
             }
           }
         }
       }
+    } catch (Exception $ex) {
+      $alert = new Alert("warning", "error en base de datos");
     }
     return $bool; //////////
   }
 
   public static function ValidarUsuario($username, $dni, $email) ///validaciones en el registro
   {
-    $users = new UserDAO;
-    if ($users->getAll() != null) {
-      $a = $users->getByDni($dni);
-      $b = $users->getByUsername($username);
-      $c = $users->getByEmail($email);
-      if ($a != null || $b != null || $c != null)
-        return false;
-      else
-        return true;
+    try {
+      $users = new UserDAO;
+      if ($users->getAll() != null) {
+        $a = $users->getByDni($dni);
+        $b = $users->getByUsername($username);
+        $c = $users->getByEmail($email);
+        if ($a != null || $b != null || $c != null)
+          return false;
+        else
+          return true;
+      }
+      return true;
+    } catch (Exception $ex) {
+      $alert = new Alert("warning", "error en base de datos");
     }
-    return true;
   }
 
   public function Logout()

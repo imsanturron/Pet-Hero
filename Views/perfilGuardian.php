@@ -22,7 +22,7 @@ include('nav-bar.php');
                 </thead>
                 <tbody>
                     <form action="<?php echo FRONT_ROOT ?>Home/cambiarPerfil" method="POST">
-                        <?php if (isset($_SESSION["loggedUser"])) { ?>
+                        <?php if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == 'g') { ?>
                             <td> <?php echo $_SESSION["loggedUser"]->getNombre() . "<br>"; ?> </td>
                             <td><?php echo $_SESSION["loggedUser"]->getUserName(); ?></td>
                             <td><?php echo "***"; ?></td>
