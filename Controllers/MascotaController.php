@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use Exception;
 use DAO\MYSQL\MascotaDAO as MascotaDAO;
 use DateTime as DateTime;
 use Models\Alert as Alert;
@@ -130,7 +131,11 @@ class MascotaController
             $mascota->setPlanVacunacion($planVacunacion);
             $mascota->setVideo($video);
 
-            $this->mascotaDAO->Add($mascota);
+            try {
+                $this->mascotaDAO->Add($mascota);
+            } catch (Exception $ex) {
+                $alert = new Alert("warning", "error en base de datos");
+            }
             if ($error == false)
                 $alert = new Alert("success", "Mascota agregada");
             else
@@ -143,8 +148,12 @@ class MascotaController
 
     public function Remove($id)
     {
-        if (isset($_SESSION["loggedUser"])) {
-            $bien = $this->mascotaDAO->removeMascotaById($id); //modificar funcion
+        if (isset($_SESSION["loggedUser"])) { ///borrar tambien intermedias
+            try {
+                $bien = $this->mascotaDAO->removeMascotaById($id); //modificar funcion
+            } catch (Exception $ex) {
+                $alert = new Alert("warning", "error en base de datos");
+            }
             if ($bien)
                 $alert = new Alert("success", "Mascota borrada exitosamente");
             else

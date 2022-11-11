@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use Exception;
 use Models\Dueno as Dueno;
 use Models\Solicitud as Solicitud;
 use Models\Guardian as Guardian;
@@ -37,8 +38,12 @@ class DuenoController
 
     public function verMascotas()
     {
-        $mascotasDao = new MascotaDAO();
-        $listaMascotas = $mascotasDao->getMascotasByDniDueno($_SESSION['loggedUser']->getDni());
+        try {
+            $mascotasDao = new MascotaDAO();
+            $listaMascotas = $mascotasDao->getMascotasByDniDueno($_SESSION['loggedUser']->getDni());
+        } catch (Exception $ex) {
+            $alert = new Alert("warning", "error en base de datos");
+        }
         require_once(VIEWS_PATH . "verMascotas.php");
     }
 
@@ -76,9 +81,13 @@ class DuenoController
             $dueno->setDireccion($direccion);
             $dueno->setTelefono($telefono);
 
-            $this->duenoDAO->Add($dueno);
-            $userDAO = new UserDAO;
-            $userDAO->add($dueno);
+            try {
+                $this->duenoDAO->Add($dueno);
+                $userDAO = new UserDAO;
+                $userDAO->add($dueno);
+            } catch (Exception $ex) {
+                $alert = new Alert("warning", "error en base de datos");
+            }
 
             $alert = new Alert("success", "Usuario creado");
             $this->home($alert);
@@ -91,74 +100,71 @@ class DuenoController
     public function opcionMenuPrincipal($opcion)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
-            $opcion = $_POST['opcion'];
+            try {
+                $opcion = $_POST['opcion'];
 
-            if ($opcion == "verMascotas") {
-                $mascotasDao = new MascotaDAO();
-                $listaMascotas = $mascotasDao->getMascotasByDniDueno($_SESSION['loggedUser']->getDni());
-                require_once(VIEWS_PATH . "verMascotas.php");
-
-            } else if ($opcion == "agregarMascota") {
-                require_once(VIEWS_PATH . "agregarMascotas.php");
-
-            } else if ($opcion == "verGuardianes") {
-                require_once(VIEWS_PATH . "filtrarPorFecha.php");
-
-            } else if ($opcion == "verPerfil") {
-                require_once(VIEWS_PATH . "perfilDueno.php");
-
-            } else if ($opcion == "verSolicitudes") {
-                $envio = array();
-                $dueno = $_SESSION['loggedUser'];
-                $solicitudes = new SolicitudDAO();
-                $solis = $solicitudes->getSolicitudesByDniDueno($dueno->getDni());
-                $mascota = new MascotaDAO(); ///get all by id desp
-                $mascotas = $mascota->GetAll(); ///get all by id desp
-                //$mascotas = $mascota->getMascotasByIdSolicitud();
-                $mascXsoliDAO = new SolixMascDAO();
-                $mascXsoli = $mascXsoliDAO->GetAll();
-                foreach ($solis as $solicitud) {
-                    if ($solicitud->getEsPago() == false || $solicitud->getEsPago() == null) {
-                        array_push($envio, $solicitud);
+                if ($opcion == "verMascotas") {
+                    $mascotasDao = new MascotaDAO();
+                    $listaMascotas = $mascotasDao->getMascotasByDniDueno($_SESSION['loggedUser']->getDni());
+                    require_once(VIEWS_PATH . "verMascotas.php");
+                } else if ($opcion == "agregarMascota") {
+                    require_once(VIEWS_PATH . "agregarMascotas.php");
+                } else if ($opcion == "verGuardianes") {
+                    require_once(VIEWS_PATH . "filtrarPorFecha.php");
+                } else if ($opcion == "verPerfil") {
+                    require_once(VIEWS_PATH . "perfilDueno.php");
+                } else if ($opcion == "verSolicitudes") {
+                    $envio = array();
+                    $dueno = $_SESSION['loggedUser'];
+                    $solicitudes = new SolicitudDAO();
+                    $solis = $solicitudes->getSolicitudesByDniDueno($dueno->getDni());
+                    $mascota = new MascotaDAO(); ///get all by id desp
+                    $mascotas = $mascota->GetAll(); ///get all by id desp
+                    //$mascotas = $mascota->getMascotasByIdSolicitud();
+                    $mascXsoliDAO = new SolixMascDAO();
+                    $mascXsoli = $mascXsoliDAO->GetAll();
+                    foreach ($solis as $solicitud) {
+                        if ($solicitud->getEsPago() == false || $solicitud->getEsPago() == null) {
+                            array_push($envio, $solicitud);
+                        }
                     }
+                    $solis = $envio;
+                    require_once(VIEWS_PATH . "verSolicitudes.php");
+                } else if ($opcion == "verReservas") {
+                    $dueno = $_SESSION['loggedUser'];
+                    $reservas = new ReservaDAO();
+                    $ress = $reservas->getReservasByDniDueno($dueno->getDni());
+                    $mascota = new MascotaDAO(); ///get all by id desp
+                    $mascotas = $mascota->GetAll(); ///get all by id desp
+                    $resXmascDAO = new ResxMascDAO();
+                    $mascXres = $resXmascDAO->GetAll();
+                    require_once(VIEWS_PATH . "verReservas.php");
+                } else if ($opcion == "verSolicitudesAceptadasAPagar") {
+                    $dueno = $_SESSION['loggedUser'];
+                    $pago = new PagoDAO();
+                    $solicitud = new SolicitudDAO();
+                    $solis = $solicitud->getSolicitudesByDniDueno($dueno->getDni()); ///get all by id desp
+                    $pagos = $pago->getPagosByDniDueno($dueno->getDni());
+                    $mascXsoliDAO = new SolixMascDAO();
+                    $mascXsoli = $mascXsoliDAO->GetAll();
+                    $mascota = new MascotaDAO(); ///get all by id desp
+                    $mascotas = $mascota->GetAll(); ///get all by id desp
+                    $reservas = new ReservaDAO();
+                    $ress = $reservas->getReservasByDniDueno($dueno->getDni());
+                    require_once(VIEWS_PATH . "pagosPendientes.php");
+                } else if ($opcion == "generarNuevaReview") {
+                    $dueno = $_SESSION['loggedUser'];
+                    $reservas = new ReservaDAO();
+                    $ress = $reservas->getReservasByDniDueno($dueno->getDni());
+                    $mascota = new MascotaDAO(); ///get all by id desp
+                    $mascotas = $mascota->GetAll(); ///get all by id desp
+                    $resXmascDAO = new ResxMascDAO();
+                    $mascXres = $resXmascDAO->GetAll();
+                    $guardianDAO = new GuardianDAO();
+                    require_once(VIEWS_PATH . "generarReview.php");
                 }
-                $solis = $envio;
-                require_once(VIEWS_PATH . "verSolicitudes.php");
-
-            } else if ($opcion == "verReservas") {
-                $dueno = $_SESSION['loggedUser'];
-                $reservas = new ReservaDAO();
-                $ress = $reservas->getReservasByDniDueno($dueno->getDni());
-                $mascota = new MascotaDAO(); ///get all by id desp
-                $mascotas = $mascota->GetAll(); ///get all by id desp
-                $resXmascDAO = new ResxMascDAO();
-                $mascXres = $resXmascDAO->GetAll();
-                require_once(VIEWS_PATH . "verReservas.php");
-
-            } else if ($opcion == "verSolicitudesAceptadasAPagar") {
-                $dueno = $_SESSION['loggedUser'];
-                $pago = new PagoDAO();
-                $solicitud = new SolicitudDAO();
-                $solis = $solicitud->getSolicitudesByDniDueno($dueno->getDni()); ///get all by id desp
-                $pagos = $pago->getPagosByDniDueno($dueno->getDni());
-                $mascXsoliDAO = new SolixMascDAO();
-                $mascXsoli = $mascXsoliDAO->GetAll();
-                $mascota = new MascotaDAO(); ///get all by id desp
-                $mascotas = $mascota->GetAll(); ///get all by id desp
-                $reservas = new ReservaDAO();
-                $ress = $reservas->getReservasByDniDueno($dueno->getDni());
-                require_once(VIEWS_PATH . "pagosPendientes.php");
-
-            } else if ($opcion == "generarNuevaReview") {
-                $dueno = $_SESSION['loggedUser'];
-                $reservas = new ReservaDAO();
-                $ress = $reservas->getReservasByDniDueno($dueno->getDni());
-                $mascota = new MascotaDAO(); ///get all by id desp
-                $mascotas = $mascota->GetAll(); ///get all by id desp
-                $resXmascDAO = new ResxMascDAO();
-                $mascXres = $resXmascDAO->GetAll();
-                $guardianDAO = new GuardianDAO();
-                require_once(VIEWS_PATH . "generarReview.php");
+            } catch (Exception $ex) {
+                $alert = new Alert("warning", "error en base de datos");
             }
         } else
             $this->home();
@@ -170,14 +176,22 @@ class DuenoController
             $envio = array();
             $valid = UtilsController::ValidarFecha($desde, $hasta); //arreglar
             if ($valid) {
-                $guardianDao = new GuardianDAO();
-                $listaguardianes = $guardianDao->GetAll();
-                foreach($listaguardianes as $guardian){
-                   if(UtilsController::ValidarFecha($guardian->getDisponibilidadInicio(), $desde)
-                   && UtilsController::ValidarFecha($hasta, $guardian->getDisponibilidadFin()))
-                   array_push($envio, $guardian);
+                try {
+                    $guardianDao = new GuardianDAO();
+                    $listaguardianes = $guardianDao->GetAll();
+                    foreach ($listaguardianes as $guardian) {
+                        if ($guardian->getDisponibilidadInicio() && $guardian->getDisponibilidadFin()) {
+                            if (
+                                UtilsController::ValidarFecha($guardian->getDisponibilidadInicio(), $desde)
+                                && UtilsController::ValidarFecha($hasta, $guardian->getDisponibilidadFin())
+                            )
+                                array_push($envio, $guardian);
+                        }
+                    }
+                    $listaguardianes = $envio;
+                } catch (Exception $ex) {
+                    $alert = new Alert("warning", "error en base de datos");
                 }
-                $listaguardianes = $envio;
                 require_once(VIEWS_PATH . "verGuardianes.php");
             } else {
                 $alert = new Alert("warning", "Fecha invalida");
@@ -190,10 +204,14 @@ class DuenoController
     public function ElegirGuardian($dni, $desde, $hasta)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
-            $mascotasDao = new MascotaDAO();
-            $listaMascotas = $mascotasDao->GetAll();
-            $guardianes = new GuardianDAO();
-            $guardian = $guardianes->getByDni($dni);
+            try {
+                $mascotasDao = new MascotaDAO();
+                $listaMascotas = $mascotasDao->getMascotasByDniDueno($_SESSION["loggedUser"]->getDni());
+                $guardianes = new GuardianDAO();
+                $guardian = $guardianes->getByDni($dni);
+            } catch (Exception $ex) {
+                $alert = new Alert("warning", "error en base de datos");
+            }
             require_once(VIEWS_PATH . "solicitarCuidadoMasc.php");
         } else
             $this->home();
@@ -201,33 +219,37 @@ class DuenoController
 
     public function ElegirGuardianFinal($animales, $dni, $desde, $hasta)
     {
-        $mascotas = new MascotaDAO();
-        $arrayMascotas = $mascotas->getArrayByIds($animales);
         //$guardian = new Guardian(); PARA IMPLEMENTAR EN OTROS LADOS
         //$guardian->setDireccion("asd")->setDni("dad")->setEmail("kasmkak");
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
-            $valid = UtilsController::ValidarMismaRaza($arrayMascotas, $dni, $desde, $hasta); //chequear con mascotas q ya tenga
-            $valid2 = UtilsController::VerifGuardianSoliNuestraRepetida($dni);
-            $valid3 = UtilsController::VerifMascotaNoEstaReservadaEnFecha($arrayMascotas, $desde, $hasta);
-            ///ver ocupacion de mascotas y de guardianes.
-            if ($valid && $valid2 && $valid3) {
+            try {
+                $mascotas = new MascotaDAO();
+                $arrayMascotas = $mascotas->getArrayByIds($animales);
+                $valid = UtilsController::ValidarMismaRaza($arrayMascotas, $dni, $desde, $hasta); //chequear con mascotas q ya tenga
+                $valid2 = UtilsController::VerifGuardianSoliNuestraRepetida($dni);
+                $valid3 = UtilsController::VerifMascotaNoEstaReservadaEnFecha($arrayMascotas, $desde, $hasta);
+                ///ver ocupacion de mascotas y de guardianes.
+                if ($valid && $valid2 && $valid3) {
 
-                $guardianes = new GuardianDAO();
-                $guardian = $guardianes->getByDni($dni);
+                    $guardianes = new GuardianDAO();
+                    $guardian = $guardianes->getByDni($dni);
 
-                $solicitud = new Solicitud($guardian, $_SESSION["loggedUser"], $desde, $hasta);
-                $solicitudesD = new SolicitudDAO;
+                    $solicitud = new Solicitud($guardian, $_SESSION["loggedUser"], $desde, $hasta);
+                    $solicitudesD = new SolicitudDAO;
 
-                $solicitudesD->Add($solicitud);
-                $idSolicitud = $solicitudesD->GetIdByDniDuenoYGuardian($solicitud->getDniDueno(), $solicitud->getDniGuardian());
-                $intermediaMascotasXsolicitud = new SolixMascDAO();
-                $intermediaMascotasXsolicitud->add($arrayMascotas, $idSolicitud);
+                    $solicitudesD->Add($solicitud);
+                    $idSolicitud = $solicitudesD->GetIdByDniDuenoYGuardian($solicitud->getDniDueno(), $solicitud->getDniGuardian());
+                    $intermediaMascotasXsolicitud = new SolixMascDAO();
+                    $intermediaMascotasXsolicitud->add($arrayMascotas, $idSolicitud);
 
-                $alert = new Alert("success", "Solicitud enviada!");
-                $this->login($alert);
-            } else {
-                $alert = new Alert("warning", "Hubo un error");
-                $this->login($alert);
+                    $alert = new Alert("success", "Solicitud enviada!");
+                    $this->login($alert);
+                } else {
+                    $alert = new Alert("warning", "Hubo un error");
+                    $this->login($alert);
+                }
+            } catch (Exception $ex) {
+                $alert = new Alert("warning", "error en base de datos");
             }
         } else
             $this->home();
@@ -235,10 +257,14 @@ class DuenoController
 
     public function cancelarSolicitud($solicitudId)
     {
-        $solicitud = new SolicitudDAO();
-        $solicitudXmasc = new SolixMascDAO();
-        $resul = $solicitud->removeSolicitudById($solicitudId);
-        $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($solicitudId); //!//
+        try {
+            $solicitud = new SolicitudDAO();
+            $solicitudXmasc = new SolixMascDAO();
+            $resul = $solicitud->removeSolicitudById($solicitudId);
+            $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($solicitudId); //!//
+        } catch (Exception $ex) {
+            $alert = new Alert("warning", "error en base de datos");
+        }
 
         if ($resul && $resul2) {
             $alert = new Alert("success", "Solicitud borrada con exito");
@@ -253,82 +279,114 @@ class DuenoController
         ///hacer vista cargar tarjeta
         //print_r($animales);
         //echo "<br> --> forma de pago: " . $formaDePago;
-        $mascotas = new MascotaDAO();
-        $arrayMascotas = $mascotas->getArrayByIds($animales);
+
 
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
-            if ($operacion == "pagar") {
-                $pago = new PagoDAO();
+            try {
+                $mascotas = new MascotaDAO();
+                $arrayMascotas = $mascotas->getArrayByIds($animales);
+                if ($operacion == "pagar") {
+                    $pago = new PagoDAO();
 
-                if ($primerPago == false || $primerPago == null) {
+                    if ($primerPago == false || $primerPago == null) {
+                        $solicitud = new SolicitudDAO();
+                        $solicitudXmasc = new SolixMascDAO();
+
+                        $soli = $solicitud->GetById($idSoliRes);
+                        $reserva = new Reserva($soli);
+                        $reservaDAO = new ReservaDAO();
+                        $reservaDAO->add($reserva);
+                        $pago->updatePrimerPagoReservaById($idPago);
+                        $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSoliRes);
+                        $resul = $solicitud->removeSolicitudById($idSoliRes);
+                        $intermediaMascotasXreserva = new ResxMascDAO();
+                        $intermediaMascotasXreserva->add($arrayMascotas, $idSoliRes);
+                    } else {
+                        $pago->updatePagoFinalReservaById($idPago);
+                    }
+
+                    $pago->updateFormaDePagoReservaById($formaDePago, $idPago);
+                    ///HACER ALERTAS
+                    $this->login();
+                } else if ($operacion == "cancelar") {
                     $solicitud = new SolicitudDAO();
                     $solicitudXmasc = new SolixMascDAO();
-
-                    $soli = $solicitud->GetById($idSoliRes);
-                    $reserva = new Reserva($soli);
-                    $reservaDAO = new ReservaDAO();
-                    $reservaDAO->add($reserva);
-                    $pago->updatePrimerPagoReservaById($idPago);
-                    $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSoliRes);
+                    $pago = new PagoDAO();
                     $resul = $solicitud->removeSolicitudById($idSoliRes);
-                    $intermediaMascotasXreserva = new ResxMascDAO();
-                    $intermediaMascotasXreserva->add($arrayMascotas, $idSoliRes);
-                } else {
-                    $pago->updatePagoFinalReservaById($idPago);
+                    $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSoliRes);
+                    $resul3 = $pago->removePagoById($idPago);
+                    ///ver si mostrar si rechazo pago
+                    ///HACER ALERTAS
+                    $this->login();
                 }
-
-                $pago->updateFormaDePagoReservaById($formaDePago, $idPago);
-                ///HACER ALERTAS
-                $this->login();
-            } else if ($operacion == "cancelar") {
-                $solicitud = new SolicitudDAO();
-                $solicitudXmasc = new SolixMascDAO();
-                $pago = new PagoDAO();
-                $resul = $solicitud->removeSolicitudById($idSoliRes);
-                $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSoliRes);
-                $resul3 = $pago->removePagoById($idPago);
-                ///ver si mostrar si rechazo pago
-                ///HACER ALERTAS
-                $this->login();
+            } catch (Exception $ex) {
+                $alert = new Alert("warning", "error en base de datos");
             }
-        }
+        } else
+            $this->home();
     }
 
     public function crearResena($idReserva, $dniGuard, $operacion)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             if ($operacion == "crear") {
+                $guardianDAO = new GuardianDAO; //NUEVO
+                $guardian = $guardianDAO->GetByDni($dniGuard); //NUEVO
+                $reservaDAO = new ReservaDAO(); //NUEVO
+                $reserva = $reservaDAO->GetById($idReserva); //NUEVO
                 ///ver si se le pasa atributo xq antes no andaba
-                $_SESSION["dniguard"] = $dniGuard; ///cambiar luego pasando atributos de una
-                $_SESSION["idreserva"] = $idReserva;
+                // ESTO ESTABA DESCOMENTADO$_SESSION["dniguard"] = $dniGuard; ///cambiar luego pasando atributos de una
+                //ESTO ESTABA DESCOMENTADO $_SESSION["idreserva"] = $idReserva;
                 require_once(VIEWS_PATH . "generarReviewAGuardianX.php"); //PREGUNTAR PROFE VARIABLES
                 ///Y luego crear reseña, tambien persistir.
             } else if ($operacion == "noCrear") {
-                $reservaDAO = new ReservaDAO();
-                $reservaDAO->updateCrearResena($idReserva, false);
-                $reservaDAO->updateResHechaOrechazada($idReserva, true);
+                try {
+                    $reservaDAO = new ReservaDAO();
+                    $reservaDAO->updateCrearResena($idReserva, false);
+                    $reservaDAO->updateResHechaOrechazada($idReserva, true);
+                } catch (Exception $ex) {
+                    $alert = new Alert("warning", "error en base de datos");
+                }
             }
             $this->login();
         } else
             $this->login();
     }
 
-    public function asentarResena($puntos, $observaciones)
+    public function asentarResena($idReserva, $dniGuard, $puntos, $observaciones) ///idr y dng agregados
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
-            $reservaDAO = new ReservaDAO();
-            $reservaDAO->updateCrearResena($_SESSION["idreserva"], false);
-            $reservaDAO->updateResHechaOrechazada($_SESSION["idreserva"], true);
+            try {
+                $reservaDAO = new ReservaDAO();
+                $reservaDAO->updateCrearResena($idReserva, false);
+                $reservaDAO->updateResHechaOrechazada($idReserva, true);
 
-            $guardianDAO = new GuardianDAO();
-            $guardianDAO->updateCantResenasMas1($_SESSION["dniguard"]); //no cambiar el orden
-            $guardianDAO->updatePuntajeTotalMasPuntaje($_SESSION["dniguard"], $puntos);
-            $guardianDAO->updatePuntajePromedio($_SESSION["dniguard"]);
-            $resenaDAO = new ResenaDAO();
-            $dueno = new Dueno();
-            $dueno = $_SESSION["loggedUser"];
-            $resena = new Resena($_SESSION["idreserva"], $dueno->getDni(), $_SESSION["dniguard"], $puntos, $observaciones);
-            $resenaDAO->Add($resena);
+                $guardianDAO = new GuardianDAO();
+                $guardianDAO->updateCantResenasMas1($dniGuard); //no cambiar el orden
+                $guardianDAO->updatePuntajeTotalMasPuntaje($dniGuard, $puntos);
+                $guardianDAO->updatePuntajePromedio($dniGuard);
+                $resenaDAO = new ResenaDAO();
+                $dueno = new Dueno();
+                $dueno = $_SESSION["loggedUser"];
+                $resena = new Resena($idReserva, $dueno->getDni(), $dniGuard, $puntos, $observaciones);
+                $resenaDAO->Add($resena);
+
+                /*$reservaDAO = new ReservaDAO();
+                $reservaDAO->updateCrearResena($_SESSION["idreserva"], false);
+                $reservaDAO->updateResHechaOrechazada($_SESSION["idreserva"], true);
+
+                $guardianDAO = new GuardianDAO();
+                $guardianDAO->updateCantResenasMas1($_SESSION["dniguard"]); //no cambiar el orden
+                $guardianDAO->updatePuntajeTotalMasPuntaje($_SESSION["dniguard"], $puntos);
+                $guardianDAO->updatePuntajePromedio($_SESSION["dniguard"]);
+                $resenaDAO = new ResenaDAO();
+                $dueno = new Dueno();
+                $dueno = $_SESSION["loggedUser"];
+                $resena = new Resena($_SESSION["idreserva"], $dueno->getDni(), $_SESSION["dniguard"], $puntos, $observaciones);
+                $resenaDAO->Add($resena);  Estaba esto */
+            } catch (Exception $ex) {
+                $alert = new Alert("warning", "error en base de datos");
+            }
             $this->login();
         } else
             $this->login();
@@ -337,9 +395,13 @@ class DuenoController
     public function Remove($dni)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
-            $bien = $this->duenoDAO->removeDuenoByDni($dni);
-            $bien2 = $userDAO = new UserDAO;
-            $bien2 = $userDAO->removeUserByDni($dni);
+            try {
+                $bien = $this->duenoDAO->removeDuenoByDni($dni);
+                $bien2 = $userDAO = new UserDAO;
+                $bien2 = $userDAO->removeUserByDni($dni);
+            } catch (Exception $ex) {
+                $alert = new Alert("warning", "error en base de datos");
+            }
             if ($bien && $bien2)
                 $alert = new Alert("success", "Usuario borrado exitosamente");
             else

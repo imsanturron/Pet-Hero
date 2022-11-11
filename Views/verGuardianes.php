@@ -1,5 +1,5 @@
 <?php
-require_once(VIEWS_PATH."header.php");
+require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
 
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
@@ -35,12 +35,10 @@ use Models\Guardian as Guardian;
                                     <td><?php echo $guardianx->getNombre(); ?></td>
                                     <td><?php echo $guardianx->getUserName(); ?></td>
                                     <td>
-                                        <?php if ($guardianx->getDisponibilidadInicio()) {
-                                            echo $guardianx->getDisponibilidadInicio() .
-                                                " hasta " . $guardianx->getDisponibilidadFin();
-                                        } else {
-                                            echo "no disponible";
-                                        } ?>
+                                        <?php
+                                        echo $guardianx->getDisponibilidadInicio() .
+                                            " hasta " . $guardianx->getDisponibilidadFin();
+                                        ?>
                                     </td>
                                     <td><?php echo $guardianx->getPrecio(); ?></td>
                                     <td><?php echo $guardianx->getDireccion(); ?></td>
@@ -52,20 +50,19 @@ use Models\Guardian as Guardian;
                                         else
                                             echo "Sin reseñas";
                                         ?></td>
-                                    <?php if ($guardianx->getDisponibilidadInicio()) { ?>
-                                        <td>
-                                            <input type="hidden" name="dni" value="<?php echo $guardianx->getDni(); ?>">
-                                            <input type="hidden" name="desde" value="<?php echo $desde; ?>">
-                                            <input type="hidden" name="hasta" value="<?php echo $hasta; ?>">
-                                            <button type="submit" class="btn btn-danger">Elegir </button>
-                                        </td>
+                                    <td>
+                                        <input type="hidden" name="dni" value="<?php echo $guardianx->getDni(); ?>">
+                                        <input type="hidden" name="desde" value="<?php echo $desde; ?>">
+                                        <input type="hidden" name="hasta" value="<?php echo $hasta; ?>">
+                                        <button type="submit" class="btn btn-danger">Elegir </button>
+                                    </td>
                                 </tr>
-                    <?php }
-                                }
-                            } else {
-                                echo " <label><h2> no hay guadianes disponibles para la fecha indicada </label></h2> ";
+                        <?php
                             }
-                    ?>
+                        } else {
+                            echo " <label><h2> no hay guadianes disponibles para la fecha indicada </label></h2> ";
+                        }
+                        ?>
                     </form>
                 </tbody>
             </table>
@@ -76,5 +73,5 @@ use Models\Guardian as Guardian;
     </section>
 </main>
 <?php
-require_once(VIEWS_PATH."footer.php");
+require_once(VIEWS_PATH . "footer.php");
 ?>

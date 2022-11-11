@@ -211,6 +211,46 @@ class SolicitudDAO
         }
     }
 
+    function getDePRUEBAPARALOQUEDIJOELPROFEDEALIASYESO($dniDueno) /////
+    {
+        try {
+            $solicitudList = array();
+
+
+            $query = "SELECT * FROM " . $this->tableName . " WHERE dniDueno = :dniDueno";
+
+            $parameters["dniDueno"] = $dniDueno;
+
+            $this->connection = Connection::GetInstance();
+
+            $resultSet = $this->connection->Execute($query, $parameters);
+
+            foreach ($resultSet as $row) {
+                $solicitud = new Solicitud();
+                $solicitud->setId($row["id"]);
+                //$solicitud->setAnimales($row["animales"]);
+                $solicitud->setFechaInicio($row["FechaInicio"]);
+                $solicitud->setFechaFin($row["FechaFin"]);
+                $solicitud->setNombreDueno($row["nombreDueno"]);
+                $solicitud->setDniDueno($row["dniDueno"]);
+                $solicitud->setNombreGuardian($row["nombreGuardian"]);
+                $solicitud->setDniGuardian($row["dniGuardian"]);
+                $solicitud->setDireccionGuardian($row["direccionGuardian"]);
+                $solicitud->setTelefonoDueno($row["telefonoDueno"]);
+                $solicitud->setTelefonoGuardian($row["telefonoGuardian"]);
+                $solicitud->setEsPago($row["esPago"]);
+                array_push($solicitudList, $solicitud);
+                ////////
+            }
+            if (isset($solicitudList))
+                return $solicitudList;
+            else
+                return null;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
     function updateAPagoById($id){
         try {
             $query = "UPDATE " . $this->tableName . " SET esPago = :esPago WHERE id = :id;";
