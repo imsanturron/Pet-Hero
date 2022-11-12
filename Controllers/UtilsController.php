@@ -151,6 +151,7 @@ class UtilsController
         return true;
       } catch (Exception $ex) {
         $alert = new Alert("warning", "error en base de datos");
+        UtilsController::Index($alert);
       }
     }
     return false;
@@ -173,6 +174,7 @@ class UtilsController
         return true;
     } catch (Exception $ex) {
       $alert = new Alert("warning", "error en base de datos");
+      UtilsController::Index($alert);
     }
   }
 
@@ -199,6 +201,7 @@ class UtilsController
       return true;
     } catch (Exception $ex) {
       $alert = new Alert("warning", "error en base de datos");
+      UtilsController::Index($alert);
     }
   }
 }
