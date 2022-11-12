@@ -16,21 +16,13 @@ class SolicitudDAO
     public function Add(Solicitud $solicitud)
     {
         try {
-            $query = "INSERT INTO " . $this->tableName . " (FechaInicio, FechaFin, nombreDueno, dniDueno, nombreGuardian, dniGuardian, direccionGuardian, telefonoDueno, telefonoGuardian, esPago)
-             VALUES ( :FechaInicio, :FechaFin, :nombreDueno, :dniDueno, :nombreGuardian, :dniGuardian, :direccionGuardian, :telefonoDueno, :telefonoGuardian, :esPago);";
-
-            // $parameters["id"] = $solicitud->getId(); ///ver tema de ids
-            //$parameters["animales"] = $solicitud->getAnimales();
+            $query = "INSERT INTO " . $this->tableName . " (FechaInicio, FechaFin, dniDueno, dniGuardian, esPago)
+             VALUES ( :FechaInicio, :FechaFin, :dniDueno, :dniGuardian, :esPago);";
 
             $parameters["FechaInicio"] = $solicitud->getFechaInicio();
             $parameters["FechaFin"] = $solicitud->getFechaFin();
-            $parameters["nombreDueno"] = $solicitud->getNombreDueno();
             $parameters["dniDueno"] = $solicitud->getDniDueno();
-            $parameters["nombreGuardian"] = $solicitud->getNombreGuardian();
             $parameters["dniGuardian"] = $solicitud->getDniGuardian();
-            $parameters["direccionGuardian"] = $solicitud->getDireccionGuardian();
-            $parameters["telefonoDueno"] = $solicitud->getTelefonoDueno();
-            $parameters["telefonoGuardian"] = $solicitud->getTelefonoGuardian();
             $parameters["esPago"] = false;
             $this->connection = Connection::GetInstance();
             $this->connection->ExecuteNonQuery($query, $parameters);
@@ -43,7 +35,8 @@ class SolicitudDAO
     {
         try {
             $solicitudList = array();
-            $query = "SELECT * FROM " . $this->tableName;
+            $query = "SELECT s.*, g.nombre as nombreGuardian, d.nombre as nombreDueno,  d.telefono as telefonoDueno, g.direccion as direccionGuardian, g.telefono as telefonoGuardian
+              FROM " . $this->tableName . " s join duenos d on s.dniDueno = d.dni join guardianes g on s.dniGuardian = g.dni";
             $this->connection = Connection::GetInstance();
             $resultSet = $this->connection->Execute($query);
 
@@ -73,7 +66,8 @@ class SolicitudDAO
         try {
             $solicitud = null;
 
-            $query = "SELECT * FROM " . $this->tableName . " WHERE id = :id";
+            $query = "SELECT s.*, g.nombre as nombreGuardian, d.nombre as nombreDueno,  d.telefono as telefonoDueno, g.direccion as direccionGuardian, g.telefono as telefonoGuardian
+             FROM " . $this->tableName . " s join duenos d on s.dniDueno = d.dni join guardianes g on s.dniGuardian = g.dni WHERE id = :id";
 
             $parameters["id"] = $id;
 
@@ -94,7 +88,6 @@ class SolicitudDAO
                 $solicitud->setTelefonoDueno($row["telefonoDueno"]);
                 $solicitud->setTelefonoGuardian($row["telefonoGuardian"]);
                 $solicitud->setEsPago($row["esPago"]);
-                ////////
             }
 
             return $solicitud;
@@ -137,7 +130,8 @@ class SolicitudDAO
             $solicitudList = array();
 
 
-            $query = "SELECT * FROM " . $this->tableName . " WHERE dniGuardian = :dniGuardian";
+            $query = "SELECT s.*, g.nombre as nombreGuardian, d.nombre as nombreDueno,  d.telefono as telefonoDueno, g.direccion as direccionGuardian, g.telefono as telefonoGuardian 
+            FROM " . $this->tableName . " s join duenos d on s.dniDueno = d.dni join guardianes g on s.dniGuardian = g.dni WHERE dniGuardian = :dniGuardian";
 
             $parameters["dniGuardian"] = $dniGuardian;
 
@@ -148,7 +142,6 @@ class SolicitudDAO
             foreach ($resultSet as $row) {
                 $solicitud = new Solicitud();
                 $solicitud->setId($row["id"]);
-                //$solicitud->setAnimales($row["animales"]);
                 $solicitud->setFechaInicio($row["FechaInicio"]);
                 $solicitud->setFechaFin($row["FechaFin"]);
                 $solicitud->setNombreDueno($row["nombreDueno"]);
@@ -160,7 +153,6 @@ class SolicitudDAO
                 $solicitud->setTelefonoGuardian($row["telefonoGuardian"]);
                 $solicitud->setEsPago($row["esPago"]);
                 array_push($solicitudList, $solicitud);
-                ////////
             }
             if (isset($solicitudList))
                 return $solicitudList;
@@ -177,7 +169,8 @@ class SolicitudDAO
             $solicitudList = array();
 
 
-            $query = "SELECT * FROM " . $this->tableName . " WHERE dniDueno = :dniDueno";
+            $query = "SELECT s.*, g.nombre as nombreGuardian, d.nombre as nombreDueno,  d.telefono as telefonoDueno, g.direccion as direccionGuardian, g.telefono as telefonoGuardian 
+            FROM " . $this->tableName . " s join duenos d on s.dniDueno = d.dni join guardianes g on s.dniGuardian = g.dni WHERE dniDueno = :dniDueno";
 
             $parameters["dniDueno"] = $dniDueno;
 
@@ -188,7 +181,6 @@ class SolicitudDAO
             foreach ($resultSet as $row) {
                 $solicitud = new Solicitud();
                 $solicitud->setId($row["id"]);
-                //$solicitud->setAnimales($row["animales"]);
                 $solicitud->setFechaInicio($row["FechaInicio"]);
                 $solicitud->setFechaFin($row["FechaFin"]);
                 $solicitud->setNombreDueno($row["nombreDueno"]);
@@ -200,47 +192,6 @@ class SolicitudDAO
                 $solicitud->setTelefonoGuardian($row["telefonoGuardian"]);
                 $solicitud->setEsPago($row["esPago"]);
                 array_push($solicitudList, $solicitud);
-                ////////
-            }
-            if (isset($solicitudList))
-                return $solicitudList;
-            else
-                return null;
-        } catch (Exception $ex) {
-            throw $ex;
-        }
-    }
-
-    function getDePRUEBAPARALOQUEDIJOELPROFEDEALIASYESO($dniDueno) /////
-    {
-        try {
-            $solicitudList = array();
-
-
-            $query = "SELECT * FROM " . $this->tableName . " WHERE dniDueno = :dniDueno";
-
-            $parameters["dniDueno"] = $dniDueno;
-
-            $this->connection = Connection::GetInstance();
-
-            $resultSet = $this->connection->Execute($query, $parameters);
-
-            foreach ($resultSet as $row) {
-                $solicitud = new Solicitud();
-                $solicitud->setId($row["id"]);
-                //$solicitud->setAnimales($row["animales"]);
-                $solicitud->setFechaInicio($row["FechaInicio"]);
-                $solicitud->setFechaFin($row["FechaFin"]);
-                $solicitud->setNombreDueno($row["nombreDueno"]);
-                $solicitud->setDniDueno($row["dniDueno"]);
-                $solicitud->setNombreGuardian($row["nombreGuardian"]);
-                $solicitud->setDniGuardian($row["dniGuardian"]);
-                $solicitud->setDireccionGuardian($row["direccionGuardian"]);
-                $solicitud->setTelefonoDueno($row["telefonoDueno"]);
-                $solicitud->setTelefonoGuardian($row["telefonoGuardian"]);
-                $solicitud->setEsPago($row["esPago"]);
-                array_push($solicitudList, $solicitud);
-                ////////
             }
             if (isset($solicitudList))
                 return $solicitudList;

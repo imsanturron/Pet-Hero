@@ -7,7 +7,7 @@ class Pago
     private $id; //PK mismo que solicitud/reserva/reseña --  //ver si cambiar por numero grande
     private $dniDueno; //FK
     private $dniGuardian; //FK
-    private $precioGuardian;
+    private $precioGuardian; //////////SACAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     private $montoAPagar; //50% de precio guardian
     private $primerPagoReserva; //booleano
     private $pagoFinal; //booleano

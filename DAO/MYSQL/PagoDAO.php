@@ -14,13 +14,12 @@ class PagoDAO
     public function Add(Pago $pago)
     {
         try {
-            $query = "INSERT INTO " . $this->tableName . " (id, dniDueno, dniGuardian, precioGuardian, montoAPagar,primerPagoReserva, pagoFinal, formaDePago)
-             VALUES (:id, :dniDueno, :dniGuardian, :precioGuardian, :montoAPagar, :primerPagoReserva, :pagoFinal, :formaDePago);";
+            $query = "INSERT INTO " . $this->tableName . " (id, dniDueno, dniGuardian, montoAPagar,primerPagoReserva, pagoFinal, formaDePago)
+             VALUES (:id, :dniDueno, :dniGuardian, :montoAPagar, :primerPagoReserva, :pagoFinal, :formaDePago);";
 
             $parameters["id"] = $pago->getId();
             $parameters["dniDueno"] = $pago->getDniDueno();
             $parameters["dniGuardian"] = $pago->getDniGuardian();
-            $parameters["precioGuardian"] = $pago->getPrecioGuardian();
             $parameters["montoAPagar"] = $pago->getMontoAPagar();
             $parameters["primerPagoReserva"] = $pago->getPrimerPagoReserva();
             $parameters["pagoFinal"] = $pago->getPagoFinal();
@@ -45,11 +44,11 @@ class PagoDAO
                 $pago->setId($row["id"]);
                 $pago->setDniDueno($row["dniDueno"]);
                 $pago->setDniGuardian($row["dniGuardian"]);
-                $pago->setPrecioGuardian($row["precioGuardian"]);
                 $pago->setMontoAPagar($row["montoAPagar"]);
                 $pago->setPrimerPagoReserva($row["primerPagoReserva"]);
                 $pago->setPagoFinal($row["pagoFinal"]);
                 $pago->setFormaDePago($row["formaDePago"]);
+                $pago->setPrecioGuardian(($pago->getMontoAPagar() * 2));
                 array_push($pagoList, $pago);
             }
             return $pagoList;
@@ -76,11 +75,11 @@ class PagoDAO
                 $pago->setId($row["id"]);
                 $pago->setDniDueno($row["dniDueno"]);
                 $pago->setDniGuardian($row["dniGuardian"]);
-                $pago->setPrecioGuardian($row["precioGuardian"]);
                 $pago->setMontoAPagar($row["montoAPagar"]);
                 $pago->setPrimerPagoReserva($row["primerPagoReserva"]);
                 $pago->setPagoFinal($row["pagoFinal"]);
                 $pago->setFormaDePago($row["formaDePago"]);
+                $pago->setPrecioGuardian(($pago->getMontoAPagar() * 2));
             }
 
             return $pago;
@@ -107,11 +106,11 @@ class PagoDAO
                 $pago->setId($row["id"]);
                 $pago->setDniDueno($row["dniDueno"]);
                 $pago->setDniGuardian($row["dniGuardian"]);
-                $pago->setPrecioGuardian($row["precioGuardian"]);
                 $pago->setMontoAPagar($row["montoAPagar"]);
                 $pago->setPrimerPagoReserva($row["primerPagoReserva"]);
                 $pago->setPagoFinal($row["pagoFinal"]);
                 $pago->setFormaDePago($row["formaDePago"]);
+                $pago->setPrecioGuardian(($pago->getMontoAPagar() * 2));
                 array_push($pagoList, $pago);
             }
             if (isset($pagoList))
@@ -141,11 +140,11 @@ class PagoDAO
                 $pago->setId($row["id"]);
                 $pago->setDniDueno($row["dniDueno"]);
                 $pago->setDniGuardian($row["dniGuardian"]);
-                $pago->setPrecioGuardian($row["precioGuardian"]);
                 $pago->setMontoAPagar($row["montoAPagar"]);
                 $pago->setPrimerPagoReserva($row["primerPagoReserva"]);
                 $pago->setPagoFinal($row["pagoFinal"]);
                 $pago->setFormaDePago($row["formaDePago"]);
+                $pago->setPrecioGuardian(($pago->getMontoAPagar() * 2));
                 array_push($pagoList, $pago);
             }
             if (isset($pagoList))

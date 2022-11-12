@@ -24,10 +24,7 @@ class DuenoDAO
             $parameters["email"] = $dueno->getEmail();
             $parameters["direccion"] = $dueno->getDireccion();
             $parameters["telefono"] = $dueno->getTelefono();
-            //$parameters["mascotas"] = $dueno->getMascotas();
             $parameters["tipo"] = $dueno->getTipo();
-            //$parameters["solicitudes"] = $dueno->getSolicitudes();
-            //$parameters["reservas"] = $dueno->getReservas();
             $this->connection = Connection::GetInstance();
             $this->connection->ExecuteNonQuery($query, $parameters);
         } catch (Exception $ex) {
@@ -52,10 +49,7 @@ class DuenoDAO
                 $dueno->setEmail($row["email"]);
                 $dueno->setDireccion($row["direccion"]);
                 $dueno->setTelefono($row["telefono"]);
-                //$dueno->setMascotas($row["mascotas"]);
                 $dueno->setTipo($row["tipo"]);
-                //$dueno->setSolicitudes($row["solicitudes"]);
-                //$dueno->setReservas($row["reservas"]);
                 array_push($duenoList, $dueno);
             }
             return $duenoList;
@@ -87,8 +81,6 @@ class DuenoDAO
                 $dueno->setDireccion($row["direccion"]);
                 $dueno->setTelefono($row["telefono"]);
                 $dueno->setTipo($row["tipo"]);
-
-                ////////
             }
 
             return $dueno;

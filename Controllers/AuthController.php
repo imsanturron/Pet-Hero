@@ -81,7 +81,7 @@ class AuthController
 
   private function validacionesLogin() //agrandar luego con pagos
   {    ///CAMBIAR TEMA RESERVAS CON VALIDACIONES HECHAS PARA RESEÑA
-    try {
+    try { ///pasar reservas a actual
       $bool = false; //actualizar adentro
       if (isset($_SESSION["loggedUser"])) {
         if ($_SESSION["tipo"] == 'g') {
@@ -188,6 +188,7 @@ class AuthController
       }
     } catch (Exception $ex) {
       $alert = new Alert("warning", "error en base de datos");
+      $this->index($alert);
     }
     return $bool; //////////
   }
@@ -208,6 +209,7 @@ class AuthController
       return true;
     } catch (Exception $ex) {
       $alert = new Alert("warning", "error en base de datos");
+      AuthController::index($alert);
     }
   }
 

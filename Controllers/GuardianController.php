@@ -58,6 +58,7 @@ class GuardianController
             $mascXres = $resXmascDAO->GetAll();
         } catch (Exception $ex) {
             $alert = new Alert("warning", "error en base de datos");
+            $this->login($alert);
         }
         require_once(VIEWS_PATH . "verReservas.php");
     }
@@ -75,6 +76,7 @@ class GuardianController
             $mascXsoli = $mascXsoliDAO->GetAll();
         } catch (Exception $ex) {
             $alert = new Alert("warning", "error en base de datos");
+            $this->login($alert);
         }
         require_once(VIEWS_PATH . "verSolicitudes.php");
     }
@@ -167,6 +169,7 @@ class GuardianController
                 }
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
+                $this->login($alert);
             }
         }
     }
@@ -233,6 +236,7 @@ class GuardianController
                 }
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
+                $this->login($alert);
             }
         } else
             $this->home();
@@ -262,6 +266,7 @@ class GuardianController
                 }
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
+                $this->login($alert);
             }
         } else
             $this->home();
@@ -303,6 +308,7 @@ class GuardianController
                 }
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
+                $this->login($alert);
             }
             $this->login($alert);
         } else {
@@ -326,6 +332,7 @@ class GuardianController
                     $alert = new Alert("warning", "Error borrando el usuario");
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
+                $this->login($alert);
             }
             $this->home($alert);
         } else

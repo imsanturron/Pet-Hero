@@ -43,6 +43,7 @@ class DuenoController
             $listaMascotas = $mascotasDao->getMascotasByDniDueno($_SESSION['loggedUser']->getDni());
         } catch (Exception $ex) {
             $alert = new Alert("warning", "error en base de datos");
+            $this->login($alert);
         }
         require_once(VIEWS_PATH . "verMascotas.php");
     }
@@ -87,6 +88,7 @@ class DuenoController
                 $userDAO->add($dueno);
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
+                $this->login($alert);
             }
 
             $alert = new Alert("success", "Usuario creado");
@@ -162,9 +164,18 @@ class DuenoController
                     $mascXres = $resXmascDAO->GetAll();
                     $guardianDAO = new GuardianDAO();
                     require_once(VIEWS_PATH . "generarReview.php");
+                } else if ($opcion == "pruebas") {
+                    $solicitudDAO = new SolicitudDAO();
+                    $reservaDAO = new ReservaDAO();
+                    //$solicitudes = $solicitudDAO->getPRUEBBA();
+                    //$solicitudes = $solicitudDAO->GetByIdPrueba(1);
+                    $reservas = $reservaDAO->GetById(1);
+                    echo "<br> <br> <br> ----  ";
+                    print_r($reservas);
                 }
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
+                $this->login($alert);
             }
         } else
             $this->home();
@@ -191,6 +202,7 @@ class DuenoController
                     $listaguardianes = $envio;
                 } catch (Exception $ex) {
                     $alert = new Alert("warning", "error en base de datos");
+                    $this->login($alert);
                 }
                 require_once(VIEWS_PATH . "verGuardianes.php");
             } else {
@@ -211,6 +223,7 @@ class DuenoController
                 $guardian = $guardianes->getByDni($dni);
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
+                $this->login($alert);
             }
             require_once(VIEWS_PATH . "solicitarCuidadoMasc.php");
         } else
@@ -226,7 +239,7 @@ class DuenoController
                 $mascotas = new MascotaDAO();
                 $arrayMascotas = $mascotas->getArrayByIds($animales);
                 $valid = UtilsController::ValidarMismaRaza($arrayMascotas, $dni, $desde, $hasta); //chequear con mascotas q ya tenga
-                $valid2 = UtilsController::VerifGuardianSoliNuestraRepetida($dni);
+                $valid2 = UtilsController::VerifGuardianSoliNuestraRepetida($dni); //ver si acepta pago
                 $valid3 = UtilsController::VerifMascotaNoEstaReservadaEnFecha($arrayMascotas, $desde, $hasta);
                 ///ver ocupacion de mascotas y de guardianes.
                 if ($valid && $valid2 && $valid3) {
@@ -250,6 +263,7 @@ class DuenoController
                 }
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
+                $this->login($alert);
             }
         } else
             $this->home();
@@ -264,6 +278,7 @@ class DuenoController
             $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($solicitudId); //!//
         } catch (Exception $ex) {
             $alert = new Alert("warning", "error en base de datos");
+            $this->login($alert);
         }
 
         if ($resul && $resul2) {
@@ -321,6 +336,7 @@ class DuenoController
                 }
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
+                $this->login($alert);
             }
         } else
             $this->home();
@@ -346,6 +362,7 @@ class DuenoController
                     $reservaDAO->updateResHechaOrechazada($idReserva, true);
                 } catch (Exception $ex) {
                     $alert = new Alert("warning", "error en base de datos");
+                    $this->login($alert);
                 }
             }
             $this->login();
@@ -386,6 +403,7 @@ class DuenoController
                 $resenaDAO->Add($resena);  Estaba esto */
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
+                $this->login($alert);
             }
             $this->login();
         } else
@@ -401,6 +419,7 @@ class DuenoController
                 $bien2 = $userDAO->removeUserByDni($dni);
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
+                $this->login($alert);
             }
             if ($bien && $bien2)
                 $alert = new Alert("success", "Usuario borrado exitosamente");

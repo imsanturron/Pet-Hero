@@ -135,6 +135,7 @@ class MascotaController
                 $this->mascotaDAO->Add($mascota);
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
+                $this->loginDueno($alert);
             }
             if ($error == false)
                 $alert = new Alert("success", "Mascota agregada");
@@ -153,6 +154,7 @@ class MascotaController
                 $bien = $this->mascotaDAO->removeMascotaById($id); //modificar funcion
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
+                $this->loginDueno($alert);
             }
             if ($bien)
                 $alert = new Alert("success", "Mascota borrada exitosamente");

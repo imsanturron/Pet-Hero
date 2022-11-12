@@ -12,13 +12,13 @@ class Solicitud //implements JsonSerializable
     protected $id;
     protected $fechaInicio;
     protected $fechaFin;
-    protected $nombreDueno;
+    protected $nombreDueno; //////////SACAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     protected $dniDueno;
-    protected $nombreGuardian;
+    protected $nombreGuardian; //////////SACAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     protected $dniGuardian;
-    protected $direccionGuardian;
-    protected $telefonoDueno;
-    protected $telefonoGuardian;
+    protected $direccionGuardian; //////////SACAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    protected $telefonoDueno; //////////SACAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    protected $telefonoGuardian; //////////SACAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     protected $esPago = false; //booleano de pago
 
     public function  __construct(Guardian $guardian = null, Dueno $dueno = null, $desde = "", $hasta = "")
