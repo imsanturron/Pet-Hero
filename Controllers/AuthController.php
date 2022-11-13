@@ -32,11 +32,9 @@ class AuthController
       $bool = false;
       $users = new UserDAO;
       $tipo = $users->getTipoByUsername($username);
-      //print_r($tipo);
 
       if ($tipo) {  ///hacer validaciones cuando inician sesion, como de fecha por disponibilidades, etc.
         if ($tipo == 'g') {
-          //echo "aaaaaaaaaaaaaaaaaaaaaaaaaaaa";
           $guardianes = new GuardianDAO;
           $guardianx = new Guardian;
           $guardianx = $guardianes->getByUsername($username);
@@ -45,26 +43,25 @@ class AuthController
             $_SESSION["loggedUser"] = $guardianx;
             $_SESSION["tipo"] = "g";
             $this->validacionesLogin();
-            ///alerta buena
+            $alert = new Alert("success", "Bienvenido!");
             require_once(VIEWS_PATH . "loginGuardian.php");
           } else {
-            $alert = new Alert("warning", "Fecha invalida");
+            $alert = new Alert("warning", "Usuario o password incorrecto");
             $this->Index($alert);
           }
         } else {
           $duenos = new DuenoDAO;
           $duenox = new Dueno;
           $duenox = $duenos->getByUsername($username);
-          //var_dump($duenox);
           if ($duenox && $duenox->getPassword() == $password) {
             $bool = true;
             $_SESSION["loggedUser"] = $duenox;
             $_SESSION["tipo"] = "d";
             $this->validacionesLogin();
-            ///alerta buena
+            $alert = new Alert("success", "Bienvenido!");
             require_once(VIEWS_PATH . "loginDueno.php");
           } else {
-            $alert = new Alert("warning", "Fecha invalida");
+            $alert = new Alert("warning", "Usuario o password incorrecto");
             $this->Index($alert);
           }
         }
@@ -74,11 +71,12 @@ class AuthController
       $this->Index($alert);
     }
     if ($bool == false) {
-      $alert = new Alert("warning", "Error iniciando sesion");
+      $alert = new Alert("warning", "Datos incorrectos en el login");
       $this->Index($alert);
     }
   }
 
+  /* Validaciones que se hacen cada vez que el usuario inicia sesion */
   private function validacionesLogin() //agrandar luego con pagos
   {    ///CAMBIAR TEMA RESERVAS CON VALIDACIONES HECHAS PARA RESEÑA
     try { ///pasar reservas a actual
@@ -97,8 +95,8 @@ class AuthController
           if (!$guardian->getDisponibilidadFin() && !$guardian->getDisponibilidadInicio()) {
             $solicitudesABorrar = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
 
-            if (isset($solicitudesABorrar)) {
-              foreach ($solicitudesABorrar as $soli) {  //borrar intermedias
+            if (isset($solicitudesABorrar)) { //borrar solicitudes, intermedias y pagos
+              foreach ($solicitudesABorrar as $soli) {  
                 $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
                 if ($soli->getEsPago())
                   $pagoDAO->removePagoById($soli->getId());
@@ -185,7 +183,10 @@ class AuthController
             }
           }
         }
-      }
+      } else {
+        $alert = new Alert("warning", "Debe iniciar sesion");
+        $this->Index($alert);
+    }
     } catch (Exception $ex) {
       $alert = new Alert("warning", "error en base de datos");
       $this->index($alert);

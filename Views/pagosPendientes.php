@@ -196,7 +196,7 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                                                 <input type="hidden" name="idPago" value="<?php echo $pago->getId(); ?>">
                                                 <input type="hidden" name="primerPago" value="<?php echo $pago->getPrimerPagoReserva(); ?>">
                                                 <button type="submit" name="operacion" value="pagar" class="btn btn-danger" ?> Pagar </button>
-                                                <?php if ($pago->getPrimerPagoReserva() == null) { ?>
+                                                <?php if ($pago->getPrimerPagoReserva() == null || $pago->getPrimerPagoReserva() == false) { ?>
                                                     <button type="submit" name="operacion" value="cancelar" class="btn btn-danger" ?> Cancelar </button>
                                             </td>
                                     <?php }

@@ -58,6 +58,37 @@ class DuenoDAO
         }
     }
 
+    function GetByDni($dni)
+    {
+        try {
+            $dueno = null;
+
+            $query = "SELECT * FROM " . $this->tableName . " WHERE dni = :dni";
+
+            $parameters["dni"] = $dni;
+
+            $this->connection = Connection::GetInstance();
+
+            $resultSet = $this->connection->Execute($query, $parameters);
+
+            foreach ($resultSet as $row) {
+                $dueno = new Dueno();
+                $dueno->setNombre($row["nombre"]);
+                $dueno->setUserName($row["username"]);
+                $dueno->setPassword($row["password"]);
+                $dueno->setDni($row["dni"]);
+                $dueno->setEmail($row["email"]);
+                $dueno->setDireccion($row["direccion"]);
+                $dueno->setTelefono($row["telefono"]);
+                $dueno->setTipo($row["tipo"]);
+            }
+
+            return $dueno;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
     function getByUsername($username)
     {
         try {
