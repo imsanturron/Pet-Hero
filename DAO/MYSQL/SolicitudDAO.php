@@ -234,7 +234,6 @@ class SolicitudDAO
 
             $resultSet = $this->connection->Execute($query, $parameters);
 
-
             return true;
         } catch (Exception $ex) {
             throw $ex;

@@ -17,7 +17,7 @@ class MascotaController
         $this->mascotaDAO = new MascotaDAO();
     }
 
-    public function Index($message = "")
+    public function Index(Alert $alert = null)
     {
         require_once(VIEWS_PATH . "home.php");
     }
@@ -27,6 +27,7 @@ class MascotaController
         require_once(VIEWS_PATH . "loginDueno.php");
     }
 
+    /* Agrega y guarda una nueva mascota. Varias validaciones en los files. */
     public function Add($especie, $nombre, $raza, $tamano, $fotoM, $planVacunacion, $video = null, $observaciones = "")
     {
         $error = false;
@@ -143,10 +144,13 @@ class MascotaController
                 $alert = new Alert("warning", "Mascota agregada y error subiendo algun file");
 
             $this->loginDueno($alert);
-        } else
-            $this->Index();
+        } else {
+            $alert = new Alert("warning", "Debe iniciar sesion para acceder a sus funciones");
+            $this->Index($alert);
+        }
     }
 
+    /* Borrar una mascota */
     public function Remove($id)
     {
         if (isset($_SESSION["loggedUser"])) { ///borrar tambien intermedias
@@ -161,7 +165,9 @@ class MascotaController
             else
                 $alert = new Alert("warning", "Error borrando la mascota");
             $this->loginDueno($alert);
-        } else
-            $this->Index();
+        } else {
+            $alert = new Alert("warning", "Debe iniciar sesion para acceder a sus funciones");
+            $this->Index($alert);
+        }
     }
 }
