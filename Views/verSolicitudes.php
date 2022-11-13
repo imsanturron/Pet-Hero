@@ -1,4 +1,5 @@
 <?php
+require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
 
 use Config\Autoload as Autoload;
@@ -13,27 +14,23 @@ use Models\Mascota as Mascota;
 
 if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
     if ($_SESSION['tipo']  == 'g') {
-        $guardian = $_SESSION['loggedUser'];
-        $solicitudes = new SolicitudDAO();
-        //$solis = $solicitudes->GetAll(); ///get all by id desp
-        $solis = $solicitudes->getSolicitudesByDniGuardian($guardian->getDni());
-        $mascota = new MascotaDAO(); ///get all by id desp
-        $mascotas = $mascota->GetAll(); ///get all by id desp
-        //$mascotas = $mascota->getMascotasByIdSolicitud();
-        $mascXsoliDAO = new SolixMascDAO();
-        $mascXsoli = $mascXsoliDAO->GetAll();
-        $ingreso = false; //SIRVE PARA VERIFICAR SI EL DUEÑO TIENE ALGUNA SOLICITUD
+        //$guardian = $_SESSION['loggedUser'];
+        //$solicitudes = new SolicitudDAO();
+        //$solis = $solicitudes->getSolicitudesByDniGuardian($guardian->getDni());
+        //$mascota = new MascotaDAO(); ///get all by id desp
+        //$mascotas = $mascota->GetAll(); ///get all by id desp
+        ////$mascotas = $mascota->getMascotasByIdSolicitud();
+        //$mascXsoliDAO = new SolixMascDAO();
+        //$mascXsoli = $mascXsoliDAO->GetAll();
     } else {
-        $dueno = $_SESSION['loggedUser'];
-        $solicitudes = new SolicitudDAO();
-        //$solis = $solicitudes->GetAll(); ///get all by id desp
-        $solis = $solicitudes->getSolicitudesByDniDueno($dueno->getDni());
-        $mascota = new MascotaDAO(); ///get all by id desp
-        $mascotas = $mascota->GetAll(); ///get all by id desp
-        //$mascotas = $mascota->getMascotasByIdSolicitud();
-        $mascXsoliDAO = new SolixMascDAO();
-        $mascXsoli = $mascXsoliDAO->GetAll();
-        $ingreso = false; //SIRVE PARA VERIFICAR SI EL DUEÑO TIENE ALGUNA SOLICITUD
+        //$dueno = $_SESSION['loggedUser'];
+        // $solicitudes = new SolicitudDAO();
+        // $solis = $solicitudes->getSolicitudesByDniDueno($dueno->getDni());
+        // $mascota = new MascotaDAO(); ///get all by id desp
+        // $mascotas = $mascota->GetAll(); ///get all by id desp
+        // //$mascotas = $mascota->getMascotasByIdSolicitud();
+        // $mascXsoliDAO = new SolixMascDAO();
+        // $mascXsoli = $mascXsoliDAO->GetAll();
     }
 } ?>
 
@@ -72,56 +69,57 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                                 <?php } ?>
 
                                 <?php foreach ($solis as $solicitud) {
-                                    if ($solicitud->getEsPago() == false || $solicitud->getEsPago() == null) {
-                                        $count = 0;
+                                    // if ($solicitud->getEsPago() == false || $solicitud->getEsPago() == null) { en controller
+                                    $count = 0;
                                 ?>
+                                    <?php foreach ($mascXsoli as $tabla) {
+                                        if ($tabla->getIdSolicitud() == $solicitud->getId()) {
+                                            $idMascotaX = $tabla->getIdMascota();
+                                            foreach ($mascotas as $masc) {
+                                                if ($masc->getId() == $idMascotaX) {
+                                                    $count++;
+                                                }
+                                            } //contar para hacer el rowspan
+                                        }
+                                    } ?>
+                                    <tr>
+                                        <td rowspan="<?php echo $count; ?>">
+                                            <input type="hidden" name="solicitudId" value="<?php echo $solicitud->getId(); ?>">
+                                            <?php if ($_SESSION['tipo'] == 'g') { ?>
+                                                <button type="submit" name="operacion" value="aceptar" class="btn btn-danger"> Aceptar </button>
+                                                <button type="submit" name="operacion" value="rechazar" class="btn btn-danger"> Rechazar </button>
+                                            <?php } else { ?>
+                                                <button type="submit" class="btn btn-danger"> Cancelar </button>
+                                            <?php } ?>
+                                        </td>
+                                        <td rowspan="<?php echo $count; ?>"><?php echo $solicitud->getNombreDueno(); ?></td>
+                                        <td rowspan="<?php echo $count; ?>"><?php echo $solicitud->getNombreGuardian(); ?></td>
+                                        <td rowspan="<?php echo $count; ?>"><?php echo $solicitud->getFechaInicio(); ?></td>
+                                        <td rowspan="<?php echo $count; ?>"><?php echo $solicitud->getFechaFin(); ?></td>
+                                        <td rowspan="<?php echo $count; ?>"><?php echo $solicitud->getDireccionGuardian(); ?></td>
+
+
                                         <?php foreach ($mascXsoli as $tabla) {
-                                            if ($tabla->getIdSolicitud() == $solicitud->getId()) {  ?>
-                                                <?php $idMascotaX = $tabla->getIdMascota();  ?>
-                                        <?php foreach ($mascotas as $masc) {
-                                                    if ($masc->getId() == $idMascotaX) {
-                                                        $count++;
-                                                    }
-                                                } //contar para hacer el rowspan
-                                            }
-                                        } ?>
-                                        <tr>
-                                            <td rowspan="<?php echo $count; ?>">
-                                                <input type="hidden" name="solicitudId" value="<?php echo $solicitud->getId(); ?>">
-                                                <?php if ($_SESSION['tipo'] == 'g') { ?>
-                                                    <button type="submit" name="operacion" value="aceptar" class="btn btn-danger"> Aceptar </button>
-                                                    <button type="submit" name="operacion" value="rechazar" class="btn btn-danger"> Rechazar </button>
-                                                <?php } else { ?>
-                                                    <button type="submit" class="btn btn-danger"> Cancelar </button>
-                                                <?php } ?>
-                                            </td>
-                                            <td rowspan="<?php echo $count; ?>"><?php echo $solicitud->getNombreDueno(); ?></td>
-                                            <td rowspan="<?php echo $count; ?>"><?php echo $solicitud->getNombreGuardian(); ?></td>
-                                            <td rowspan="<?php echo $count; ?>"><?php echo $solicitud->getFechaInicio(); ?></td>
-                                            <td rowspan="<?php echo $count; ?>"><?php echo $solicitud->getFechaFin(); ?></td>
-                                            <td rowspan="<?php echo $count; ?>"><?php echo $solicitud->getDireccionGuardian(); ?></td>
+                                            if ($tabla->getIdSolicitud() == $solicitud->getId()) {
+                                                $idMascotaX = $tabla->getIdMascota();
+                                                foreach ($mascotas as $masc) {
+                                                    if ($masc->getId() == $idMascotaX) { ?>
 
-
-                                            <?php foreach ($mascXsoli as $tabla) {
-                                                if ($tabla->getIdSolicitud() == $solicitud->getId()) {
-                                                    $idMascotaX = $tabla->getIdMascota();
-                                                    foreach ($mascotas as $masc) {
-                                                        if ($masc->getId() == $idMascotaX) { ?>
-
-                                                            <td><?php echo $masc->getNombre(); ?></td>
-                                                            <td><?php echo $masc->getEspecie(); ?></td>
-                                                            <td><?php echo $masc->getRaza(); ?></td>
-                                                            <td><?php echo $masc->getObservaciones(); ?></td> <? //TAMAÑO Y FOTOS 
-                                                                                                                ?>
-                                                            <?php if ($_SESSION['tipo'] == 'g') { ?>
-                                                                <input type="hidden" name="animales[]" value="<?php echo $masc->getId(); ?>">
-                                        </tr>
-        <?php }
-                                                        }
+                                                        <td><?php echo $masc->getNombre(); ?></td>
+                                                        <td><?php echo $masc->getEspecie(); ?></td>
+                                                        <td><?php echo $masc->getRaza(); ?></td>
+                                                        <td><?php echo $masc->getObservaciones(); ?></td> <? //TAMAÑO Y FOTOS 
+                                                                                                            ?>
+                                                        <?php if ($_SESSION['tipo'] == 'g') { ?>
+                                                            <input type="hidden" name="animales[]" value="<?php echo $masc->getId(); ?>">
+                                                        <?php } ?>
+                                    </tr>
+            <?php
                                                     }
                                                 }
                                             }
                                         }
+                                        // }
                                     }
                                 } else {
                                     echo "NO TIENE SOLICITUDES";
@@ -145,3 +143,6 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
         </div>
     </div>
 </main>
+<?php
+require_once(VIEWS_PATH . "footer.php");
+?>

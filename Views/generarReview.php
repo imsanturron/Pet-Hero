@@ -1,4 +1,5 @@
 <?php
+require_once(VIEWS_PATH."header.php");
 include('nav-bar.php');
 
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
@@ -10,15 +11,15 @@ use Models\Reserva as Reserva;
 use Models\Resena as Resena;
 
 if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
-  if ($_SESSION['tipo'] == 'g') {
-    $guardian = $_SESSION['loggedUser'];
-    $reservas = new ReservaDAO();
-    $ress = $reservas->getReservasByDniGuardian($guardian->getDni());
-    $mascota = new MascotaDAO(); ///get all by id desp
-    $mascotas = $mascota->GetAll(); ///get all by id desp
-    $resXmascDAO = new ResxMascDAO();
-    $mascXres = $resXmascDAO->GetAll();
-    $guardianDAO = new GuardianDAO();
+  if ($_SESSION['tipo'] == 'd') {
+    //$dueno = $_SESSION['loggedUser'];
+    //$reservas = new ReservaDAO();
+    //$ress = $reservas->getReservasByDniDueno($dueno->getDni());
+    //$mascota = new MascotaDAO(); ///get all by id desp
+    //$mascotas = $mascota->GetAll(); ///get all by id desp
+    //$resXmascDAO = new ResxMascDAO();
+    //$mascXres = $resXmascDAO->GetAll();
+    //$guardianDAO = new GuardianDAO();
   }
 }
 ?>
@@ -104,3 +105,6 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
     </div>
   </section>
 </main>
+<?php
+require_once(VIEWS_PATH."footer.php");
+?>

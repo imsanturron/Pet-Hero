@@ -1,5 +1,9 @@
-<?php namespace Models;
-class Mascota{
+<?php
+
+namespace Models;
+
+class Mascota
+{
 
     private $dniDueno; //FK
     private $id; //PK
@@ -12,7 +16,7 @@ class Mascota{
     private $video;
     private $planVacunacion;
     //private $ocupada; true false y ver si podemos mandar solicitud con mascota reservada. puede ser intermedia de fechas
-    
+
     public function getNombre()
     {
         return $this->nombre;
@@ -24,7 +28,7 @@ class Mascota{
 
         return $this;
     }
-    
+
     public function getId()
     {
         return $this->id;
@@ -61,18 +65,13 @@ class Mascota{
         return $this;
     }
 
-  
+
     public function getTamano()
     {
         return $this->tamano;
     }
 
-    /**
-     * Set the value of tamano
-     *
-     * @return  self
-     */ 
-    public function setTamano($tamano)
+    public function setTamano($tamano): self
     {
         $this->tamano = $tamano;
 
@@ -84,12 +83,7 @@ class Mascota{
         return $this->observaciones;
     }
 
-    /**
-     * Set the value of observaciones
-     *
-     * @return  self
-     */ 
-    public function setObservaciones($observaciones)
+    public function setObservaciones($observaciones): self
     {
         $this->observaciones = $observaciones;
 
@@ -100,12 +94,7 @@ class Mascota{
         return $this->fotoMascota;
     }
 
-    /**
-     * Set the value of observaciones
-     *
-     * @return  self
-     */ 
-    public function setFotoMascota($fotoMascota)
+    public function setFotoMascota($fotoMascota): self
     {
         $this->fotoMascota = $fotoMascota;
 
@@ -116,12 +105,7 @@ class Mascota{
         return $this->video;
     }
 
-    /**
-     * Set the value of observaciones
-     *
-     * @return  self
-     */ 
-    public function setVideo($video)
+    public function setVideo($video): self
     {
         $this->video = $video;
 
@@ -132,12 +116,7 @@ class Mascota{
         return $this->planVacunacion;
     }
 
-    /**
-     * Set the value of observaciones
-     *
-     * @return  self
-     */ 
-    public function setPlanVacunacion($planVacunacion)
+    public function setPlanVacunacion($planVacunacion): self
     {
         $this->planVacunacion = $planVacunacion;
 
@@ -168,4 +147,3 @@ class Mascota{
         return $this;
     }
 }
-?>

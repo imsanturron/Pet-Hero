@@ -1,4 +1,5 @@
 <?php
+require_once(VIEWS_PATH."header.php");
 include('nav-bar.php');
 ?>
 <!-- ################################################################################################ -->
@@ -23,12 +24,12 @@ include('nav-bar.php');
           <table>
             <thead>
               <tr>
-                <th>Especie</th>
-                <th>Nombre</th>
-                <th>Raza</th>
-                <th>Tamaño</th>
-                <th>Imagen</th> 
-                <th>Plan de vacunacion</th> 
+                <th>Especie*</th>
+                <th>Nombre*</th>
+                <th>Raza*</th>
+                <th>Tamaño*</th>
+                <th>Imagen*</th> 
+                <th>Plan de vacunacion*</th> 
                 <th>Video</th> 
                 <th>Observaciones</th>
               </tr>
@@ -80,3 +81,6 @@ include('nav-bar.php');
 <div class="alert alert-<?php echo $alert->getTipo() ?>">
   <?php echo $alert->getMensaje() ?>
 </div>
+<?php
+require_once(VIEWS_PATH."footer.php");
+?>

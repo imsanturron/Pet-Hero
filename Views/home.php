@@ -1,3 +1,6 @@
+<?php
+require_once(VIEWS_PATH."header.php");
+?>
 <div id="pageintro" class="hoc clear">
   <article class="center">
     <h3 class="heading underline">PetHero</h3>
@@ -9,3 +12,6 @@
   <input type="submit" class="btn" value="Registrarse dueño" name="usuario" style="background-color:#DC8E47;color:white;" />
   <input type="submit" class="btn" value="Registrarseguardian" name="usuario" style="background-color:#DC8E47;color:white;" />
 </form>
+<?php
+require_once(VIEWS_PATH."footer.php");
+?>

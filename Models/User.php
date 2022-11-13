@@ -15,9 +15,6 @@ class User
     protected $direccion;
     protected $tipo; //char = "g" || "d"
     protected $telefono;
-    //protected $solicitudes; ///array ids
-    //protected $reservas; ///array ids
-    
     //protected $pais;
 
     function __construct()
@@ -118,57 +115,4 @@ class User
 
         return $this;
     }
-
-
-    /*public function getSolicitudes()
-    {
-        return $this->solicitudes;
-    }
-
-    public function getSolicitudById($uid)
-    {
-        foreach ($this->solicitudes as $sol) {
-            if ($sol->getId() == $uid)
-                return $sol;
-        }
-        return null;
-    }
-
-    public function setSolicitudes($solicitudes): self
-    {
-        $this->solicitudes = $solicitudes;
-
-        return $this;
-    }
-
-    public function addSolicitud(Solicitud $solicitud)
-    {
-        array_push($this->solicitudes, $solicitud);
-    }
-
-    public function getReservas()
-    {
-        return $this->reservas;
-    }
-
-    public function getReservaById($uid)
-    {
-        foreach ($this->reservas as $res) {
-            if ($res->getId() == $uid)
-                return $res;
-        }
-        return null;
-    }
-
-    public function setReservas($reservas): self
-    {
-        $this->reservas = $reservas;
-
-        return $this;
-    }
-
-    public function addReserva(Reserva $reserva)
-    {
-        array_push($this->reservas, $reserva);
-    }*/
 }

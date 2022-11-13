@@ -24,10 +24,7 @@ class DuenoDAO
             $parameters["email"] = $dueno->getEmail();
             $parameters["direccion"] = $dueno->getDireccion();
             $parameters["telefono"] = $dueno->getTelefono();
-            //$parameters["mascotas"] = $dueno->getMascotas();
             $parameters["tipo"] = $dueno->getTipo();
-            //$parameters["solicitudes"] = $dueno->getSolicitudes();
-            //$parameters["reservas"] = $dueno->getReservas();
             $this->connection = Connection::GetInstance();
             $this->connection->ExecuteNonQuery($query, $parameters);
         } catch (Exception $ex) {
@@ -52,13 +49,41 @@ class DuenoDAO
                 $dueno->setEmail($row["email"]);
                 $dueno->setDireccion($row["direccion"]);
                 $dueno->setTelefono($row["telefono"]);
-                //$dueno->setMascotas($row["mascotas"]);
                 $dueno->setTipo($row["tipo"]);
-                //$dueno->setSolicitudes($row["solicitudes"]);
-                //$dueno->setReservas($row["reservas"]);
                 array_push($duenoList, $dueno);
             }
             return $duenoList;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    function GetByDni($dni)
+    {
+        try {
+            $dueno = null;
+
+            $query = "SELECT * FROM " . $this->tableName . " WHERE dni = :dni";
+
+            $parameters["dni"] = $dni;
+
+            $this->connection = Connection::GetInstance();
+
+            $resultSet = $this->connection->Execute($query, $parameters);
+
+            foreach ($resultSet as $row) {
+                $dueno = new Dueno();
+                $dueno->setNombre($row["nombre"]);
+                $dueno->setUserName($row["username"]);
+                $dueno->setPassword($row["password"]);
+                $dueno->setDni($row["dni"]);
+                $dueno->setEmail($row["email"]);
+                $dueno->setDireccion($row["direccion"]);
+                $dueno->setTelefono($row["telefono"]);
+                $dueno->setTipo($row["tipo"]);
+            }
+
+            return $dueno;
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -87,40 +112,10 @@ class DuenoDAO
                 $dueno->setDireccion($row["direccion"]);
                 $dueno->setTelefono($row["telefono"]);
                 $dueno->setTipo($row["tipo"]);
-
-                ////////
             }
 
             return $dueno;
         } catch (Exception $ex) {
-            throw $ex;
-        }
-    }
-
-
-    public function modificarPerfil(Dueno $dueno){
-
-        try {
-
-                $query = "UPDATE ".$this->tableName." SET username= :username, password= :password,nombre= :nombre,dni= :dni,email= :email, direccion= :direccion, telefono= :telefono 
-                 WHERE dni = ". $_SESSION["dni"].";";
-
-
-                 $parameters["username"] = $dueno->getNombre();
-                 $parameters["password"] = $dueno->getPassword();
-                 $parameters["nombre"] = $dueno->getNombre();
-                 $parameters["dni"] = $dueno->getDni();
-                 $parameters["email"] = $dueno->getEmail();
-                 $parameters["direccion"] = $dueno->getDireccion();
-                 $parameters["telefono"] = $dueno->getTelefono();
-
-  
-        
-            $this->connection = Connection::GetInstance();
-
-            $this->connection->ExecuteNonQuery($query, $parameters);
-
-        } catch (Excepcion $ex){
             throw $ex;
         }
     }

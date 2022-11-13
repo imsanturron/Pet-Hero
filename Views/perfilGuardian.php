@@ -1,4 +1,5 @@
 <?php
+require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
 ?>
 <main class="py-5">
@@ -21,7 +22,7 @@ include('nav-bar.php');
                 </thead>
                 <tbody>
                     <form action="<?php echo FRONT_ROOT ?>Home/cambiarPerfil" method="POST">
-                        <?php if (isset($_SESSION["loggedUser"])) { ?>
+                        <?php if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == 'g') { ?>
                             <td> <?php echo $_SESSION["loggedUser"]->getNombre() . "<br>"; ?> </td>
                             <td><?php echo $_SESSION["loggedUser"]->getUserName(); ?></td>
                             <td><?php echo "***"; ?></td>
@@ -43,3 +44,6 @@ include('nav-bar.php');
             </table>
         </div>
     </section>
+    <?php
+    require_once(VIEWS_PATH . "footer.php");
+    ?>
