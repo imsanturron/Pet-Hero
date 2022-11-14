@@ -142,6 +142,47 @@ class DuenoDAO
             throw $ex;
         }
     }
+    function getTelefonos() /////
+    {
+        try {
+            $telefonoList = array();
+            $query = "SELECT telefono FROM " . $this->tableName;
+            $this->connection = Connection::GetInstance();
+            $resultSet = $this->connection->Execute($query);
+
+            foreach ($resultSet as $row) {
+                $dueno = new Dueno();
+                $dueno->setTelefono($row["telefono"]);
+                array_push($telefonoList, $dueno);
+            }
+            return $telefonoList;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public function updateDatosDueno($username, $password, $nombre, $email, $direccion, $telefono){
+        try {
+            $query = "UPDATE " . $this->tableName . " SET username  = :username, password = :password,
+             nombre = :nombre, email = :email, direccion = :direccion, telefono = :telefono WHERE dni = :dni;";
+
+            $parameters["username"] = $username;
+            $parameters["password"] = $password;
+            $parameters["nombre"] = $nombre;
+            $parameters["email"] = $email;
+            $parameters["direccion"] = $direccion;
+            $parameters["telefono"] = $telefono;
+            $parameters["dni"] = $_SESSION["loggedUser"]->getDni();
+
+            $this->connection = Connection::GetInstance();
+
+            $this->connection->ExecuteNonQuery($query, $parameters);
+            return true;
+        } catch (Exception $ex) {
+            return false;
+            //throw $ex;
+        }
+    }
 
     /*protected function parseToObject($value) { //REVISAR BASTANTE
 			$value = is_array($value) ? $value : [];

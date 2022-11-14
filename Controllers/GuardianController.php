@@ -185,6 +185,8 @@ class GuardianController
                     $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
                     //linea anterior asi porque el '$_SESSION["loggedUser"]' no se actualiza con updates
                     require_once(VIEWS_PATH . "cambiarTamanoACuidar.php");
+                } else if ($opcion == "modificarDatos") {
+                    require_once(VIEWS_PATH . "modificarDatos.php");
                 }
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
@@ -316,25 +318,41 @@ class GuardianController
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
             try {
-                $mascotas = new MascotaDAO();
-                $arrayMascotas = $mascotas->getArrayByIds($animales);
                 if ($operacion == "aceptar") {
-                    $guardianDAO = new GuardianDAO();
-                    $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
+                    $mascotas = new MascotaDAO();
+                    $arrayMascotas = $mascotas->getArrayByIds($animales);
                     $solicitud = new SolicitudDAO();
+                    $soli = $solicitud->GetById($solicitudId);
                     $solicitudXmasc = new SolixMascDAO();
 
-                    $soli = $solicitud->GetById($solicitudId);
-                    $pagos = new PagoDAO();
-                    $pago = new Pago($soli, $guardian);
-                    $solicitud->updateAPagoById($soli->getId()); //podemos ver si bien
-                    $pagos->Add($pago); //podemos ver si bien
+                    $valid = UtilsController::ValidarMismaRaza( //con mascotas que puede ya haber reservadas
+                        $arrayMascotas,
+                        $soli->getDniGuardian(),
+                        $soli->getFechaInicio(),
+                        $soli->getFechaFin()
+                    );
+                    $valid2 = UtilsController::VerifMascotaNoEstaReservadaEnFecha( 
+                        $arrayMascotas,
+                        $soli->getFechaInicio(),
+                        $soli->getFechaFin()
+                    );
+                    if ($valid && $valid2) {
+                        $guardianDAO = new GuardianDAO();
+                        $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
 
-                    //if ($resul && $resul2) { ///arreglar esto
-                    $alert = new Alert("success", "Solicitud aceptada, pago pendiente para reservar");
-                    //} else {
-                    //    $alert = new Alert("warning", "No se borro alguna solicitud");
-                    //}
+                        $pagos = new PagoDAO();
+                        $pago = new Pago($soli, $guardian);
+                        $solicitud->updateAPagoById($soli->getId()); //podemos ver si bien
+                        $pagos->Add($pago); //podemos ver si bien
+
+                        $alert = new Alert("success", "Solicitud aceptada, pago pendiente para reservar");
+                    } else {
+                        //el guardian tiene mascotas incompatibles en la fecha o la mascota esta reservada
+                        $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($solicitudId);
+                        $solicitud->removeSolicitudById($solicitudId);
+
+                        $alert = new Alert("warning", "Tiene mascotas incompatibles en la fecha o la mascota esta reservada");
+                    }
                 } else if ($operacion == "rechazar") {
 
                     $solicitud = new SolicitudDAO();
