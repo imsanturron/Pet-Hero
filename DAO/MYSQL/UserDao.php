@@ -105,12 +105,39 @@ class UserDAO
     }
   }
 
+  function getTipoByDni($dni) /////
+  {
+    try {
+      $usuario = null;
+
+      $query = "SELECT tipo FROM " . $this->tableName . " WHERE dni = :dni";
+
+      $parameters["dni"] = $dni;
+
+      $this->connection = Connection::GetInstance();
+
+      $resultSet = $this->connection->Execute($query, $parameters);
+
+      foreach ($resultSet as $row) {
+        $usuario = new User();
+        $usuario->setTipo($row["tipo"]);
+      }
+
+      if ($usuario)
+        return $usuario->getTipo();
+      else
+        return null;
+    } catch (Exception $ex) {
+      throw $ex;
+    }
+  }
+
   function getByUsername($username) /////
   {
     try {
       $usuario = null;
 
-      $query = "SELECT tipo FROM " . $this->tableName . " WHERE username = :username";
+      $query = "SELECT * FROM " . $this->tableName . " WHERE username = :username";
 
       $parameters["username"] = $username;
 
@@ -154,7 +181,6 @@ class UserDAO
         $usuario->setDni($row["dni"]);
         $usuario->setEmail($row["email"]);
         $usuario->setTipo($row["tipo"]);
-        ////////
       }
 
       return $usuario;
@@ -177,24 +203,28 @@ class UserDAO
 
       $resultSet = $this->connection->Execute($query, $parameters);
 
-
       return true;
     } catch (Exception $ex) {
       throw $ex;
     }
   }
 
-  ///////////////////////////////////////////FUNCIONES JSONJJSONJSON/////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  public function updateDatosUser($username, $password, $email){
+    try {
+      $query = "UPDATE " . $this->tableName . " SET username  = :username, password = :password, email = :email WHERE dni = :dni;";
 
-  /*public function getByPais($dni) 
-    {
-      $this->retrieveData();
-      foreach($this->usuarioList as $item) 
-      {
-        if($item->getPais() == $dni)
-          return $dni;
-      }
-      return null;
-    }*/
+      $parameters["username"] = $username;
+      $parameters["password"] = $password;
+      $parameters["email"] = $email;
+      $parameters["dni"] = $_SESSION["loggedUser"]->getDni();
+
+      $this->connection = Connection::GetInstance();
+
+      $this->connection->ExecuteNonQuery($query, $parameters);
+      return true;
+  } catch (Exception $ex) {
+      return false;
+      //throw $ex;
+  }
+}
 }

@@ -26,6 +26,19 @@ class UtilsController
     require_once(VIEWS_PATH . "home.php");
   }
 
+  public function LoginDueno(Alert $alert = null)
+  {
+    if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == 'd')
+      require_once(VIEWS_PATH . "loginDueno.php");
+  }
+
+  public function LoginGuardian(Alert $alert = null)
+  {
+    if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == 'g')
+      require_once(VIEWS_PATH . "loginGuardian.php");
+  }
+
+
   /* Valida fechas con muchas posibles variantes explicadas mas abajo. */
   public static function ValidarFecha($finic, $ffin = null, $fmedio = null, $despDeHoy = false) //agregar $fmedio, entre 2 fechas. poner despues de ffin en parametros, o ultimo, ver despues.
   {
@@ -98,8 +111,8 @@ class UtilsController
             $mascotas = new MascotaDAO();
             foreach ($reservas as $res) {
               if (
-                UtilsController::ValidarFecha($res->getFechaInicio(), $desde)
-                && UtilsController::ValidarFecha($res->getFechaFin(), $hasta)
+                UtilsController::ValidarFecha($res->getFechaInicio(), $res->getFechaFin(), $desde)
+                || UtilsController::ValidarFecha($res->getFechaInicio(), $res->getFechaFin(), $hasta)
               ) {
                 $idMascota = $mascotasXreserva->getIdMascotaByIdReserva($res->getId());
                 $mascotaVerRaza = $mascotas->GetById($idMascota);
@@ -166,7 +179,7 @@ class UtilsController
   }
 
   /* Valida que las mascotas que enviamos en una solicitud no esten ya reservadas
-    en el rango de fechas que la solicitud tiene. Ya estarian reservadas para esas fechas. */
+    en el rango de fechas que la solicitud tiene. */
   public static function VerifMascotaNoEstaReservadaEnFecha($arrayMascotas, $fini, $ffin)
   {
     if (isset($_SESSION["loggedUser"])) {
@@ -192,6 +205,179 @@ class UtilsController
       } catch (Exception $ex) {
         $alert = new Alert("warning", "error en base de datos");
         UtilsController::Index($alert);
+      }
+    } else {
+      $alert = new Alert("warning", "Debe iniciar sesion");
+      UtilsController::Index($alert);
+    }
+  }
+
+  /* Verifica que las mascotas no esten ya reservadas y que sean de la misma raza si el guardian 
+  tuviera reserva en fecha. En caso de avanzar, borrara las solicitudes y pagos para la fecha de 
+  la solicitud(futura reserva) que no sean compatibles, ya que solicitan un cuidado de mascotas de
+  distinta raza al de las mascotas de esta solicitud que sera reserva. */
+  public static function ValidacionesSoliPagoAReserva($arrayMascotas, $dniGuard, $idSoliRes, $fini, $ffin)
+  {
+    if (isset($_SESSION["loggedUser"])) {
+      try {
+        $valid = UtilsController::VerifMascotaNoEstaReservadaEnFecha($arrayMascotas, $fini, $ffin);
+        $valid2 = UtilsController::ValidarMismaRaza($arrayMascotas, $dniGuard, $fini, $ffin);
+        if ($valid && $valid2) {
+          $solicitudDAO = new SolicitudDAO();
+          $mascotaDAO = new  MascotaDAO();
+          $mascXsoliDAO = new SolixMascDAO();
+          $pagoDAO = new PagoDAO();
+          $solicitudes = $solicitudDAO->getSolicitudesByDniGuardian($dniGuard);
+
+          if (isset($solicitudes) && !empty($solicitudes)) {
+            foreach ($solicitudes as $soli) {
+              if ($soli->getId() != $idSoliRes) { //si no es la solicitud actual
+                if (
+                  UtilsController::ValidarFecha($soli->getFechaInicio(), $soli->getFechaFin(), $fini) //cambia con fmedio en validar fecha
+                  || UtilsController::ValidarFecha($soli->getFechaInicio(), $soli->getFechaFin(), $ffin)
+                ) { //si esta en el rango de esta futura reserva
+                  $idMascota = $mascXsoliDAO->getIdMascotaByIdSolicitud($soli->getId());
+                  $mascotaVerRaza = $mascotaDAO->GetById($idMascota);
+                  if ($mascotaVerRaza->getRaza() != $arrayMascotas[0]->getRaza()) { //si son distinta raza
+                    $mascXsoliDAO->removeSolicitudMascIntByIdSolicitud($idSoliRes); //borrar intermedia masc-soli
+                    if ($soli->getEsPago()) //si la solicitud habia sido aceptada
+                      $pagoDAO->removePagoById($soli->getId());
+
+                    $solicitudDAO->removeSolicitudById($idSoliRes); //borrar solicitud
+                  }
+                }
+              }
+            }
+          }
+          return true;
+        } else
+          return false;
+      } catch (Exception $ex) {
+        $alert = new Alert("warning", "error en base de datos");
+        UtilsController::Index($alert);
+      }
+    } else {
+      $alert = new Alert("warning", "Debe iniciar sesion");
+      UtilsController::Index($alert);
+    }
+  }
+
+  /* Valida que si el usuario cambia sus datos, los unique permanezcan como unicos en toda
+  la base de datos. */
+  private function ValidarNuevosDatosUsuario($username = null, $email = null, $telefono = null) ///validaciones en el registro
+  {
+    //array merge telefonos
+    if (isset($_SESSION["loggedUser"])) {
+      try {
+        $users = new UserDAO;
+        $c = null;
+        $b = null;
+        $a = null;
+        if ($users->getAll() != null) {
+          if ($username)
+            $a = $users->getByUsername($username);
+          if ($email)
+            $b = $users->getByEmail($email);
+          if ($telefono) {
+            $guardianDAO = new GuardianDAO();
+            $duenoDAO = new DuenoDAO();
+            $telefonos = array();
+            $tels = $guardianDAO->getTelefonos();
+            foreach ($tels as $t) {
+              array_push($telefonos, $t);
+            }
+            $tels = $duenoDAO->getTelefonos();
+            foreach ($tels as $t) {
+              array_push($telefonos, $t);
+            }
+            foreach ($telefonos as $telef) {
+              if ($telefono == $telef) {
+                $c = true;
+              }
+            }
+          }
+          if ($a != null || $b != null || $c != null)
+            return false;
+          else
+            return true;
+        }
+        return true;
+      } catch (Exception $ex) {
+        $alert = new Alert("warning", "error en base de datos");
+        UtilsController::index($alert);
+      }
+    } else {
+      $alert = new Alert("warning", "Debe iniciar sesion");
+      UtilsController::Index($alert);
+    }
+  }
+
+  /* Un usuario podra cambiar alguno, todos o ninguno de los atributos que se muestran por parametro */
+  public function modificarDatos($username = null, $password = null, $nombre = null, $email = null, $direccion = null, $telefono = null)
+  {
+    if (isset($_SESSION["loggedUser"])) {
+      try {
+        if ($username || $email || $telefono)
+          $valid = $this->ValidarNuevosDatosUsuario($username, $email, $telefono);
+        if ($valid) {
+          if ($_SESSION["tipo"] == 'd') {
+
+            $duenoDAO = new DuenoDAO();
+            $dueno = $duenoDAO->GetByDni($_SESSION["loggedUser"]->getDni());
+            if (!$username)
+              $username = $dueno->getUserName();
+            if (!$password)
+              $password = $dueno->getPassword();
+            if (!$nombre)
+              $nombre = $dueno->getNombre();
+            if (!$email)
+              $email = $dueno->getEmail();
+            if (!$direccion)
+              $direccion = $dueno->getDireccion();
+            if (!$telefono)
+              $telefono = $dueno->getTelefono();
+            $duenoDAO->updateDatosDueno($username, $password, $nombre, $email, $direccion, $telefono);
+
+            $usuarioDAO = new UserDAO();
+            $usuarioDAO->updateDatosUser($username, $password, $email);
+
+            $alert = new Alert("success", "Datos actualizados!");
+            $this->loginDueno($alert);
+          } else {
+            ///guardian
+            $guardianDAO = new GuardianDAO();
+            $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
+            if (!$username)
+              $username = $guardian->getUserName();
+            if (!$password)
+              $password = $guardian->getPassword();
+            if (!$nombre)
+              $nombre = $guardian->getNombre();
+            if (!$email)
+              $email = $guardian->getEmail();
+            if (!$direccion)
+              $direccion = $guardian->getDireccion();
+            if (!$telefono)
+              $telefono = $guardian->getTelefono();
+
+            $guardianDAO->updateDatosGuardian($username, $password, $nombre, $email, $direccion, $telefono);
+
+            $usuarioDAO = new UserDAO();
+            $usuarioDAO->updateDatosUser($username, $password, $email);
+
+            $alert = new Alert("success", "Datos actualizados!");
+            $this->LoginGuardian($alert);
+          }
+        } else {
+          $alert = new Alert("warning", "Username, email o telefono estan utilizados por alguien mas");
+          if ($_SESSION["tipo"] == 'd')
+            $this->LoginDueno($alert);
+          else
+            $this->LoginGuardian($alert);
+        }
+      } catch (Exception $ex) {
+        $alert = new Alert("warning", "error en base de datos");
+        UtilsController::index($alert);
       }
     } else {
       $alert = new Alert("warning", "Debe iniciar sesion");

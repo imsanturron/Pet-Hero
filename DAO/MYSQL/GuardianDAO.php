@@ -189,6 +189,25 @@ class GuardianDAO
         }
     }
 
+    function getTelefonos() /////
+    {
+        try {
+            $telefonoList = array();
+            $query = "SELECT telefono FROM " . $this->tableName;
+            $this->connection = Connection::GetInstance();
+            $resultSet = $this->connection->Execute($query);
+
+            foreach ($resultSet as $row) {
+                $guardian = new Guardian();
+                $guardian->setTelefono($row["telefono"]);
+                array_push($telefonoList, $guardian);
+            }
+            return $telefonoList;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
     function getCantResenasByDni($dni) /////
     {
         try {
@@ -215,6 +234,7 @@ class GuardianDAO
             throw $ex;
         }
     }
+
     function getPuntajeTotalByDni($dni) /////
     {
         try {
@@ -345,6 +365,30 @@ class GuardianDAO
         }
     }
 
+    public function updateDatosGuardian($username, $password, $nombre, $email, $direccion, $telefono)
+    {
+        try {
+            $query = "UPDATE " . $this->tableName . " SET username  = :username, password = :password,
+             nombre = :nombre, email = :email, direccion = :direccion, telefono = :telefono WHERE dni = :dni;";
+
+            $parameters["username"] = $username;
+            $parameters["password"] = $password;
+            $parameters["nombre"] = $nombre;
+            $parameters["email"] = $email;
+            $parameters["direccion"] = $direccion;
+            $parameters["telefono"] = $telefono;
+            $parameters["dni"] = $_SESSION["loggedUser"]->getDni();
+
+            $this->connection = Connection::GetInstance();
+
+            $this->connection->ExecuteNonQuery($query, $parameters);
+            return true;
+        } catch (Exception $ex) {
+            return false;
+            //throw $ex;
+        }
+    }
+
 
     /*function getGuardianesEntreFechas($desde, $hasta)
     {
@@ -384,5 +428,4 @@ class GuardianDAO
             throw $ex;
         }
     }*/
-
 }

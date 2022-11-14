@@ -56,6 +56,28 @@ class SolixMascDAO
         }
     }
 
+    function getIdMascotaByIdSolicitud($idSolicitud) /////
+    {
+        try {
+
+            $query = "SELECT idMascota FROM " . $this->tableName . " WHERE idSolicitud = :idSolicitud"; //Limit 1?
+
+            $parameters["idSolicitud"] = $idSolicitud;
+
+            $this->connection = Connection::GetInstance();
+
+            $resultSet = $this->connection->Execute($query, $parameters);
+
+            foreach ($resultSet as $row) {
+                $soliXmasc = new SolixMasc();
+                $soliXmasc->setIdMascota($row["idMascota"]);
+            }
+            return $soliXmasc->getIdMascota();
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
     function removeSolicitudMascIntById($idIntermedia)
     {
         try {
@@ -93,41 +115,4 @@ class SolixMascDAO
             throw $ex;
         }
     }
-
-    /*function setIdSolicitudEnMascota($mascotas,$idSolicitud) /////
-        {
-          try {
-               
-            foreach($mascotas as $mascota){
-                $query = "UPDATE " . $this->tableName . " SET idSolicitud = :idSolicitud WHERE id = :id;";
-      
-                $parameters["idSoliRes"] = $idSolicitud;
-                $parameters["id"] = $mascota->getId();
-          
-
-            $this->connection = Connection::GetInstance();
-      
-            $resultSet = $this->connection->Execute($query, $parameters);
-      
-            foreach ($resultSet as $row) {
-                $mascota = new Mascota();
-                $mascota->setId($row["id"]);
-                $mascota->setNombre($row["nombre"]);
-                $mascota->setRaza($row["raza"]);
-                $mascota->setEspecie($row["especie"]);
-                $mascota->setDniDueno($row["dueno"]);
-                $mascota->setIdSoliRes($row["idSoliRes"]);
-                $mascota->setTamano($row["tamano"]);
-                $mascota->setObservaciones($row["observaciones"]);
-             
-              ////////
-
-            }
-        }
-           
-      
-          } catch (Exception $ex) {
-            throw $ex;
-          }
-        }*/
 }

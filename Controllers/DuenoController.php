@@ -183,6 +183,8 @@ class DuenoController
                     $reservas = $reservaDAO->GetById(1);
                     echo "<br> <br> <br> ----  ";
                     print_r($reservas);
+                } else if ($opcion == "modificarDatos") {
+                    require_once(VIEWS_PATH . "modificarDatos.php");
                 }
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
@@ -273,7 +275,7 @@ class DuenoController
             try {
                 $mascotas = new MascotaDAO();
                 $arrayMascotas = $mascotas->getArrayByIds($animales);
-                $valid = UtilsController::ValidarMismaRaza($arrayMascotas, $dni, $desde, $hasta); //chequear con mascotas q ya tenga
+                $valid = UtilsController::ValidarMismaRaza($arrayMascotas, $dni, $desde, $hasta); //chequea con mascotas q ya tenga
                 $valid2 = UtilsController::VerifGuardianSoliNuestraRepetida($dni); //ver si acepta pago
                 $valid3 = UtilsController::VerifMascotaNoEstaReservadaEnFecha($arrayMascotas, $desde, $hasta);
                 ///ver ocupacion de mascotas y de guardianes.
@@ -348,32 +350,55 @@ class DuenoController
 
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             try {
-                $mascotas = new MascotaDAO();
-                $arrayMascotas = $mascotas->getArrayByIds($animales);
                 if ($operacion == "pagar") {
                     $pago = new PagoDAO();
+                    $mascotas = new MascotaDAO();
+                    $arrayMascotas = $mascotas->getArrayByIds($animales);
 
                     ///en caso de ser el primer pago...
                     if ($primerPago == false || $primerPago == null) {
                         $solicitud = new SolicitudDAO();
-                        $solicitudXmasc = new SolixMascDAO();
-
                         $soli = $solicitud->GetById($idSoliRes);
-                        $reserva = new Reserva($soli);
-                        $reservaDAO = new ReservaDAO();
-                        $reservaDAO->add($reserva);
-                        $pago->updatePrimerPagoReservaById($idPago);
-                        $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSoliRes);
-                        $resul = $solicitud->removeSolicitudById($idSoliRes);
-                        $intermediaMascotasXreserva = new ResxMascDAO();
-                        $intermediaMascotasXreserva->add($arrayMascotas, $idSoliRes);
+                        $solicitudXmasc = new SolixMascDAO();
+                        $valid = UtilsController::ValidacionesSoliPagoAReserva(
+                            $arrayMascotas,
+                            $soli->getDniGuardian(),
+                            $idSoliRes,
+                            $soli->getFechaInicio(),
+                            $soli->getFechaFin()
+                        );
+                        if ($valid) {
+                            $reserva = new Reserva($soli);
+                            $reservaDAO = new ReservaDAO();
+                            $reservaDAO->add($reserva);
+                            $pago->updatePrimerPagoReservaById($idPago);
+                            $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSoliRes);
+                            $resul = $solicitud->removeSolicitudById($idSoliRes);
+                            $intermediaMascotasXreserva = new ResxMascDAO();
+                            $intermediaMascotasXreserva->add($arrayMascotas, $idSoliRes);
+                            $alert = new Alert("success", "Primer pago realizado");
+                        } else { //no puede hacerse reserva
+                            $solicitud = new SolicitudDAO();
+                            $solicitudXmasc = new SolixMascDAO();
+                            $pago = new PagoDAO();
+                            $solicitud->removeSolicitudById($idSoliRes);
+                            $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSoliRes);
+                            $pago->removePagoById($idPago);
+                            $alert = new Alert("warning", "Pago cancelado. <br>
+                            Tiene mascotas incompatibles en la fecha o la mascota esta reservada");
+
+                            ///ver si mostrar si rechazo pago
+                            ///HACER ALERTAS
+                            $this->login($alert);
+                        }
                     } else { //en caso de hacer el pago final
                         $pago->updatePagoFinalReservaById($idPago);
+                        $alert = new Alert("success", "Primer final realizado");
                     }
 
                     $pago->updateFormaDePagoReservaById($formaDePago, $idPago);
-                    ///HACER ALERTAS
-                    $this->login();
+
+                    $this->login($alert);
                 } else if ($operacion == "cancelar") {
                     $solicitud = new SolicitudDAO();
                     $solicitudXmasc = new SolixMascDAO();
