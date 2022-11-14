@@ -184,6 +184,29 @@ class UserDAO
     }
   }
 
+  public function modificarPerfil(User $user){
+
+    try {
+
+            $query = "UPDATE ".$this->tableName." SET username= :username, password= :password,email= :email
+             WHERE dni = ". $_SESSION["loggedUser"]->getDni() .";";
+
+
+             $parameters["username"] = $user->getUsername();
+             $parameters["password"] = $user->getPassword();
+             $parameters["email"] = $user->getEmail();
+
+
+        $this->connection = Connection::GetInstance();
+
+        $this->connection->ExecuteNonQuery($query, $parameters);
+
+    } catch (Excepcion $ex){
+        throw $ex;
+    }
+}
+
+
   ///////////////////////////////////////////FUNCIONES JSONJJSONJSON/////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

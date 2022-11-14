@@ -11,6 +11,7 @@ include('nav-bar.php');
   <button name="opcion" value="verReservas" type="submit" class="btn" style="background-color:#DC8E47;color:white;">Mis reservas</button>
   <button name="opcion" value="verSolicitudesAceptadasAPagar" type="submit" class="btn" style="background-color:#DC8E47;color:white;">Solicitudes aceptadas y reservas a pagar</button>
   <button name="opcion" value="generarNuevaReview" type="submit" class="btn" style="background-color:#DC8E47;color:white;">Generar nueva review</button>
+  <input type="submit" class="btn" value="modificarDatos" name="opcion" placeholder="Modificar Datos" style="background-color:#DC8E47;color:white;" />
   <button name="opcion" value="pruebas" type="submit" class="btn" style="background-color:#DC8E47;color:white;">Pruebas</button>
 
   <div class="alert alert-<?php echo $alert->getTipo() ?>">

@@ -9,6 +9,7 @@ include('nav-bar.php');
   <button name="opcion" value="verSolicitudes" type="submit" class="btn" style="background-color:#DC8E47;color:white;">Ver solicitudes</button>
   <button name="opcion" value="verPrimerosPagosPendientes" type="submit" class="btn" style="background-color:#DC8E47;color:white;">Ver pagos pendientes</button>
   <button name="opcion" value="cambiarTamanoACuidar" type="submit" class="btn" style="background-color:#DC8E47;color:white;">Cambiar mi tamaño a cuidar</button>
+  <input type="submit" class="btn" value="modificarDatos" name="opcion" placeholder="Modificar Datos" style="background-color:#DC8E47;color:white;" />
 
   <div class="alert alert-<?php echo $alert->getTipo() ?>">
     <?php echo $alert->getMensaje() ?>

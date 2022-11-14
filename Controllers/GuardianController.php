@@ -16,6 +16,7 @@ use DAO\MYSQL\MascotaDAO as MascotaDAO;
 use DAO\MYSQL\ResxMascDAO as ResxMascDAO;
 use DAO\MYSQL\PagoDAO as PagoDAO;
 use Models\Pago as pago;
+use Models\User;
 
 class GuardianController
 {
@@ -185,6 +186,8 @@ class GuardianController
                     $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
                     //linea anterior asi porque el '$_SESSION["loggedUser"]' no se actualiza con updates
                     require_once(VIEWS_PATH . "cambiarTamanoACuidar.php");
+                }else if ($opcion == "modificarDatos") {
+                    require_once(VIEWS_PATH . "modificarDatosGuardianes.php");
                 }
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
@@ -195,6 +198,46 @@ class GuardianController
             $this->home($alert);
         }
     }
+
+    public function modificarDatos($username,$password,$nombre,$email,$direccion,$telefono)
+    {
+
+        $guardian = new Guardian();
+
+        $guardian->setUsername($username);
+        $guardian->setPassword($password);
+        $guardian->setNombre($nombre);
+        $guardian->setDni($_SESSION["loggedUser"]->getDni());
+        $guardian->setEmail($email);
+        $guardian->setDireccion($direccion);
+        $guardian->setTelefono($telefono);
+
+        
+        $usuario = new User();
+        $usuario->setUsername($username);
+        $usuario->setPassword($password);
+        $usuario->setEmail($email);
+        $usuario->setTipo($_SESSION["loggedUser"]->getTipo());
+
+        $users = new UserDAO();
+       
+       
+        $this->guardianDAO->modificarPerfil($guardian);
+        $users->modificarPerfil($usuario);
+ 
+          
+ 
+           
+        echo '<script language="javascript">alert("Su perfil fue modificado");</script>';
+        
+        $this->login();
+
+    }
+
+
+
+
+
 
     /* El guardian podra cambiar su rango de disponibilidad para cuidar mascotas.
     En caso de cambiarlo se haran las validaciones pertinentes, como si la 

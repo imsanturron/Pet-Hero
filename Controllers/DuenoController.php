@@ -21,6 +21,7 @@ use DAO\MYSQL\UserDAO as UserDAO;
 use Models\Pago;
 use Models\Resena;
 use Models\SolixMasc;
+use Models\User;
 
 class DuenoController
 {
@@ -183,6 +184,8 @@ class DuenoController
                     $reservas = $reservaDAO->GetById(1);
                     echo "<br> <br> <br> ----  ";
                     print_r($reservas);
+                } else if ($opcion == "modificarDatos") {
+                    require_once(VIEWS_PATH . "modificarDatosDueños.php");
                 }
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
@@ -193,6 +196,45 @@ class DuenoController
             $this->home($alert);
         }
     }
+
+    
+    public function modificarDatos($username,$password,$nombre,$email,$direccion,$telefono)
+    {
+
+        $dueno = new Dueno();
+
+        $dueno->setUsername($username);
+        $dueno->setPassword($password);
+        $dueno->setNombre($nombre);
+        $dueno->setDni($_SESSION["loggedUser"]->getDni());
+        $dueno->setEmail($email);
+        $dueno->setDireccion($direccion);
+        $dueno->setTelefono($telefono);
+
+        
+        $usuario = new User();
+        $usuario->setUsername($username);
+        $usuario->setPassword($password);
+        $usuario->setEmail($email);
+        $usuario->setTipo($_SESSION["loggedUser"]->getTipo());
+
+        $users = new UserDAO();
+       
+       
+        $this->duenoDAO->modificarPerfil($dueno);
+        $users->modificarPerfil($usuario);
+ 
+          
+ 
+           
+        echo '<script language="javascript">alert("Su perfil fue modificado");</script>';
+        
+        $this->login();
+
+    }
+
+
+
 
     /* Verifica que las fechas solicitadas sean validas y busca los guardianes 
     disponibles en el rango seleccionado para mostrarlos como opcion */

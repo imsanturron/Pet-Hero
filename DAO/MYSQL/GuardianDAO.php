@@ -112,6 +112,32 @@ class GuardianDAO
         }
     }
 
+    public function modificarPerfil(Guardian $guardian){
+
+        try {
+
+                $query = "UPDATE ".$this->tableName." SET username= :username, password= :password,nombre= :nombre,email= :email, direccion= :direccion, telefono= :telefono 
+                 WHERE dni = ". $_SESSION["loggedUser"]->getDni() .";";
+
+
+                 $parameters["username"] = $guardian->getUsername();
+                 $parameters["password"] = $guardian->getPassword();
+                 $parameters["nombre"] = $guardian->getNombre(); 
+                 $parameters["email"] = $guardian->getEmail();
+                 $parameters["direccion"] = $guardian->getDireccion();
+                 $parameters["telefono"] = $guardian->getTelefono();
+
+  
+        
+            $this->connection = Connection::GetInstance();
+
+            $this->connection->ExecuteNonQuery($query, $parameters);
+
+        } catch (Excepcion $ex){
+            throw $ex;
+        }
+    }
+
     function getByUsername($username)
     {
         try {
