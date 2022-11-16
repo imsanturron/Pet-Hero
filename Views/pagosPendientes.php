@@ -42,7 +42,7 @@ use Models\ResxMasc as ResXmasc;
                     <tbody>
                         <?php if (isset($_SESSION['loggedUser']) && $_SESSION['tipo']  == 'd') { ?>
                             <form action="<?php echo FRONT_ROOT ?>Dueno/realizarPago" method="POST">
-                                <?php }
+                                <?php 
 
                             if (isset($pagos) && !empty($pagos)) {
 
@@ -164,6 +164,8 @@ use Models\ResxMasc as ResXmasc;
                             }
                         } else
                             echo "<h2>No tiene pagos pendientes!</h2>";
+                    }else
+                    echo "<h2>Inicia sesion!</h2>";
                         ?>
                             </form>
                     </tbody>

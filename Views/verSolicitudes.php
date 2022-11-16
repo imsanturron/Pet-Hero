@@ -3,7 +3,6 @@ require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
 
 use Config\Autoload as Autoload;
-//use DAO\JSON\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\MascotaDAO as MascotaDAO;
 use DAO\MYSQL\SolicitudDAO as SolicitudDAO;
@@ -99,9 +98,11 @@ use Models\Mascota as Mascota;
                                         }
                                     }
                                 } else {
-                                    echo "NO TIENE SOLICITUDES";
-                                } ?>
-
+                                    echo " <h4>NO HAY SOLICITUDES ENVIADAS!</h4>";
+                                    ?>
+                                Si ha enviado una solicitud anteriormente, puede que esta haya sido aceptada y
+                                deba pagar su confirmacion.
+                                <?php  } ?>
                                 </form>
                     </tbody>
             </table>
