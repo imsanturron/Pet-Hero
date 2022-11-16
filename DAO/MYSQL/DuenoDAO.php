@@ -177,10 +177,8 @@ class DuenoDAO
             $this->connection = Connection::GetInstance();
 
             $this->connection->ExecuteNonQuery($query, $parameters);
-            return true;
         } catch (Exception $ex) {
-            return false;
-            //throw $ex;
+            throw $ex;
         }
     }
 

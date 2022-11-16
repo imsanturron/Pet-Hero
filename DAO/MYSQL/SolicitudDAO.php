@@ -48,7 +48,7 @@ class SolicitudDAO
                 $solicitud->setNombreDueno($row["nombreDueno"]);
                 $solicitud->setDniDueno($row["dniDueno"]);
                 $solicitud->setNombreGuardian($row["nombreGuardian"]);
-                $solicitud->setDniGuardian($row["dniGuardian"]); ///ACA VA EL ALIAS EN ""
+                $solicitud->setDniGuardian($row["dniGuardian"]);
                 $solicitud->setDireccionGuardian($row["direccionGuardian"]);
                 $solicitud->setTelefonoDueno($row["telefonoDueno"]);
                 $solicitud->setTelefonoGuardian($row["telefonoGuardian"]);
@@ -213,8 +213,7 @@ class SolicitudDAO
             $this->connection->ExecuteNonQuery($query, $parameters);
             return true;
         } catch (Exception $ex) {
-            return false;
-            //throw $ex;
+            throw $ex;
         }
     }
 

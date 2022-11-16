@@ -26,14 +26,14 @@ class AuthController
     require_once(VIEWS_PATH . "home.php");
   }
 
-  public function Login($username, $password) //si esta vacio rompe
+  public function Login($username, $password)
   {
     try {
       $bool = false;
       $users = new UserDAO;
       $tipo = $users->getTipoByUsername($username);
 
-      if ($tipo) {  ///hacer validaciones cuando inician sesion, como de fecha por disponibilidades, etc.
+      if ($tipo) {
         if ($tipo == 'g') {
           $guardianes = new GuardianDAO;
           $guardianx = new Guardian;
@@ -77,8 +77,8 @@ class AuthController
   }
 
   /* Validaciones que se hacen cada vez que el usuario inicia sesion */
-  private function validacionesLogin() //agrandar luego con pagos
-  {    ///CAMBIAR TEMA RESERVAS CON VALIDACIONES HECHAS PARA RESEÑA
+  private function validacionesLogin()
+  {
     try { ///pasar reservas a actual
       $bool = false; //actualizar adentro
       if (isset($_SESSION["loggedUser"])) {
@@ -91,23 +91,22 @@ class AuthController
           $solicitud = new SolicitudDAO();
           $soliXmasc = new SolixMascDAO();
 
-          $solicitudes = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
           if (!$guardian->getDisponibilidadFin() && !$guardian->getDisponibilidadInicio()) {
             $solicitudesABorrar = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
 
-            if (isset($solicitudesABorrar)) { //borrar solicitudes, intermedias y pagos
-              foreach ($solicitudesABorrar as $soli) {  
+            if (isset($solicitudesABorrar) && !empty($solicitudesABorrar)) { //borrar solicitudes, intermedias y pagos
+              foreach ($solicitudesABorrar as $soli) {
                 $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
                 if ($soli->getEsPago())
                   $pagoDAO->removePagoById($soli->getId());
               }
               $solicitud->removeSolicitudesByDniGuardian($guardian->getDni());
             }
-            //advertir que disponibilidad es null
+            //advertir que disponibilidad es null ---> notifiaciones
           } else if (!UtilsController::ValidarFecha($guardian->getDisponibilidadFin())) { //ver foranea para reducir
             $solicitudesABorrar = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
 
-            if (isset($solicitudesABorrar)) {
+            if (isset($solicitudesABorrar)  && !empty($solicitudesABorrar)) {
               foreach ($solicitudesABorrar as $soli) {  //borrar intermedias
                 $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
                 if ($soli->getEsPago())
@@ -118,12 +117,12 @@ class AuthController
             $guardianDAO->setDisponibilidadEnNull($guardian->getDni());
             ///advertir que disponibilidad es null
           } else if (!UtilsController::ValidarFecha($guardian->getDisponibilidadInicio())) {
-
+            //borrar solicitudes que vencieron en ese rango, no son todas.
             $solicitudesAChequear = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
 
-            if (isset($solicitudesAChequear)) {
+            if (isset($solicitudesAChequear) && !empty($solicitudesAChequear)) {
               foreach ($solicitudesAChequear as $soli) {  //chequear y borrar intermedias y solicitudes
-                if (UtilsController::ValidarFecha($soli->getFechaInicio())) {
+                if (!UtilsController::ValidarFecha($soli->getFechaInicio())) {
                   if ($soli->getEsPago())
                     $pagoDAO->removePagoById($soli->getId());
 
@@ -134,14 +133,28 @@ class AuthController
             }
             //advertir que la fecha inicio se paso
           }
+
+          $solicitudes = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
+          if (isset($solicitudes) && !empty($solicitudes)) {
+            foreach ($solicitudes as $soli) {
+              if (!UtilsController::ValidarFecha($soli->getFechaInicio())) {
+                $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
+                if ($soli->getEsPago())
+                  $pagoDAO->removePagoById($soli->getId());
+
+                $solicitud->removeSolicitudById($soli->getId());
+              }
+            }
+          }
+
           $reservas = $reservaDAO->getReservasByDniGuardian($guardian->getDni());
-          if (isset($reservas)) {
+          if (isset($reservas)  && !empty($reservas)) {
             foreach ($reservas as $res) {
-              if (UtilsController::ValidarFecha($res->getFechaFin())) {
+              if (!UtilsController::ValidarFecha($res->getFechaFin())) {
                 $reservaDAO->updateEstado($res->getId(), "finalizado");
                 if ($res->getResHechaOrechazada() == false && $res->getCrearResena() == false)
-                  $res->setCrearResena(true);
-              } else if (UtilsController::ValidarFecha($res->getFechaInicio())) {
+                  $reservaDAO->updateCrearResena($res->getId(), true);
+              } else if (!UtilsController::ValidarFecha($res->getFechaInicio())) {
                 $reservaDAO->updateEstado($res->getId(), "actual");
               }
             }
@@ -158,7 +171,7 @@ class AuthController
           $soliXmasc = new SolixMascDAO();
           $solicitudes = $solicitud->getSolicitudesByDniDueno($dueno->getDni());
 
-          if (isset($solicitudes)) {
+          if (isset($solicitudes) && !empty($solicitudes)) {
             foreach ($solicitudes as $soli) {
               if (!UtilsController::ValidarFecha($soli->getFechaInicio())) {
                 $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
@@ -171,13 +184,13 @@ class AuthController
           }
 
           $reservas = $reservaDAO->getReservasByDniDueno($dueno->getDni());
-          if (isset($reservas)) {
+          if (isset($reservas) && !empty($reservas)) {
             foreach ($reservas as $res) {
-              if (UtilsController::ValidarFecha($res->getFechaFin())) {
+              if (!UtilsController::ValidarFecha($res->getFechaFin())) {
                 $reservaDAO->updateEstado($res->getId(), "finalizado");
                 if ($res->getResHechaOrechazada() == false && $res->getCrearResena() == false)
-                  $res->setCrearResena(true);
-              } else if (UtilsController::ValidarFecha($res->getFechaInicio())) {
+                  $reservaDAO->updateCrearResena($res->getId(), true);
+              } else if (!UtilsController::ValidarFecha($res->getFechaInicio())) {
                 $reservaDAO->updateEstado($res->getId(), "actual");
               }
             }
@@ -186,7 +199,7 @@ class AuthController
       } else {
         $alert = new Alert("warning", "Debe iniciar sesion");
         $this->Index($alert);
-    }
+      }
     } catch (Exception $ex) {
       $alert = new Alert("warning", "error en base de datos");
       $this->index($alert);
@@ -194,21 +207,28 @@ class AuthController
     return $bool; //////////
   }
 
-  public static function ValidarUsuario($username, $dni, $email) ///validaciones en el registro
+  public static function ValidarUsuario($username, $dni, $email, $telefono) ///validaciones en el registro
   {
     try {
-      $users = new UserDAO;
-      if ($users->getAll() != null) {
-        $a = $users->getByDni($dni);
-        $b = $users->getByUsername($username);
-        $c = $users->getByEmail($email);
-        if ($a != null || $b != null || $c != null)
-          return false;
-        else
-          return true;
-      }
-      return true;
+      if (is_numeric($dni) && is_numeric($telefono)) { //cambiar alert
+        $users = new UserDAO;
+        $a = null;
+        $b = null;
+        $c = null;
+        if ($users->getAll() != null) {
+          $a = $users->getByDni($dni);
+          $b = $users->getByUsername($username);
+          $c = $users->getByEmail($email);
+          if ($a != null || $b != null || $c != null)
+            return false;
+          else
+            return true;
+        }
+        return true;
+      } else
+        return false;
     } catch (Exception $ex) {
+      echo $ex;
       $alert = new Alert("warning", "error en base de datos");
       AuthController::index($alert);
     }

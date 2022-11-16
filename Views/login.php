@@ -13,10 +13,6 @@ require_once(VIEWS_PATH . "header.php");
     <button class="btn-login btn" type="submit" name="">Ingresar</button>
   </form>
 </div>
-<div class="alert alert-<?php echo $alert->getTipo() ?>">
-  <?php echo $alert->getMensaje() ////no lo esta haciendo 
-  ?>
-</div>
 </div>
 <?php
 require_once(VIEWS_PATH . "footer.php");

@@ -67,18 +67,19 @@ class UserDAO
 
       foreach ($resultSet as $row) {
         $usuario = new User();
+        $usuario->setUserName($row["username"]);
+        $usuario->setPassword($row["password"]);
         $usuario->setDni($row["dni"]);
-        $usuario->setNombre($row["nombre"]);
-        ////////
+        $usuario->setEmail($row["email"]);
+        $usuario->setTipo($row["tipo"]);
       }
-
       return $usuario;
     } catch (Exception $ex) {
       throw $ex;
     }
   }
 
-  function getTipoByUsername($username) /////
+  function getTipoByUsername($username)
   {
     try {
       $usuario = null;
@@ -105,7 +106,7 @@ class UserDAO
     }
   }
 
-  function getTipoByDni($dni) /////
+  function getTipoByDni($dni)
   {
     try {
       $usuario = null;
@@ -132,7 +133,7 @@ class UserDAO
     }
   }
 
-  function getByUsername($username) /////
+  function getByUsername($username)
   {
     try {
       $usuario = null;
@@ -152,16 +153,14 @@ class UserDAO
         $usuario->setDni($row["dni"]);
         $usuario->setEmail($row["email"]);
         $usuario->setTipo($row["tipo"]);
-        ////////
       }
-
       return $usuario;
     } catch (Exception $ex) {
       throw $ex;
     }
   }
 
-  function getByEmail($email) /////
+  function getByEmail($email)
   {
     try {
       $usuario = null;
@@ -223,8 +222,7 @@ class UserDAO
       $this->connection->ExecuteNonQuery($query, $parameters);
       return true;
   } catch (Exception $ex) {
-      return false;
-      //throw $ex;
+      throw $ex;
   }
 }
 }

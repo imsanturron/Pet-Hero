@@ -96,7 +96,7 @@ class GuardianController
     /* agregar y guardar nuevo guardian */
     public function Add($username, $password, $nombre, $dni, $email, $direccion, $telefono, $precio, $tamanoMasc)
     {
-        $valid = AuthController::ValidarUsuario($username, $dni, $email);
+        $valid = AuthController::ValidarUsuario($username, $dni, $email, $telefono);
         if ($valid) {
             $guardian = new Guardian();
             $guardian->setUserName($username);
@@ -319,11 +319,12 @@ class GuardianController
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
             try {
                 if ($operacion == "aceptar") {
+                    $solicitudXmasc = new SolixMascDAO();
+                    $idmascs = $solicitudXmasc->getAllIdMascotaByIdSolicitud($solicitudId);
                     $mascotas = new MascotaDAO();
-                    $arrayMascotas = $mascotas->getArrayByIds($animales);
+                    $arrayMascotas = $mascotas->getArrayByIds($idmascs);
                     $solicitud = new SolicitudDAO();
                     $soli = $solicitud->GetById($solicitudId);
-                    $solicitudXmasc = new SolixMascDAO();
 
                     $valid = UtilsController::ValidarMismaRaza( //con mascotas que puede ya haber reservadas
                         $arrayMascotas,
@@ -336,6 +337,8 @@ class GuardianController
                         $soli->getFechaInicio(),
                         $soli->getFechaFin()
                     );
+                    //echo "   valid---->" . $valid;
+                    //echo "   valid2---->" . $valid2;
                     if ($valid && $valid2) {
                         $guardianDAO = new GuardianDAO();
                         $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());

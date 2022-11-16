@@ -15,18 +15,12 @@ class SolixMascDAO
 
     public function add($arrayMascotas, $idSolicitud)
     {
-        //$ids = array();
-        // array_push($ids, $masc->getId());
-
         try {
             foreach ($arrayMascotas as $masc) {
                 $query = "INSERT INTO " . $this->tableName . " (idSolicitud, idMascota)
              VALUES (:idSolicitud, :idMascota);";
-                ///id fk?
-                //$parameters["idSolicitud"] = $soliXmasc->getIdSolixMasc();
                 $parameters["idSolicitud"] = $idSolicitud;
                 $parameters["idMascota"] = $masc->getId();
-                ///
                 $this->connection = Connection::GetInstance();
                 $this->connection->ExecuteNonQuery($query, $parameters);
             }
@@ -56,7 +50,7 @@ class SolixMascDAO
         }
     }
 
-    function getIdMascotaByIdSolicitud($idSolicitud) /////
+    function getIdMascotaByIdSolicitud($idSolicitud)
     {
         try {
 
@@ -73,6 +67,28 @@ class SolixMascDAO
                 $soliXmasc->setIdMascota($row["idMascota"]);
             }
             return $soliXmasc->getIdMascota();
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    function getAllIdMascotaByIdSolicitud($idSolicitud)
+    {
+        try {
+            $soliXmascList = array();
+
+            $query = "SELECT idMascota FROM " . $this->tableName . " WHERE idSolicitud = :idSolicitud"; //Limit 1?
+
+            $parameters["idSolicitud"] = $idSolicitud;
+
+            $this->connection = Connection::GetInstance();
+
+            $resultSet = $this->connection->Execute($query, $parameters);
+
+            foreach ($resultSet as $row) {
+                array_push($soliXmascList, $row["idMascota"]);
+            }
+            return $soliXmascList;
         } catch (Exception $ex) {
             throw $ex;
         }

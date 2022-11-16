@@ -48,7 +48,7 @@ class UtilsController
         $ff = date("Y-m-d", strtotime($ffin));
       if ($fmedio)
         $fmed = date("Y-m-d", strtotime($fmedio));
-
+      
 
       if ($ffin && $fmedio == null && $despDeHoy == false) { ///verificar si fini es antes de ff
         if (strtotime($fini) <= strtotime($ff))
@@ -151,19 +151,24 @@ class UtilsController
   }
 
   /* Verifica que no le hayamos enviado a un guardian mas de una solicitud
-    en un rango de fechas !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!111 */
-  public static function VerifGuardianSoliNuestraRepetida($dniGuard)
+    en un rango de fechas */
+  public static function VerifGuardianSoliNuestraRepetida($dniGuard, $fini, $ffin)
   {
-    if (isset($_SESSION["loggedUser"])) {
+    if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == 'd') {
       try {
         $guardianes = new GuardianDAO(); //
-        $guardian = $guardianes->getByDni($dniGuard); //
         $solicitud = new SolicitudDAO();
         $solicitudes = $solicitud->getSolicitudesByDniGuardian($dniGuard);
         if (isset($solicitudes) && !empty($solicitudes)) {
           foreach ($solicitudes as $soli) {
-            if ($soli->getDniDueno() == $_SESSION["loggedUser"]->getDni())
-              return false;
+            if ($soli->getDniDueno() == $_SESSION["loggedUser"]->getDni()) {
+              if (
+                UtilsController::ValidarFecha($soli->getFechaInicio(), $soli->getFechaFin(), $fini)
+                || UtilsController::ValidarFecha($soli->getFechaInicio(), $soli->getFechaFin(), $ffin)
+              ) {
+                return false;
+              }
+            }
           }
           return true;
         } else
@@ -196,6 +201,7 @@ class UtilsController
                 UtilsController::ValidarFecha($res->getFechaInicio(), $res->getFechaFin(), $fini) //cambia con fmedio en validar fecha
                 || UtilsController::ValidarFecha($res->getFechaInicio(), $res->getFechaFin(), $ffin)
               ) {
+                echo"222";
                 return false; //la mascota esta reservada en esa fecha
               }
             }
@@ -269,39 +275,42 @@ class UtilsController
     //array merge telefonos
     if (isset($_SESSION["loggedUser"])) {
       try {
-        $users = new UserDAO;
-        $c = null;
-        $b = null;
-        $a = null;
-        if ($users->getAll() != null) {
-          if ($username)
-            $a = $users->getByUsername($username);
-          if ($email)
-            $b = $users->getByEmail($email);
-          if ($telefono) {
-            $guardianDAO = new GuardianDAO();
-            $duenoDAO = new DuenoDAO();
-            $telefonos = array();
-            $tels = $guardianDAO->getTelefonos();
-            foreach ($tels as $t) {
-              array_push($telefonos, $t);
-            }
-            $tels = $duenoDAO->getTelefonos();
-            foreach ($tels as $t) {
-              array_push($telefonos, $t);
-            }
-            foreach ($telefonos as $telef) {
-              if ($telefono == $telef) {
-                $c = true;
+        if (is_numeric($telefono)) {
+          $users = new UserDAO;
+          $c = null;
+          $b = null;
+          $a = null;
+          if ($users->getAll() != null) {
+            if ($username)
+              $a = $users->getByUsername($username);
+            if ($email)
+              $b = $users->getByEmail($email);
+            if ($telefono) {
+              $guardianDAO = new GuardianDAO();
+              $duenoDAO = new DuenoDAO();
+              $telefonos = array();
+              $tels = $guardianDAO->getTelefonos();
+              foreach ($tels as $t) {
+                array_push($telefonos, $t);
+              }
+              $tels = $duenoDAO->getTelefonos();
+              foreach ($tels as $t) {
+                array_push($telefonos, $t);
+              }
+              foreach ($telefonos as $telef) {
+                if ($telefono == $telef) {
+                  $c = true;
+                }
               }
             }
+            if ($a != null || $b != null || $c != null)
+              return false;
+            else
+              return true;
           }
-          if ($a != null || $b != null || $c != null)
-            return false;
-          else
-            return true;
-        }
-        return true;
+          return true;
+        } else
+          return false;
       } catch (Exception $ex) {
         $alert = new Alert("warning", "error en base de datos");
         UtilsController::index($alert);
