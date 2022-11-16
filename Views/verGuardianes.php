@@ -4,7 +4,6 @@ include('nav-bar.php');
 
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
 use Models\Guardian as Guardian;
-
 ?>
 
 <main class="py-5">

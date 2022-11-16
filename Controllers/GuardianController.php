@@ -332,7 +332,7 @@ class GuardianController
                         $soli->getFechaInicio(),
                         $soli->getFechaFin()
                     );
-                    $valid2 = UtilsController::VerifMascotaNoEstaReservadaEnFecha( 
+                    $valid2 = UtilsController::VerifMascotaNoEstaReservadaEnFecha(
                         $arrayMascotas,
                         $soli->getFechaInicio(),
                         $soli->getFechaFin()

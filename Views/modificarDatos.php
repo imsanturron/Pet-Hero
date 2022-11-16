@@ -23,7 +23,7 @@ include('nav-bar.php');
 
             <input class="input-login" type="text" name="direccion" placeholder="Direccion">
 
-            <input name="telefono" placeholder="Telefono"  pattern=".{6,20}" title="6 to 20 characters">
+            <input name="telefono" placeholder="Telefono" pattern=".{6,20}" title="6 to 20 characters">
 
             <div>
                 <button class="formButton" type="submit">Modificar datos </button>
@@ -33,6 +33,6 @@ include('nav-bar.php');
         </form>
     </div>
 </main>
-<?php 
+<?php
 require_once(VIEWS_PATH . "footer.php");
- ?>
+?>

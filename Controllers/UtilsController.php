@@ -201,7 +201,6 @@ class UtilsController
                 UtilsController::ValidarFecha($res->getFechaInicio(), $res->getFechaFin(), $fini) //cambia con fmedio en validar fecha
                 || UtilsController::ValidarFecha($res->getFechaInicio(), $res->getFechaFin(), $ffin)
               ) {
-                echo"222";
                 return false; //la mascota esta reservada en esa fecha
               }
             }

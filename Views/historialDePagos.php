@@ -13,59 +13,13 @@ use Models\Dueno as Dueno;
 use Models\Mascota as Mascota;
 use Models\Pago as Pago;
 use Models\ResxMasc as ResXmasc;
-
-if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
-    if ($_SESSION['tipo']  == 'g') {
-        //$guardian = $_SESSION['loggedUser'];
-        //$pago = new PagoDAO();
-        //$solicitud = new SolicitudDAO();
-        //$solis = $solicitud->getSolicitudesByDniGuardian($guardian->getDni()); ///get all by id desp
-        // $pagos = $pago->getPagosByDniGuardian($guardian->getDni());
-        // //$mascXsoliDAO = new SolixMascDAO();
-        // $mascXsoli = $mascXsoliDAO->GetAll();
-        // $mascXresDAO = new ResxMascDAO();
-        //$mascXres = $mascXresDAO->GetAll();
-        //$mascota = new MascotaDAO(); ///get all by id desp
-        // $mascotas = $mascota->GetAll(); ///get all by id desp
-        // $reservas = new ReservaDAO();
-        // $ress = $reservas->getReservasByDniGuardian($guardian->getDni());
-
-        //ya estaba comentado esto
-        /*$mascota = new MascotaDAO(); ///get all by id desp
-        $mascotas = $mascota->GetAll(); ///get all by id desp
-        //$mascotas = $mascota->getMascotasByIdSolicitud();
-        $mascXsoliDAO = new SolixMascDAO();
-        $mascXsoli = $mascXsoliDAO->GetAll();
-        $ingreso = false; //SIRVE PARA VERIFICAR SI EL DUEÑO TIENE ALGUNA SOLICITUD*/
-    } else {
-        ////$dueno = $_SESSION['loggedUser'];
-        ////$pago = new PagoDAO();
-        ////$solicitud = new SolicitudDAO();
-        ////$solis = $solicitud->getSolicitudesByDniDueno($dueno->getDni()); ///get all by id desp
-        ////$pagos = $pago->getPagosByDniDueno($dueno->getDni());
-        ////$mascXsoliDAO = new SolixMascDAO();
-        ////$mascXsoli = $mascXsoliDAO->GetAll();
-        ////$mascota = new MascotaDAO(); ///get all by id desp
-        ////$mascotas = $mascota->GetAll(); ///get all by id desp
-        ////$reservas = new ReservaDAO();
-        //// $ress = $reservas->getReservasByDniDueno($dueno->getDni());
-
-        //ya estaba comentado esto
-        /*$mascota = new MascotaDAO(); ///get all by id desp
-        $mascotas = $mascota->GetAll(); ///get all by id desp
-        //$mascotas = $mascota->getMascotasByIdSolicitud();
-        $mascXsoliDAO = new SolixMascDAO();
-        $mascXsoli = $mascXsoliDAO->GetAll();
-        $ingreso = false; //SIRVE PARA VERIFICAR SI EL DUEÑO TIENE ALGUNA SOLICITUD */
-    }
-}
 ?>
 
 <main class="py-5">
     <?php if (isset($_SESSION['loggedUser'])) { ?>
         <section id="listado" class="mb-5">
             <div class="container">
-                <h2 class="mb-4">Historial de pagos finalizados</h2>
+                <h2 class="mb-4">Historial de  reservas y pagos finalizados</h2>
                 <table class="table bg-light-alpha">
                     <thead>
                         <th>Id unico del pago</th>
@@ -177,7 +131,7 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                             }
                         }
                     } else
-                        echo "<h2>No tiene pagos finalizados hechos</h2>";
+                        echo "<h2>No tiene reservas/pagos finalizados</h2>";
                     ?>
                     </form>
                     </tbody>

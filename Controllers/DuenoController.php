@@ -382,10 +382,6 @@ class DuenoController
                     $solicitudXmasc = new SolixMascDAO();
                     $idmascs = $solicitudXmasc->getAllIdMascotaByIdSolicitud($idSoliRes);
                     $arrayMascotas = $mascotas->getArrayByIds($idmascs);
-                    echo "array mascotas --->";
-                    print_r($arrayMascotas);
-                    echo "<br><br> forma de pago --->" . $formaDePago;
-
 
                     ///en caso de ser el primer pago...
                     if ($primerPago == false || $primerPago == null) {

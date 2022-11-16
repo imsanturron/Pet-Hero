@@ -44,6 +44,7 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                     <thead>
                         <th>Nombre Dueño</th>
                         <th>Nombre Guardian</th>
+                        <th>Estado</th>
                         <th>Desde</th>
                         <th>Hasta</th>
                         <th>Direccion de guarda</th>
@@ -72,6 +73,7 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
 
                                     <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getNombreDueno(); ?></td>
                                     <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getNombreGuardian(); ?></td>
+                                    <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getEstado(); ?></td>
                                     <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getFechaInicio(); ?></td>
                                     <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getFechaFin(); ?></td>
                                     <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getDireccionGuardian(); ?></td>
@@ -95,7 +97,7 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                                     }
                                 }
                             } else {
-                                echo "NO TIENE RESERVAS";
+                                echo "NO TIENE RESERVAS ACTUALMENTE";
                             } ?>
 
                         </form>
