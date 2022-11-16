@@ -1,5 +1,6 @@
 <?php
-
+require_once(VIEWS_PATH."header.php");
+include('nav-bar.php');
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\MascotaDAO as MascotaDAO;
 use DAO\MYSQL\ReservaDAO;
@@ -21,7 +22,7 @@ use Models\Mascota as Mascota;
         <h2>Review de <?php echo $guardian->getNombre() ?></h2>
         <form action="<?php echo FRONT_ROOT ?>Dueno/asentarResena" method="post" style="background-color: #EAEDED;padding: 2rem !important;">
           <input type="hidden" name="idReserva" value="<?php echo $reserva->getId(); ?>">
-          <input type="hidden" name="idGuardian" value="<?php echo $guardian->getDni(); ?>">
+          <input type="hidden" name="dniGuard" value="<?php echo $guardian->getDni(); ?>">
           <table>
             <thead>
               <tr>

@@ -81,7 +81,6 @@ class PagoDAO
                 $pago->setFormaDePago($row["formaDePago"]);
                 $pago->setPrecioGuardian(($pago->getMontoAPagar() * 2));
             }
-
             return $pago;
         } catch (Exception $ex) {
             throw $ex;
@@ -122,7 +121,7 @@ class PagoDAO
         }
     }
 
-    function getPagosByDniDueno($dniDueno) /////
+    function getPagosByDniDueno($dniDueno)
     {
         try {
             $pagoList = array();
@@ -168,8 +167,7 @@ class PagoDAO
             $this->connection->ExecuteNonQuery($query, $parameters);
             return true;
         } catch (Exception $ex) {
-            return false;
-            //throw $ex;
+            throw $ex;
         }
     }
 
@@ -185,8 +183,7 @@ class PagoDAO
             $this->connection->ExecuteNonQuery($query, $parameters);
             return true;
         } catch (Exception $ex) {
-            return false;
-            //throw $ex;
+            throw $ex;
         }
     }
 
@@ -202,8 +199,7 @@ class PagoDAO
             $this->connection->ExecuteNonQuery($query, $parameters);
             return true;
         } catch (Exception $ex) {
-            return false;
-            //throw $ex;
+            throw $ex;
         }
     }
 
@@ -220,7 +216,6 @@ class PagoDAO
             $this->connection = Connection::GetInstance();
 
             $resultSet = $this->connection->Execute($query, $parameters);
-
 
             return true;
         } catch (Exception $ex) {

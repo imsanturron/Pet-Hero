@@ -11,28 +11,7 @@ use DAO\MYSQL\SolixMascDAO;
 use Models\Guardian as Guardian;
 use Models\Dueno as Dueno;
 use Models\Mascota as Mascota;
-
-if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
-    if ($_SESSION['tipo']  == 'g') {
-        //$guardian = $_SESSION['loggedUser'];
-        //$solicitudes = new SolicitudDAO();
-        //$solis = $solicitudes->getSolicitudesByDniGuardian($guardian->getDni());
-        //$mascota = new MascotaDAO(); ///get all by id desp
-        //$mascotas = $mascota->GetAll(); ///get all by id desp
-        ////$mascotas = $mascota->getMascotasByIdSolicitud();
-        //$mascXsoliDAO = new SolixMascDAO();
-        //$mascXsoli = $mascXsoliDAO->GetAll();
-    } else {
-        //$dueno = $_SESSION['loggedUser'];
-        // $solicitudes = new SolicitudDAO();
-        // $solis = $solicitudes->getSolicitudesByDniDueno($dueno->getDni());
-        // $mascota = new MascotaDAO(); ///get all by id desp
-        // $mascotas = $mascota->GetAll(); ///get all by id desp
-        // //$mascotas = $mascota->getMascotasByIdSolicitud();
-        // $mascXsoliDAO = new SolixMascDAO();
-        // $mascXsoli = $mascXsoliDAO->GetAll();
-    }
-} ?>
+?>
 
 <main class="py-5">
 
@@ -69,10 +48,9 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                                 <?php } ?>
 
                                 <?php foreach ($solis as $solicitud) {
-                                    // if ($solicitud->getEsPago() == false || $solicitud->getEsPago() == null) { en controller
                                     $count = 0;
                                 ?>
-                                    <?php foreach ($mascXsoli as $tabla) {
+                                    <?php foreach ($mascXsoli as $tabla) { ///no puede hacerse fuera de vista
                                         if ($tabla->getIdSolicitud() == $solicitud->getId()) {
                                             $idMascotaX = $tabla->getIdMascota();
                                             foreach ($mascotas as $masc) {
@@ -119,7 +97,6 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                                                 }
                                             }
                                         }
-                                        // }
                                     }
                                 } else {
                                     echo "NO TIENE SOLICITUDES";

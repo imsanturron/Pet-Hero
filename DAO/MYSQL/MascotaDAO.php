@@ -63,7 +63,7 @@ class MascotaDAO
         }
     }
 
-    function getArrayByIds($ids) /////
+    function getArrayByIds($ids)
     {
         try {
             $mascotaList = array();
@@ -87,10 +87,9 @@ class MascotaDAO
                     $mascota->setTamano($row["tamano"]);
                     $mascota->setObservaciones($row["observaciones"]);
                     $mascota->setFotoMascota($row["fotoMascota"]);
-                $mascota->setVideo($row["video"]);
-                $mascota->setPlanVacunacion($row["planVacunacion"]);
+                    $mascota->setVideo($row["video"]);
+                    $mascota->setPlanVacunacion($row["planVacunacion"]);
                     array_push($mascotaList, $mascota);
-                    ////////
                 }
             }
 
@@ -100,7 +99,7 @@ class MascotaDAO
         }
     }
 
-    function getMascotasByDniDueno($dniDueno) /////
+    function getMascotasByDniDueno($dniDueno) 
     {
         try {
             $mascotaList = array();

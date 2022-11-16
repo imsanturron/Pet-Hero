@@ -142,7 +142,6 @@ class GuardianDAO
                 $guardian->setCantResenas($row["cantResenas"]);
                 $guardian->setPuntajeTotal($row["puntajeTotal"]);
                 $guardian->setPuntajePromedio($row["puntajePromedio"]);
-                ////////
             }
 
             return $guardian;
@@ -165,8 +164,7 @@ class GuardianDAO
             $this->connection->ExecuteNonQuery($query, $parameters);
             return true;
         } catch (Exception $ex) {
-            return false;
-            //throw $ex;
+            throw $ex;
         }
     }
 
@@ -182,10 +180,8 @@ class GuardianDAO
             $this->connection = Connection::GetInstance();
 
             $this->connection->ExecuteNonQuery($query, $parameters);
-            return true;
         } catch (Exception $ex) {
-            return false;
-            //throw $ex;
+            throw $ex;
         }
     }
 
@@ -276,10 +272,8 @@ class GuardianDAO
             $this->connection = Connection::GetInstance();
 
             $this->connection->ExecuteNonQuery($query, $parameters);
-            return true;
         } catch (Exception $ex) {
-            return false;
-            //throw $ex;
+            throw $ex;
         }
     }
 
@@ -297,10 +291,8 @@ class GuardianDAO
             $this->connection = Connection::GetInstance();
 
             $this->connection->ExecuteNonQuery($query, $parameters);
-            return true;
         } catch (Exception $ex) {
-            return false;
-            //throw $ex;
+            throw $ex;
         }
     }
 
@@ -319,10 +311,8 @@ class GuardianDAO
             $this->connection = Connection::GetInstance();
 
             $this->connection->ExecuteNonQuery($query, $parameters);
-            return true;
         } catch (Exception $ex) {
-            return false;
-            //throw $ex;
+            throw $ex;
         }
     }
 
@@ -339,8 +329,7 @@ class GuardianDAO
             $this->connection->ExecuteNonQuery($query, $parameters);
             return true;
         } catch (Exception $ex) {
-            return false;
-            //throw $ex;
+            throw $ex;
         }
     }
 
@@ -384,8 +373,7 @@ class GuardianDAO
             $this->connection->ExecuteNonQuery($query, $parameters);
             return true;
         } catch (Exception $ex) {
-            return false;
-            //throw $ex;
+            throw $ex;
         }
     }
 
