@@ -101,7 +101,6 @@ class UtilsController
       if (isset($animales) && !empty($animales)) {
         try {
           $comparador = array(); //compara raza
-          //$comparador2 = array(); //compara tamaño x si guardian lo cambio y distinto tamaño tiene misma raza
           $guardianes = new GuardianDAO();
           $guardian = $guardianes->getByDni($dniGuard);
           $reserva = new ReservaDAO();
