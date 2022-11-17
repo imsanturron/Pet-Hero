@@ -1,4 +1,5 @@
 <?php
+require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
 ?>
 <form action="<?php echo FRONT_ROOT ?>Dueno/filtrarFechas" method="post" style="background-color: #EAEDED;padding: 2rem !important;">
@@ -16,3 +17,6 @@ include('nav-bar.php');
 <div class="alert alert-<?php echo $alert->getTipo() ?>">
     <?php echo $alert->getMensaje() ?>
 </div>
+<?php
+require_once(VIEWS_PATH . "footer.php");
+?>

@@ -1,9 +1,8 @@
 <?php
+require_once(VIEWS_PATH."header.php");
 include('nav-bar.php');
 
-use Config\Autoload as Autoload;
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
-//use DAO\JSON\GuardianDAO as GuardianDAO;
 use Models\Guardian as Guardian;
 
 $guardianDao = new GuardianDAO();
@@ -80,3 +79,6 @@ $listaguardianes = $guardianDao->GetAll();
         </div>
     </div>
 </main>
+<?php
+require_once(VIEWS_PATH."footer.php");
+?>

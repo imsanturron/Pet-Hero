@@ -2,15 +2,14 @@
 
 namespace Controllers;
 
-//use DAO\JSON\GuardianDAO as GuardianDao;
-use DAO\MYSQL\GuardianDAO as GuardianDao;
-//use DAO\JSON\DuenoDAO as DuenoDAO;
+use DAO\MYSQL\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\DuenoDAO as DuenoDAO;
-use DAO\MYSQL\MascotaDAO;
+use DAO\MYSQL\MascotaDAO as MascotaDAO;
 use DAO\MYSQL\ReservaDAO;
+use DAO\MYSQL\PagoDAO;
 use DAO\MYSQL\ResxMascDAO;
 use DAO\MYSQL\SolicitudDAO;
-//use DAO\JSON\UserDAO as UserDAO;
+use DAO\MYSQL\SolixMascDAO;
 use DAO\MYSQL\UserDAO as UserDAO;
 use Exception;
 use Models\Guardian as Guardian;
@@ -30,14 +29,12 @@ class AuthController
   public function Login($username, $password)
   {
     try {
+      $bool = false;
       $users = new UserDAO;
       $tipo = $users->getTipoByUsername($username);
-      //print_r($tipo);
-      $bool = false;
 
-      if ($tipo) {  ///hacer validaciones cuando inician sesion, como de fecha por disponibilidades, etc.
+      if ($tipo) {
         if ($tipo == 'g') {
-          //echo "aaaaaaaaaaaaaaaaaaaaaaaaaaaa";
           $guardianes = new GuardianDAO;
           $guardianx = new Guardian;
           $guardianx = $guardianes->getByUsername($username);
@@ -45,252 +42,197 @@ class AuthController
             $bool = true;
             $_SESSION["loggedUser"] = $guardianx;
             $_SESSION["tipo"] = "g";
-            ///alerta buena
+            $this->validacionesLogin();
+            $alert = new Alert("success", "Bienvenido!");
             require_once(VIEWS_PATH . "loginGuardian.php");
           } else {
-            $alert = new Alert("warning", "Fecha invalida");
+            $alert = new Alert("warning", "Usuario o password incorrecto");
             $this->Index($alert);
           }
         } else {
           $duenos = new DuenoDAO;
           $duenox = new Dueno;
           $duenox = $duenos->getByUsername($username);
-          //var_dump($duenox);
           if ($duenox && $duenox->getPassword() == $password) {
             $bool = true;
             $_SESSION["loggedUser"] = $duenox;
             $_SESSION["tipo"] = "d";
-            ///alerta buena
+            $this->validacionesLogin();
+            $alert = new Alert("success", "Bienvenido!");
             require_once(VIEWS_PATH . "loginDueno.php");
           } else {
-            $alert = new Alert("warning", "Fecha invalida");
+            $alert = new Alert("warning", "Usuario o password incorrecto");
             $this->Index($alert);
           }
         }
       }
-    } catch (Exception $e) {
-      $alert = new Alert("warning", "datos incorrectos");
+    } catch (Exception $ex) {
+      $alert = new Alert("warning", "error en base de datos");
+      $this->Index($alert);
     }
     if ($bool == false) {
-      $alert = new Alert("warning", "Fecha invalida");
+      $alert = new Alert("warning", "Datos incorrectos en el login");
       $this->Index($alert);
     }
   }
 
-  /*private function validacionesLogin() //agrandar luego con pagos
+  /* Validaciones que se hacen cada vez que el usuario inicia sesion */
+  private function validacionesLogin()
   {
-    $bool = false; //actualizar adentro
-    if (isset($_SESSION["loggedUser"])) {
-      if ($_SESSION["tipo"] == 'g') {
-        $guardian = new Guardian();
-        $guardian = $_SESSION["loggedUser"];
-        //$solicitud = new SolicitudDAO();
-        //$solicitudes = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
-        if(AuthController::ValidarFecha($guardian->getDisponibilidadFin())){
-          ///borrar todas las solicitudes, las solis intermedias y setear en null
-          //la disponibilidad
-        } else if(AuthController::ValidarFecha($guardian->getDisponibilidadInicio())){
-            ///ver que solicitudes, y solis intermedias hay que borrar
-            //y advertir que la fecha inicio se paso
-        }
-        //chequear reservas para cambiarles el estado
-      } else {
-        //caso dueño
-        $dueno = new Dueno();
-        $dueno = $_SESSION["loggedUser"];
-        $solicitud = new SolicitudDAO();
-        $solicitudes = $solicitud->getSolicitudesByDniDueno($dueno->getDni());
-        foreach($solicitudes as $soli){
-          if(AuthController::ValidarFecha($soli->getFechaInicio)){
-             //remover solicitud
+    try {
+      $bool = false;
+      if (isset($_SESSION["loggedUser"])) {
+        if ($_SESSION["tipo"] == 'g') {
+          $guardian = new Guardian();
+          $guardian = $_SESSION["loggedUser"];
+          $guardianDAO = new GuardianDAO();
+          $reservaDAO = new ReservaDAO();
+          $pagoDAO = new PagoDAO();
+          $solicitud = new SolicitudDAO();
+          $soliXmasc = new SolixMascDAO();
+
+          if (!$guardian->getDisponibilidadFin() && !$guardian->getDisponibilidadInicio()) {
+            $solicitudesABorrar = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
+
+            if (isset($solicitudesABorrar) && !empty($solicitudesABorrar)) { //borrar solicitudes, intermedias y pagos
+              foreach ($solicitudesABorrar as $soli) {
+                $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
+                if ($soli->getEsPago())
+                  $pagoDAO->removePagoById($soli->getId());
+              }
+              $solicitud->removeSolicitudesByDniGuardian($guardian->getDni());
+            }
+            //advertir que disponibilidad es null ---> notifiaciones
+          } else if (!UtilsController::ValidarFecha($guardian->getDisponibilidadFin())) { //ver foranea para reducir
+            $solicitudesABorrar = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
+
+            if (isset($solicitudesABorrar)  && !empty($solicitudesABorrar)) {
+              foreach ($solicitudesABorrar as $soli) {  //borrar intermedias
+                $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
+                if ($soli->getEsPago())
+                  $pagoDAO->removePagoById($soli->getId());
+              }
+              $solicitud->removeSolicitudesByDniGuardian($guardian->getDni());
+            }
+            $guardianDAO->setDisponibilidadEnNull($guardian->getDni());
+            ///advertir que disponibilidad es null
+          } else if (!UtilsController::ValidarFecha($guardian->getDisponibilidadInicio())) {
+            //borrar solicitudes que vencieron en ese rango, no son todas.
+            $solicitudesAChequear = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
+
+            if (isset($solicitudesAChequear) && !empty($solicitudesAChequear)) {
+              foreach ($solicitudesAChequear as $soli) {  //chequear y borrar intermedias y solicitudes
+                if (!UtilsController::ValidarFecha($soli->getFechaInicio())) {
+                  if ($soli->getEsPago())
+                    $pagoDAO->removePagoById($soli->getId());
+
+                  $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
+                  $solicitud->removeSolicitudById($soli->getId());
+                }
+              }
+            }
+            //advertir que la fecha inicio se paso
           }
-        }
-        //chequear reservas para cambiarles el estado
-      }
-    }
-    return $bool;
-  }*/
 
-  public static function ValidarUsuario($username, $dni, $email)
-  {
-    $users = new UserDAO;
-    if ($users->getAll() != null) {
-      $a = $users->getByDni($dni);
-      $b = $users->getByUsername($username);
-      $c = $users->getByEmail($email);
-      if ($a != null || $b != null || $c != null)
-        return false;
-      else
-        return true;
-    }
-    return true;
-  }
+          $solicitudes = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
+          if (isset($solicitudes) && !empty($solicitudes)) {
+            foreach ($solicitudes as $soli) {
+              if (!UtilsController::ValidarFecha($soli->getFechaInicio())) {
+                $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
+                if ($soli->getEsPago())
+                  $pagoDAO->removePagoById($soli->getId());
 
-  public static function ValidarFecha($finic, $ffin = null, $fmedio = null, $despDeHoy = false) //agregar $fmedio, entre 2 fechas. poner despues de ffin en parametros, o ultimo, ver despues.
-  {
-    $fini = date("Y-m-d", strtotime($finic));
-    if ($ffin)
-      $ff = date("Y-m-d", strtotime($ffin));
-    if ($fmedio)
-      $fmed = date("Y-m-d", strtotime($fmedio));
-
-      /*echo "acaa";
-      var_dump($ffin);
-      var_dump($fmedio);
-      var_dump($despDeHoy);
-    if ($ffin && $fmedio = null && $despDeHoy == false) { ///verificar si fini es antes de ff
-      //echo "acaa";
-      if (strtotime($fini) <= strtotime($ff))
-        return true;
-      else
-        return false;
-    } else if ($ffin == null && $fmedio = null) {
-      if (strtotime($fini) >= strtotime(date("Y-m-d"))) ///verificar que fini mayor que hoy
-        return true;
-      else
-        return false;
-    } else if ($ffin && $fmedio = null && $despDeHoy == true) { //primer if + fini despues de hoy
-      if (strtotime($fini) >= strtotime(date("Y-m-d")) && strtotime($fini) <= strtotime($ff))
-        return true;
-      else
-        return false;
-    } else if ($ffin && $fmedio && $despDeHoy == false) {//verificar que $fmedio->$fmed esta entre $fini y $ff
-      if (strtotime($fini) <= strtotime($ff)
-           && strtotime($fini) <= strtotime($fmed)
-             && strtotime($fmed) <= strtotime($ff))
-             return true;
-             else
-             return false;
-    } else if ($ffin && $fmedio && $despDeHoy == true){ //anterior if + fini >= hoy
-      if (strtotime($fini) >= strtotime(date("Y-m-d"))
-        && strtotime($fini) <= strtotime($ff)
-          && strtotime($fini) <= strtotime($fmed)
-            && strtotime($fmed) <= strtotime($ff))
-              return true;
-            else
-              return false;
-    }
-    //echo "acaa";
-*/
-    //var_dump(strtotime(date("Y-m-d")));
-    //var_dump($ff);
-    /*if (strtotime($ff) >= strtotime(date("Y-m-d")))
-      echo 1;
-    else
-      echo 0;*/
-    //var_dump(date("Y-m-d"));
-
-    $fini = explode("-", $finic);
-    if ($ffin)
-      $ff = explode("-", $ffin);
-
-    if ($ffin && $despDeHoy == false) {
-
-      if ($fini[0] < $ff[0])
-        return true;
-      else if ($fini[0] == $ff[0] && $fini[1] < $ff[1])
-        return true;
-      elseif ($fini[0] == $ff[0] && $fini[1] == $ff[1] && $fini[2] <= $ff[2])
-        return true;
-      else
-        return false;
-    } else if ($ffin == null) {
-
-      $fechaHoy = date("Y-m-d", strtotime("now"));
-      $compar = explode("-", $fechaHoy); ///echo $compar[3];
-      if ($compar[0] < $fini[0])
-        return true;
-      else if ($compar[0] == $fini[0] && $compar[1] < $fini[1])
-        return true;
-      elseif ($compar[0] == $fini[0] && $compar[1] == $fini[1] && $compar[2] <= $fini[2])
-        return true;
-      else
-        return false;
-      ///seguir caso de las 2 fechas y verificar este
-    } else if ($ffin && $despDeHoy == true) {
-      return true;
-    }
-  }
-
-  public static function ValidarMismaRaza($animales, $dniGuard, $desde, $hasta)
-  {
-    if (isset($animales) && !empty($animales)) {
-      $comparador = array();
-      $guardianes = new GuardianDAO();
-      $guardian = $guardianes->getByDni($dniGuard);
-      $reserva = new ReservaDAO();
-      $reservas = $reserva->getReservasByDniGuardian($dniGuard);
-      if (isset($reservas) && !empty($reservas)) {
-        $mascotasXreserva = new ResxMascDAO();
-        $mascotas = new MascotaDAO();
-        foreach ($reservas as $res) {
-          if (
-            AuthController::ValidarFecha($res->getFechaInicio(), $desde)
-            && AuthController::ValidarFecha($res->getFechaFin(), $hasta)
-          ) {
-            $idMascota = $mascotasXreserva->getIdMascotaByIdReserva($res->getId());
-            $mascotaVerRaza = $mascotas->GetById($idMascota);
-            array_push($comparador, $mascotaVerRaza->getRaza());
+                $solicitud->removeSolicitudById($soli->getId());
+              }
+            }
           }
-        }
-      }
 
-      for ($i = 0; $i < count($animales); $i++) {
-        $j = $i;
-        for ($j; $j < count($animales); $j++) {
-          if ($j != $i) {
-            if ($animales[$i]->getRaza() != $animales[$j]->getRaza()) {
-              return false;
+          $reservas = $reservaDAO->getReservasByDniGuardian($guardian->getDni());
+          if (isset($reservas)  && !empty($reservas)) {
+            foreach ($reservas as $res) {
+              if (!UtilsController::ValidarFecha($res->getFechaFin())) {
+                $reservaDAO->updateEstado($res->getId(), "finalizado");
+                if ($res->getResHechaOrechazada() == false && $res->getCrearResena() == false)
+                  $reservaDAO->updateCrearResena($res->getId(), true);
+              } else if (!UtilsController::ValidarFecha($res->getFechaInicio())) {
+                $reservaDAO->updateEstado($res->getId(), "actual");
+              }
+            }
+          }
+        } else {
+          //caso dueño
+          $dueno = new Dueno();
+          $dueno = $_SESSION["loggedUser"];
+          $solicitud = new SolicitudDAO();
+          $duenoDAO = new DuenoDAO();
+          $reservaDAO = new ReservaDAO();
+          $pagoDAO = new PagoDAO();
+          $solicitud = new SolicitudDAO();
+          $soliXmasc = new SolixMascDAO();
+          $solicitudes = $solicitud->getSolicitudesByDniDueno($dueno->getDni());
+
+          if (isset($solicitudes) && !empty($solicitudes)) {
+            foreach ($solicitudes as $soli) {
+              if (!UtilsController::ValidarFecha($soli->getFechaInicio())) {
+                $soliXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
+                if ($soli->getEsPago())
+                  $pagoDAO->removePagoById($soli->getId());
+
+                $solicitud->removeSolicitudById($soli->getId());
+              }
+            }
+          }
+
+          $reservas = $reservaDAO->getReservasByDniDueno($dueno->getDni());
+          if (isset($reservas) && !empty($reservas)) {
+            foreach ($reservas as $res) {
+              if (!UtilsController::ValidarFecha($res->getFechaFin())) {
+                $reservaDAO->updateEstado($res->getId(), "finalizado");
+                if ($res->getResHechaOrechazada() == false && $res->getCrearResena() == false)
+                  $reservaDAO->updateCrearResena($res->getId(), true);
+              } else if (!UtilsController::ValidarFecha($res->getFechaInicio())) {
+                $reservaDAO->updateEstado($res->getId(), "actual");
+              }
             }
           }
         }
+      } else {
+        $alert = new Alert("warning", "Debe iniciar sesion");
+        $this->Index($alert);
       }
-      if (isset($comparador) && !empty($comparador)) {
-        foreach ($comparador as $raza) { ///compara las razas de reservas existentes con esta. Strings.
-          if ($animales[0]->getRaza() != $raza)
-            return false;
-        }
-      }
-      return true;
+    } catch (Exception $ex) {
+      $alert = new Alert("warning", "error en base de datos");
+      $this->index($alert);
     }
-
-    return false;
+    return $bool; //////////
   }
 
-  public static function VerifGuardianSoliNuestraRepetida($dniGuard)
+  public static function ValidarUsuario($username, $dni, $email, $telefono) ///validaciones en el registro
   {
-    $guardianes = new GuardianDAO(); //
-    $guardian = $guardianes->getByDni($dniGuard); //
-    $solicitud = new SolicitudDAO();
-    $solicitudes = $solicitud->getSolicitudesByDniGuardian($dniGuard);
-    if (isset($solicitudes) && !empty($solicitudes)) {
-      foreach ($solicitudes as $soli) {
-        if ($soli->getDniDueno() == $_SESSION["loggedUser"]->getDni())
-          return false;
-      }
-      return true;
-    } else
-      return true;
-  }
-
-  /*public static function VerifMascotaNoEstaReservadaEnFecha($arrayMascotas, $fini, $ffin){
-    $reservaXmascotas = new ResxMascDAO();
-    $resXmasc = $reservaXmascotas->GetAll();
-    $reserva = new ReservaDAO();
-
-    foreach($arrayMascotas as $masc){
-      foreach($resXmasc as $rmi){
-        if($rmi->getIdMascota() == $masc->getId()){
-          $res =  $reserva->GetById($rmi->getIdReserva());
-          if((AuthController::ValidarFecha($res->getFechaInicio(), $fini) //cambia con fmedio en validar fecha
-              && AuthController::ValidarFecha($ffin, $res->getFechaFin()))){
-               return false; //la mascota esta reservada en esa fecha
-          }
+    try {
+      if (is_numeric($dni) && is_numeric($telefono)) { //cambiar alert
+        $users = new UserDAO;
+        $a = null;
+        $b = null;
+        $c = null;
+        if ($users->getAll() != null) {
+          $a = $users->getByDni($dni);
+          $b = $users->getByUsername($username);
+          $c = $users->getByEmail($email);
+          if ($a != null || $b != null || $c != null)
+            return false;
+          else
+            return true;
         }
-      }
+        return true;
+      } else
+        return false;
+    } catch (Exception $ex) {
+      echo $ex;
+      $alert = new Alert("warning", "error en base de datos");
+      AuthController::index($alert);
     }
-    return true;
-  }*/
+  }
 
   public function Logout()
   {

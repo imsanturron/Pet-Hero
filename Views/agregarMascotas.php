@@ -1,4 +1,5 @@
 <?php
+require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
 ?>
 <!-- ################################################################################################ -->
@@ -23,13 +24,13 @@ include('nav-bar.php');
           <table>
             <thead>
               <tr>
-                <th>Especie</th>
-                <th>Nombre</th>
-                <th>Raza</th>
-                <th>Tamaño</th>
-                <th>Imagen</th> 
-                <th>Plan de vacunacion</th> 
-                <th>Video</th> 
+                <th>Especie*</th>
+                <th>Nombre*</th>
+                <th>Raza*</th>
+                <th>Tamaño*</th>
+                <th>Imagen*</th>
+                <th>Plan de vacunacion*</th>
+                <th>Video</th>
                 <th>Observaciones</th>
               </tr>
             </thead>
@@ -41,10 +42,10 @@ include('nav-bar.php');
                     <option value="perro"> Perro </option>
                 </td>
                 <td>
-                  <input type="text" name="nombre" required> 
+                  <input type="text" name="nombre" required>
                 </td>
                 <td>
-                  <input type="text" name="raza" required> <? //ver como hacer menu distinto ?>
+                  <input type="text" name="raza" required>
                 </td>
                 <td>
                   <select name="tamano" required>
@@ -57,10 +58,10 @@ include('nav-bar.php');
                   <input type="file" name="fotoM" required>
                 </td>
                 <td>
-                <input type="file" name="planVacunacion" required>
+                  <input type="file" name="planVacunacion" required>
                 </td>
                 <td>
-                <input type="file" name="video">
+                  <input type="file" name="video">
                 </td>
                 <td>
                   <input type="text" name="observaciones">
@@ -80,3 +81,6 @@ include('nav-bar.php');
 <div class="alert alert-<?php echo $alert->getTipo() ?>">
   <?php echo $alert->getMensaje() ?>
 </div>
+<?php
+require_once(VIEWS_PATH . "footer.php");
+?>

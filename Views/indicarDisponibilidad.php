@@ -1,4 +1,5 @@
 <?php
+require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
 ?>
 <form action="<?php echo FRONT_ROOT ?>Guardian/elegirDisponibilidad" method="post" style="background-color: #EAEDED;padding: 2rem !important;">
@@ -12,6 +13,14 @@ include('nav-bar.php');
       <br> <br>
       <button type="submit" class="btn" style="background-color:#DC8E47;color:white;">Enviar</button>
 </form>
+<form action="<?php echo FRONT_ROOT ?>Guardian/elegirDisponibilidad" method="post" style="background-color: #EAEDED;padding: 2rem !important;">
+  <input type="hidden" name="desde" value="" />
+  <input type="hidden" name="hasta" value="" />
+  <button type="submit" class="btn" name="noDisp" value="1" style="background-color:#DC8E47;color:white;">No estoy disponible</button>
+</form>
 <div class="alert alert-<?php echo $alert->getTipo() ?>">
   <?php echo $alert->getMensaje() ?>
 </div>
+<?php
+require_once(VIEWS_PATH . "footer.php");
+?>

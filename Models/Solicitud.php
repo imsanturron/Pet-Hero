@@ -4,25 +4,20 @@ namespace Models;
 
 use Models\Guardian as Guardian;
 use Models\Dueno as Dueno;
-//use JsonSerializable;
-//use Serializable;
 
-class Solicitud //implements JsonSerializable
+class Solicitud 
 {
-
     protected $id;
-    //protected $animales;
     protected $fechaInicio;
     protected $fechaFin;
-    protected $nombreDueno;
+    protected $nombreDueno; 
     protected $dniDueno;
-    protected $nombreGuardian;
+    protected $nombreGuardian; 
     protected $dniGuardian;
-    protected $direccionGuardian;
-    protected $telefonoDueno;
-    protected $telefonoGuardian;
-    //protected $pagado = false; //booleano de pago
-
+    protected $direccionGuardian; 
+    protected $telefonoDueno; 
+    protected $telefonoGuardian; 
+    protected $esPago = false; //booleano de pago
 
     public function  __construct(Guardian $guardian = null, Dueno $dueno = null, $desde = "", $hasta = "")
     {
@@ -39,13 +34,6 @@ class Solicitud //implements JsonSerializable
         }
     }
 
-    /*public function jsonSerialize(){
-        $solicitud["id"] = $this->id;
-    }*/
-
-
-
-
     public function getId()
     {
         return $this->id;
@@ -57,18 +45,6 @@ class Solicitud //implements JsonSerializable
 
         return $this;
     }
-
-    /*public function getAnimales()
-    {
-        return $this->animales;
-    }
-
-    public function setAnimales($animales): self
-    {
-        $this->animales = $animales;
-
-        return $this;
-    }*/
 
     public function getFechaInicio()
     {
@@ -174,6 +150,18 @@ class Solicitud //implements JsonSerializable
     public function setTelefonoDueno($telefonoDueno): self
     {
         $this->telefonoDueno = $telefonoDueno;
+
+        return $this;
+    }
+
+    public function getEsPago()
+    {
+        return $this->esPago;
+    }
+
+    public function setEsPago($esPago): self
+    {
+        $this->esPago = $esPago;
 
         return $this;
     }

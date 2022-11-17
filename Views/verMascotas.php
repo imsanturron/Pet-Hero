@@ -1,12 +1,6 @@
 <?php
+require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
-
-use Config\Autoload as Autoload;
-//use DAO\JSON\MascotaDAO;
-use DAO\MYSQL\MascotaDAO;
-
-$mascotasDao = new MascotaDAO();
-$listaMascotas = $mascotasDao->GetAll();
 ?>
 
 <main class="py-5">
@@ -29,31 +23,27 @@ $listaMascotas = $mascotasDao->GetAll();
                          <form action="<?php echo FRONT_ROOT ?>Mascota/Remove" method="POST">
                               <?php
                               if (isset($listaMascotas) && !empty($listaMascotas)) {
-
                                    foreach ($listaMascotas as $mascota) {
                               ?>
-                                        <?php if ($mascota->getdniDueno() == $_SESSION["loggedUser"]->getDni()) { ?>
-                                             <tr>
-                                                  <td><?php echo $mascota->getNombre(); ?></td>
-                                                  <td><?php echo $mascota->getRaza(); ?></td>
-                                                  <td><?php echo $mascota->getTamano(); ?></td>
-                                                  <td><?php echo $mascota->getObservaciones(); ?></td>
-                                                  <td><img src="<?php echo FRONT_ROOT . IMG_PATH . $mascota->getFotoMascota() ?>"></td>
-                                                  <td><img src="<?php echo FRONT_ROOT . IMG_PATH . $mascota->getPlanVacunacion() ?>"></td>
-                                                  <td>
-                                                       <?php if ($mascota->getVideo()) { ?>
-                                                            <video controls width="220" height="140">
-                                                                 <source src="<?php echo FRONT_ROOT . VIDEO_PATH . $mascota->getVideo() ?>" type="video/mp4">
-                                                            </video>
-                                                       <?php } ?>
-                                                  </td>
-                                                  <td>
-                                                       <input type="hidden" name="id" value="<?php echo $mascota->getId(); ?>">
-                                                       <button type="submit" class="btn btn-danger" ?> Eliminar </button>
-                                                  </td>
-                                             </tr>
+                                        <tr>
+                                             <td><?php echo $mascota->getNombre(); ?></td>
+                                             <td><?php echo $mascota->getRaza(); ?></td>
+                                             <td><?php echo $mascota->getTamano(); ?></td>
+                                             <td><?php echo $mascota->getObservaciones(); ?></td>
+                                             <td><img src="<?php echo FRONT_ROOT . IMG_PATH . $mascota->getFotoMascota() ?>" style="width:680px;height:auto;"></td>
+                                             <td><img src="<?php echo FRONT_ROOT . IMG_PATH . $mascota->getPlanVacunacion() ?>" style="width:680px;height:auto;"></td>
+                                             <td>
+                                                  <?php if ($mascota->getVideo()) { ?>
+                                                       <video controls width="220" height="140">
+                                                            <source src="<?php echo FRONT_ROOT . VIDEO_PATH . $mascota->getVideo() ?>" type="video/mp4">
+                                                       </video>
+                                                  <?php } ?>
+                                             </td>
+                                             <td>
+                                                  <button type="submit" name="id" value="<?php echo $mascota->getId(); ?>" class="btn btn-danger" ?> Eliminar </button>
+                                             </td>
+                                        </tr>
                               <?php
-                                        }
                                    }
                               } else
                                    echo "<h2>No tiene mascotas cargadas!</h2>";
@@ -64,3 +54,6 @@ $listaMascotas = $mascotasDao->GetAll();
           </div>
      </section>
 </main>
+<?php
+require_once(VIEWS_PATH . "footer.php");
+?>

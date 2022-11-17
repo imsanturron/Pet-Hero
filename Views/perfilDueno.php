@@ -1,11 +1,6 @@
 <?php
-
-use DAO\MYSQL\MascotaDAO;
-use Models\Mascota as Mascota;
-
+require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
-$mascota = new MascotaDAO;
-$mascotas = $mascota->getMascotasByDniDueno($_SESSION["loggedUser"]->getDni());
 ?>
 <main class="py-5">
 
@@ -25,7 +20,7 @@ $mascotas = $mascota->getMascotasByDniDueno($_SESSION["loggedUser"]->getDni());
                 </thead>
                 <tbody>
                     <form action="<?php echo FRONT_ROOT ?>Home/cambiarPerfil" method="POST">
-                        <?php if (isset($_SESSION["loggedUser"])) { ?>
+                        <?php if (isset($_SESSION["loggedUser"])  && $_SESSION["tipo"] == 'd') { ?>
                             <td> <?php echo $_SESSION["loggedUser"]->getNombre() . "<br>"; ?> </td>
                             <td><?php echo $_SESSION["loggedUser"]->getUserName(); ?></td>
                             <td><?php echo "***"; ?></td>
@@ -40,3 +35,6 @@ $mascotas = $mascota->getMascotasByDniDueno($_SESSION["loggedUser"]->getDni());
             </table>
         </div>
     </section>
+    <?php
+    require_once(VIEWS_PATH . "footer.php");
+    ?>

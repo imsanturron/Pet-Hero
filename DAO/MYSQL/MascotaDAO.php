@@ -63,7 +63,7 @@ class MascotaDAO
         }
     }
 
-    function getArrayByIds($ids) /////
+    function getArrayByIds($ids)
     {
         try {
             $mascotaList = array();
@@ -87,10 +87,9 @@ class MascotaDAO
                     $mascota->setTamano($row["tamano"]);
                     $mascota->setObservaciones($row["observaciones"]);
                     $mascota->setFotoMascota($row["fotoMascota"]);
-                $mascota->setVideo($row["video"]);
-                $mascota->setPlanVacunacion($row["planVacunacion"]);
+                    $mascota->setVideo($row["video"]);
+                    $mascota->setPlanVacunacion($row["planVacunacion"]);
                     array_push($mascotaList, $mascota);
-                    ////////
                 }
             }
 
@@ -100,7 +99,7 @@ class MascotaDAO
         }
     }
 
-    function getMascotasByDniDueno($dniDueno) /////
+    function getMascotasByDniDueno($dniDueno) 
     {
         try {
             $mascotaList = array();
@@ -188,94 +187,4 @@ class MascotaDAO
             throw $ex;
         }
     }
-
-    /*function setIdSolicitudEnMascota($mascotas,$idSolicitud) /////
-        {
-          try {
-            
-      
-            foreach($mascotas as $mascota){
-                $query = "UPDATE " . $this->tableName . " SET idSoliRes = :idSoliRes WHERE id = :id;";
-      
-                $parameters["idSoliRes"] = $idSolicitud;
-                $parameters["id"] = $mascota->getId();
-          
-
-            $this->connection = Connection::GetInstance();
-      
-            $resultSet = $this->connection->Execute($query, $parameters);
-      
-            foreach ($resultSet as $row) {
-                $mascota = new Mascota();
-                $mascota->setId($row["id"]);
-                $mascota->setNombre($row["nombre"]);
-                $mascota->setRaza($row["raza"]);
-                $mascota->setEspecie($row["especie"]);
-                $mascota->setDniDueno($row["dueno"]);
-                $mascota->setIdSoliRes($row["idSoliRes"]);
-                $mascota->setTamano($row["tamano"]);
-                $mascota->setObservaciones($row["observaciones"]);
-             
-              ////////
-
-            }
-        }
-           
-      
-          } catch (Exception $ex) {
-            throw $ex;
-          }
-        }*/
-
-
-    /*
-        function getMascotasByIdSolicitud($) /////
-        {
-          try {
-            $solicitudList = array();
-      
-           
-            $query = "SELECT * FROM " . $this->tableName . " WHERE dniGuardian = :dniGuardian";
-      
-            $parameters["dniGuardian"] = $dniGuardian;
-      
-            $this->connection = Connection::GetInstance();
-      
-            $resultSet = $this->connection->Execute($query, $parameters);
-      
-            foreach ($resultSet as $row) {
-                $solicitud = new Solicitud();
-                $solicitud->setId($row["id"]);
-                //$solicitud->setAnimales($row["animales"]);
-                $solicitud->setFechaInicio($row["FechaInicio"]);
-                $solicitud->setFechaFin($row["FechaFin"]);
-                $solicitud->setNombreDueno($row["nombreDueno"]);
-                $solicitud->setDniDueno($row["dniDueno"]);
-                $solicitud->setNombreGuardian($row["nombreGuardian"]);
-                $solicitud->setDniGuardian($row["dniGuardian"]);
-                $solicitud->setDireccionGuardian($row["direccionGuardian"]);
-                $solicitud->setTelefonoDueno($row["telefonoDueno"]);
-                $solicitud->setTelefonoGuardian($row["telefonoGuardian"]);
-                array_push($solicitudList, $solicitud);
-              ////////
-            }
-        
-      
-            return $solicitudList;
-          } catch (Exception $ex) {
-            throw $ex;
-          }
-        }
-  */
-
-    /*
-    private function GetNextId()
-    {
-        $id = 0;
-        foreach($this->usuarioList as $mascota)
-        {
-            $id = ($mascota->getId() > $id) ? $mascota->getId() : $id;
-        }
-        return $id + 1;
-    }*/
 }

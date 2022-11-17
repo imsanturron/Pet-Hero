@@ -9,7 +9,7 @@ define("IMG_PATH", VIEWS_PATH . "img/");
 define("VIDEO_PATH", VIEWS_PATH . "video/");
 
 define("DB_HOST", "localhost");
-define("DB_NAME", "PetHero");
+define("DB_NAME", "PetHero2");
 define("DB_USER", "root");
 define("DB_PASS", "");
 ?>

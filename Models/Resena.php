@@ -1,13 +1,27 @@
-<?php namespace Models;
+<?php
+
+namespace Models;
 
 class Resena
 {
-    private $id; //PK
+    private $id; //PK   --> id de reserva/solicitud/pago
     private $dniDueno; //FK
     private $dniGuardian; //FK
     private $puntaje; ///del 1 al 10
     private $fecha; ///que se hizo la observacion
     private $observacion; ///comentarios
+
+    public function __construct($id = null, $dniDueno = null, $dniGuardian = null, $puntaje = null, $observacion = "")
+    {
+        if ($id && $dniDueno && $dniGuardian) {
+            $this->setId($id);
+            $this->setDniDueno($dniDueno);
+            $this->setDniGuardian($dniGuardian);
+            $this->setPuntaje($puntaje);
+            $this->setFecha(date("Y-m-d"));
+            $this->setObservacion($observacion);
+        }
+    }
 
     public function getPuntaje()
     {
@@ -45,17 +59,11 @@ class Resena
         return $this;
     }
 
-    /**
-     * Get the value of dniDueno
-     */
     public function getDniDueno()
     {
         return $this->dniDueno;
     }
 
-    /**
-     * Set the value of dniDueno
-     */
     public function setDniDueno($dniDueno): self
     {
         $this->dniDueno = $dniDueno;
@@ -63,17 +71,11 @@ class Resena
         return $this;
     }
 
-    /**
-     * Get the value of id
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * Set the value of id
-     */
     public function setId($id): self
     {
         $this->id = $id;
@@ -81,17 +83,11 @@ class Resena
         return $this;
     }
 
-    /**
-     * Get the value of dniGuardian
-     */
     public function getDniGuardian()
     {
         return $this->dniGuardian;
     }
 
-    /**
-     * Set the value of dniGuardian
-     */
     public function setDniGuardian($dniGuardian): self
     {
         $this->dniGuardian = $dniGuardian;

@@ -16,21 +16,17 @@ class ReservaDAO
     public function Add(Reserva $reserva)
     {
         try {
-            $query = "INSERT INTO " . $this->tableName . " (id, FechaInicio, FechaFin, nombreDueno, dniDueno, nombreGuardian, dniGuardian, direccionGuardian, telefonoDueno, telefonoGuardian, estado)
-             VALUES (:id, :FechaInicio, :FechaFin, :nombreDueno, :dniDueno, :nombreGuardian, :dniGuardian, :direccionGuardian, :telefonoDueno, :telefonoGuardian, :estado);";
+            $query = "INSERT INTO " . $this->tableName . " (id, FechaInicio, FechaFin, dniDueno, dniGuardian, estado, crearResena, hechaOrechazada)
+             VALUES (:id, :FechaInicio, :FechaFin, :dniDueno, :dniGuardian, :estado, :crearResena, :hechaOrechazada);";
 
             $parameters["id"] = $reserva->getId();
-            //$parameters["animales"] = $reserva->getAnimales();
             $parameters["FechaInicio"] = $reserva->getFechaInicio();
             $parameters["FechaFin"] = $reserva->getFechaFin();
-            $parameters["nombreDueno"] = $reserva->getNombreDueno();
             $parameters["dniDueno"] = $reserva->getDniDueno();
-            $parameters["nombreGuardian"] = $reserva->getNombreGuardian();
             $parameters["dniGuardian"] = $reserva->getDniGuardian();
-            $parameters["direccionGuardian"] = $reserva->getDireccionGuardian();
-            $parameters["telefonoDueno"] = $reserva->getTelefonoDueno();
-            $parameters["telefonoGuardian"] = $reserva->getTelefonoGuardian();
             $parameters["estado"] = $reserva->getEstado();
+            $parameters["crearResena"] = $reserva->getCrearResena();
+            $parameters["hechaOrechazada"] = $reserva->getResHechaOrechazada();
             $this->connection = Connection::GetInstance();
             $this->connection->ExecuteNonQuery($query, $parameters);
         } catch (Exception $ex) {
@@ -42,14 +38,14 @@ class ReservaDAO
     {
         try {
             $reservaList = array();
-            $query = "SELECT * FROM " . $this->tableName;
+            $query = "SELECT r.*, g.nombre as nombreGuardian, d.nombre as nombreDueno,  d.telefono as telefonoDueno, g.direccion as direccionGuardian, g.telefono as telefonoGuardian
+             FROM " . $this->tableName . " r join duenos d on r.dniDueno = d.dni join guardianes g on r.dniGuardian = g.dni";
             $this->connection = Connection::GetInstance();
             $resultSet = $this->connection->Execute($query);
 
             foreach ($resultSet as $row) {
                 $reserva = new Reserva();
                 $reserva->setId($row["id"]);
-                //$reserva->setAnimales($row["animales"]);
                 $reserva->setFechaInicio($row["FechaInicio"]);
                 $reserva->setFechaFin($row["FechaFin"]);
                 $reserva->setNombreDueno($row["nombreDueno"]);
@@ -60,6 +56,8 @@ class ReservaDAO
                 $reserva->setTelefonoDueno($row["telefonoDueno"]);
                 $reserva->setTelefonoGuardian($row["telefonoGuardian"]);
                 $reserva->setEstado($row["estado"]);
+                $reserva->setCrearResena($row["crearResena"]);
+                $reserva->setResHechaOrechazada($row["hechaOrechazada"]);
                 array_push($reservaList, $reserva);
             }
             return $reservaList;
@@ -72,8 +70,8 @@ class ReservaDAO
     {
         try {
             $reserva = null;
-
-            $query = "SELECT * FROM " . $this->tableName . " WHERE id = :id";
+            $query = "SELECT r.*, g.nombre as nombreGuardian, d.nombre as nombreDueno,  d.telefono as telefonoDueno, g.direccion as direccionGuardian, g.telefono as telefonoGuardian
+             FROM " . $this->tableName . " r join duenos d on r.dniDueno = d.dni join guardianes g on r.dniGuardian = g.dni WHERE id = :id";
 
             $parameters["id"] = $id;
 
@@ -84,7 +82,6 @@ class ReservaDAO
             foreach ($resultSet as $row) {
                 $reserva = new Reserva();
                 $reserva->setId($row["id"]);
-                //$reserva->setAnimales($row["animales"]);
                 $reserva->setFechaInicio($row["FechaInicio"]);
                 $reserva->setFechaFin($row["FechaFin"]);
                 $reserva->setNombreDueno($row["nombreDueno"]);
@@ -95,6 +92,8 @@ class ReservaDAO
                 $reserva->setTelefonoDueno($row["telefonoDueno"]);
                 $reserva->setTelefonoGuardian($row["telefonoGuardian"]);
                 $reserva->setEstado($row["estado"]);
+                $reserva->setCrearResena($row["crearResena"]);
+                $reserva->setResHechaOrechazada($row["hechaOrechazada"]);
             }
 
             return $reserva;
@@ -108,7 +107,8 @@ class ReservaDAO
         try {
             $reservaList = array();
 
-            $query = "SELECT * FROM " . $this->tableName . " WHERE dniGuardian = :dniGuardian";
+            $query = "SELECT r.*, g.nombre as nombreGuardian, d.nombre as nombreDueno,  d.telefono as telefonoDueno, g.direccion as direccionGuardian, g.telefono as telefonoGuardian 
+            FROM " . $this->tableName . " r join duenos d on r.dniDueno = d.dni join guardianes g on r.dniGuardian = g.dni WHERE dniGuardian = :dniGuardian";
 
             $parameters["dniGuardian"] = $dniGuardian;
 
@@ -119,7 +119,6 @@ class ReservaDAO
             foreach ($resultSet as $row) {
                 $reserva = new Reserva();
                 $reserva->setId($row["id"]);
-                //$reserva->setAnimales($row["animales"]);
                 $reserva->setFechaInicio($row["FechaInicio"]);
                 $reserva->setFechaFin($row["FechaFin"]);
                 $reserva->setNombreDueno($row["nombreDueno"]);
@@ -130,6 +129,8 @@ class ReservaDAO
                 $reserva->setTelefonoDueno($row["telefonoDueno"]);
                 $reserva->setTelefonoGuardian($row["telefonoGuardian"]);
                 $reserva->setEstado($row["estado"]);
+                $reserva->setCrearResena($row["crearResena"]);
+                $reserva->setResHechaOrechazada($row["hechaOrechazada"]);
                 array_push($reservaList, $reserva);
             }
             if (isset($reservaList))
@@ -146,7 +147,8 @@ class ReservaDAO
         try {
             $reservaList = array();
 
-            $query = "SELECT * FROM " . $this->tableName . " WHERE dniDueno = :dniDueno";
+            $query = "SELECT r.*, g.nombre as nombreGuardian, d.nombre as nombreDueno,  d.telefono as telefonoDueno, g.direccion as direccionGuardian, g.telefono as telefonoGuardian 
+            FROM " . $this->tableName . " r join duenos d on r.dniDueno = d.dni join guardianes g on r.dniGuardian = g.dni WHERE dniDueno = :dniDueno";
 
             $parameters["dniDueno"] = $dniDueno;
 
@@ -157,7 +159,6 @@ class ReservaDAO
             foreach ($resultSet as $row) {
                 $reserva = new Reserva();
                 $reserva->setId($row["id"]);
-                //$reserva->setAnimales($row["animales"]);
                 $reserva->setFechaInicio($row["FechaInicio"]);
                 $reserva->setFechaFin($row["FechaFin"]);
                 $reserva->setNombreDueno($row["nombreDueno"]);
@@ -168,6 +169,8 @@ class ReservaDAO
                 $reserva->setTelefonoDueno($row["telefonoDueno"]);
                 $reserva->setTelefonoGuardian($row["telefonoGuardian"]);
                 $reserva->setEstado($row["estado"]);
+                $reserva->setCrearResena($row["crearResena"]);
+                $reserva->setResHechaOrechazada($row["hechaOrechazada"]);
                 array_push($reservaList, $reserva);
             }
             if (isset($reservaList))
@@ -179,22 +182,54 @@ class ReservaDAO
         }
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////FUNCIONES JSONJSONJSON/////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /*
-    public function remove(Reserva $user)
+    function updateEstado($id, $nuevoEstado)
     {
-        $this->retrieveData();
+        try {
+            $query = "UPDATE " . $this->tableName . " SET estado = :estado WHERE id = :id;";
 
-        if (($clave = array_search($user, $this->usuarioList)) !== false) {
+            $parameters["estado"] = $nuevoEstado;
+            $parameters["id"] = $id;
 
-            unset($this->usuarioList[$clave]);
+            $this->connection = Connection::GetInstance();
+
+            $this->connection->ExecuteNonQuery($query, $parameters);
+            return true;
+        } catch (Exception $ex) {
+            throw $ex;
         }
-
-        $this->SaveData();
     }
 
-*/
+    function updateCrearResena($id, $nuevoEstado)
+    {
+        try {
+            $query = "UPDATE " . $this->tableName . " SET crearResena = :crearResena WHERE id = :id;";
+
+            $parameters["crearResena"] = $nuevoEstado;
+            $parameters["id"] = $id;
+
+            $this->connection = Connection::GetInstance();
+
+            $this->connection->ExecuteNonQuery($query, $parameters);
+            return true;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    function updateResHechaOrechazada($id, $nuevoEstado)
+    {
+        try {
+            $query = "UPDATE " . $this->tableName . " SET hechaOrechazada = :hechaOrechazada WHERE id = :id;";
+
+            $parameters["hechaOrechazada"] = $nuevoEstado;
+            $parameters["id"] = $id;
+
+            $this->connection = Connection::GetInstance();
+
+            $this->connection->ExecuteNonQuery($query, $parameters);
+            return true;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
 }

@@ -1,8 +1,7 @@
 <?php
+require_once(VIEWS_PATH."header.php");
 include('nav-bar.php');
 
-use Config\Autoload as Autoload;
-//use DAO\JSON\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\MascotaDAO as MascotaDAO;
 use DAO\MYSQL\SolicitudDAO as SolicitudDAO;
@@ -106,3 +105,6 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
         </div>
     </div>
 </main>
+<?php
+require_once(VIEWS_PATH."footer.php");
+?>

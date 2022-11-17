@@ -20,11 +20,8 @@ class ResxMascDAO
 
                 $query = "INSERT INTO " . $this->tableName . " (idReserva, idMascota)
              VALUES (:idReserva, :idMascota);";
-                ///id fk?
-                //$parameters["idSolicitud"] = $soliXmasc->getIdSolixMasc();
                 $parameters["idReserva"] = $idReserva;
                 $parameters["idMascota"] = $masc->getId();
-                ///
                 $this->connection = Connection::GetInstance();
                 $this->connection->ExecuteNonQuery($query, $parameters);
             }
@@ -54,11 +51,11 @@ class ResxMascDAO
         }
     }
 
-    function getIdMascotaByIdReserva($idReserva) /////
+    function getIdMascotaByIdReserva($idReserva)
     {
         try {
 
-            $query = "SELECT idMascota FROM " . $this->tableName . " WHERE idReserva = :idReserva"; //Limit 1?
+            $query = "SELECT idMascota FROM " . $this->tableName . " WHERE idReserva = :idReserva"; //L 1?
 
             $parameters["idReserva"] = $idReserva;
 
