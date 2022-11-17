@@ -33,7 +33,7 @@ if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == 'g') {
             </div>
         </main>
     </div>
-<?php } /////////// 
+<?php }
 ?>
 <!-- ################################################################################################ -->
 <div class="alert alert-<?php echo $alert->getTipo() ?>">

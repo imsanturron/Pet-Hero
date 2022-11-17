@@ -4,21 +4,19 @@ namespace Models;
 
 use Models\Guardian as Guardian;
 use Models\Dueno as Dueno;
-//use JsonSerializable;
-//use Serializable;
 
-class Solicitud //implements JsonSerializable
+class Solicitud 
 {
     protected $id;
     protected $fechaInicio;
     protected $fechaFin;
-    protected $nombreDueno; //////////SACAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    protected $nombreDueno; 
     protected $dniDueno;
-    protected $nombreGuardian; //////////SACAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    protected $nombreGuardian; 
     protected $dniGuardian;
-    protected $direccionGuardian; //////////SACAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    protected $telefonoDueno; //////////SACAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    protected $telefonoGuardian; //////////SACAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    protected $direccionGuardian; 
+    protected $telefonoDueno; 
+    protected $telefonoGuardian; 
     protected $esPago = false; //booleano de pago
 
     public function  __construct(Guardian $guardian = null, Dueno $dueno = null, $desde = "", $hasta = "")
@@ -35,13 +33,6 @@ class Solicitud //implements JsonSerializable
             $this->telefonoGuardian = $guardian->getTelefono();
         }
     }
-
-    /*public function jsonSerialize(){
-        $solicitud["id"] = $this->id;
-    }*/
-
-
-
 
     public function getId()
     {

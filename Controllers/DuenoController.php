@@ -295,7 +295,7 @@ class DuenoController
     exitoso, crea la solicitud y la intermedia de solicitudes x mascotas */
     public function ElegirGuardianFinal($animales, $dni, $desde, $hasta)
     {
-        //$guardian = new Guardian(); PARA IMPLEMENTAR EN OTROS LADOS
+        //$guardian = new Guardian(); PARA IMPLEMENTAR EN OTROS LADOS --> posible por :self
         //$guardian->setDireccion("asd")->setDni("dad")->setEmail("kasmkak");
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             try {
@@ -348,7 +348,6 @@ class DuenoController
     solicitud como la tabla intermedia de solicitudes y mascotas */
     public function cancelarSolicitud($solicitudId)
     {
-        echo "soll->" . $solicitudId;
         try {
             $solicitud = new SolicitudDAO();
             $solicitudXmasc = new SolixMascDAO();
@@ -378,10 +377,7 @@ class DuenoController
         $operacion = $s[0];
         $idSoliResPag = $s[1];
         $primerPago = $s[2];
-        echo "formpago:" . $formaDePago . "<br>";
-        echo "idsrp:" . $idSoliResPag . "<br>";
-        echo "PrimerPago:" . $primerPago . "<br>";
-        echo "operacion:" . $operacion . "<br>";
+
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             try {
                 if ($operacion == "pagar") {
@@ -423,8 +419,6 @@ class DuenoController
                             $alert = new Alert("warning", "Pago cancelado. <br>
                             Tiene mascotas incompatibles en la fecha o la mascota esta reservada");
 
-                            ///ver si mostrar si rechazo pago
-                            ///HACER ALERTAS
                             $this->login($alert);
                         }
                     } else { //en caso de hacer el pago final
@@ -445,8 +439,6 @@ class DuenoController
                     else
                         $alert = new Alert("success", "Error borrando algun pago o solicitud");
 
-                    ///ver si mostrar si rechazo pago
-                    ///HACER ALERTAS
                     $this->login($alert);
                 }
             } catch (Exception $ex) {
@@ -473,7 +465,7 @@ class DuenoController
                 $guardian = $guardianDAO->GetByDni($dniGuard);
                 $reservaDAO = new ReservaDAO();
                 $reserva = $reservaDAO->GetById($idReserva);
-                require_once(VIEWS_PATH . "generarReviewAGuardianX.php"); 
+                require_once(VIEWS_PATH . "generarReviewAGuardianX.php");
             } else if ($operacion == "noCrear") {
                 try {
                     $reservaDAO = new ReservaDAO();
