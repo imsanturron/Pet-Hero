@@ -1,18 +1,6 @@
 <?php
 require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
-
-use DAO\MYSQL\MascotaDAO as MascotaDAO;
-use DAO\MYSQL\SolicitudDAO as SolicitudDAO;
-use DAO\MYSQL\ReservaDAO as ReservaDAO;
-use DAO\MYSQL\PagoDAO as PagoDAO;
-use DAO\MYSQL\ResxMascDAO;
-use DAO\MYSQL\SolixMascDAO as SolixMascDAO;
-use Models\Guardian as Guardian;
-use Models\Dueno as Dueno;
-use Models\Mascota as Mascota;
-use Models\Pago as Pago;
-use Models\ResxMasc as ResXmasc;
 ?>
 
 <main class="py-5">
@@ -42,7 +30,7 @@ use Models\ResxMasc as ResXmasc;
                     <tbody>
                         <?php if (isset($_SESSION['loggedUser']) && $_SESSION['tipo']  == 'd') { ?>
                             <form action="<?php echo FRONT_ROOT ?>Dueno/realizarPago" method="POST">
-                                <?php 
+                                <?php }
 
                             if (isset($pagos) && !empty($pagos)) {
 
@@ -50,36 +38,7 @@ use Models\ResxMasc as ResXmasc;
                                     $soli = $solicitud->GetById($pago->getId());
                                     if (!$soli)
                                         $reser = $reservas->GetById($pago->getId());
-
-
-                                    if ($soli) {
-                                        foreach ($mascXsoli as $tabla) {
-
-                                            if ($tabla->getIdSolicitud() == $soli->getId()) {
-                                                $idMascotaX = $tabla->getIdMascota();
-                                                foreach ($mascotas as $masc) {
-                                                    if ($masc->getId() == $idMascotaX) { ?>
-                                                        <input type="hidden" name="animales[]" value="<?php echo $masc->getId(); ?>">
-                                                    <?php
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        foreach ($mascXres as $tabla) {
-
-                                            if ($tabla->getIdReserva() == $reser->getId()) {
-                                                $idMascotaX = $tabla->getIdMascota();
-                                                foreach ($mascotas as $masc) {
-                                                    if ($masc->getId() == $idMascotaX) { ?>
-                                                        <input type="hidden" name="animales[]" value="<?php echo $masc->getId(); ?>">
-                                    <?php
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                    ?>
+                                ?>
                                     <tr>
                                         <td><?php echo $pago->getId(); ?></td>
                                         <td><?php
@@ -118,8 +77,6 @@ use Models\ResxMasc as ResXmasc;
                                             <td><select name="formaDePago" required>
                                                     <option value="credito"> Credito </option>
                                                     <option value="debito"> Debito </option>
-                                                    <option value="efectivo"> Efectivo </option>
-                                                    <option value="cheque"> Cheque </option>
                                                 </select></td>
                                         <?php } else { ?>
                                             <input type="hidden" name="formaDePago" value="-">
@@ -143,16 +100,9 @@ use Models\ResxMasc as ResXmasc;
                                         </td>
                                         <?php if ($_SESSION["tipo"]  == "d") { ?>
                                             <td>
-                                                <?php if ($soli) { ?>
-                                                    <input type="hidden" name="idSoliRes" value="<?php echo $soli->getId(); ?>">
-                                                <?php } else { ?>
-                                                    <input type="hidden" name="idSoliRes" value="<?php echo $reser->getId(); ?>">
-                                                <?php } ?>
-                                                <input type="hidden" name="idPago" value="<?php echo $pago->getId(); ?>">
-                                                <input type="hidden" name="primerPago" value="<?php echo $pago->getPrimerPagoReserva(); ?>">
-                                                <button type="submit" name="operacion" value="pagar" class="btn btn-danger" ?> Pagar </button>
+                                                <button type="submit" name="operacion" value="pagar-<?php echo $pago->getId(); ?>-<?php echo $pago->getPrimerPagoReserva(); ?>" class="btn btn-danger" ?> Pagar </button>
                                                 <?php if ($pago->getPrimerPagoReserva() == null || $pago->getPrimerPagoReserva() == false) { ?>
-                                                    <button type="submit" name="operacion" value="cancelar" class="btn btn-danger" ?> Cancelar </button>
+                                                    <button type="submit" name="operacion" value="cancelar-<?php echo $pago->getId(); ?>-<?php echo $pago->getPrimerPagoReserva(); ?>" class="btn btn-danger" ?> Cancelar </button>
                                                 <?php } ?>
                                             </td>
                                         <?php
@@ -163,9 +113,7 @@ use Models\ResxMasc as ResXmasc;
                                 }
                             }
                         } else
-                            echo "<h2>No tiene pagos pendientes!</h2>";
-                    }else
-                    echo "<h2>Inicia sesion!</h2>";
+                            echo "<h2>Inicia sesion!</h2>";
                         ?>
                             </form>
                     </tbody>

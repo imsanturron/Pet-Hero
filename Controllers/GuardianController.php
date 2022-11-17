@@ -165,6 +165,7 @@ class GuardianController
                     $solis = $envio;
                     require_once(VIEWS_PATH . "verSolicitudes.php");
                 } else if ($opcion == "verPrimerosPagosPendientes") {
+                    $envio = array();
                     $guardianDAO = new GuardianDAO();
                     $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
                     $pago = new PagoDAO();
@@ -179,6 +180,14 @@ class GuardianController
                     $mascotas = $mascota->GetAll(); ///get all by id desp
                     $reservas = new ReservaDAO();
                     $ress = $reservas->getReservasByDniGuardian($guardian->getDni());
+                    foreach ($pagos as $pag) {
+                        if (($pag->getPrimerPagoReserva() == false || $pag->getPrimerPagoReserva() == null)
+                            || ($pag->getPagoFinal() == false || $pag->getPagoFinal() == null)
+                        ) {
+                            array_push($envio, $pag);
+                        }
+                    }
+                    $pagos = $envio;
                     require_once(VIEWS_PATH . "pagosPendientes.php");
                 } else if ($opcion == "cambiarTamanoACuidar") {
                     $guardianDAO = new GuardianDAO();
@@ -187,6 +196,29 @@ class GuardianController
                     require_once(VIEWS_PATH . "cambiarTamanoACuidar.php");
                 } else if ($opcion == "modificarDatos") {
                     require_once(VIEWS_PATH . "modificarDatos.php");
+                }else if ($opcion == "historialDePagos") {
+                    $envio = array();
+                    $guardianDAO = new GuardianDAO();
+                    $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
+                    $pago = new PagoDAO();
+                    $solicitud = new SolicitudDAO();
+                    $solis = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
+                    $pagos = $pago->getPagosByDniGuardian($guardian->getDni());
+                    $mascXsoliDAO = new SolixMascDAO();
+                    $mascXsoli = $mascXsoliDAO->GetAll();
+                    $mascXresDAO = new ResxMascDAO();
+                    $mascXres = $mascXresDAO->GetAll();
+                    $mascota = new MascotaDAO();
+                    $mascotas = $mascota->GetAll();
+                    $reservas = new ReservaDAO();
+                    $ress = $reservas->getReservasByDniGuardian($guardian->getDni());
+                    foreach ($pagos as $pag) {
+                        if ($pag->getPrimerPagoReserva() == true && $pag->getPagoFinal() == true) {
+                            array_push($envio, $pag);
+                        }
+                    }
+                    $pagos = $envio;
+                    require_once(VIEWS_PATH . "historialDePagos.php");
                 }
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
@@ -314,10 +346,14 @@ class GuardianController
     un dueño. En caso de rechazarla se borrara la solicitud como tambien la intermedia
     de solicitudes-mascotas. Si se acepta, seguira siendo una solicitud, se le dotara de
     true en el atributo "esPago", y se creara un pago para que el dueño pueda realizar */
-    public function operarSolicitud($solicitudId, $operacion, $animales)
+    public function operarSolicitud($operacion)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
             try {
+                $s = explode("-", $operacion);
+                $operacion = $s[0];
+                $solicitudId = $s[1];
+
                 if ($operacion == "aceptar") {
                     $solicitudXmasc = new SolixMascDAO();
                     $idmascs = $solicitudXmasc->getAllIdMascotaByIdSolicitud($solicitudId);
@@ -337,8 +373,7 @@ class GuardianController
                         $soli->getFechaInicio(),
                         $soli->getFechaFin()
                     );
-                    //echo "   valid---->" . $valid;
-                    //echo "   valid2---->" . $valid2;
+
                     if ($valid && $valid2) {
                         $guardianDAO = new GuardianDAO();
                         $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
@@ -369,11 +404,11 @@ class GuardianController
                         $alert = new Alert("warning", "No se borro alguna solicitud");
                     }
                 }
+                $this->login($alert);
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
                 $this->login($alert);
             }
-            $this->login($alert);
         } else {
             $alert = new Alert("warning", "Debe iniciar sesion para acceder a sus funciones");
             $this->home($alert);

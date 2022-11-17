@@ -1,27 +1,6 @@
 <?php
-require_once(VIEWS_PATH."header.php");
+require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
-
-use DAO\MYSQL\GuardianDAO as GuardianDAO;
-use DAO\MYSQL\ReservaDAO as ReservaDAO;
-use DAO\MYSQL\MascotaDAO as MascotaDAO;
-use DAO\MYSQL\ResxMascDAO as ResxMascDAO;
-use Models\Guardian as Guardian;
-use Models\Reserva as Reserva;
-use Models\Resena as Resena;
-
-if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
-  if ($_SESSION['tipo'] == 'd') {
-    //$dueno = $_SESSION['loggedUser'];
-    //$reservas = new ReservaDAO();
-    //$ress = $reservas->getReservasByDniDueno($dueno->getDni());
-    //$mascota = new MascotaDAO(); ///get all by id desp
-    //$mascotas = $mascota->GetAll(); ///get all by id desp
-    //$resXmascDAO = new ResxMascDAO();
-    //$mascXres = $resXmascDAO->GetAll();
-    //$guardianDAO = new GuardianDAO();
-  }
-}
 ?>
 
 <main class="py-5">
@@ -63,17 +42,14 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
             ?>
                   <tr>
                     <td rowspan="<?php echo $count; ?>">
-                      <input type="hidden" name="idReserva" value="<?php echo $reserva->getId(); ?>">
-                      <input type="hidden" name="dniGuard" value="<?php echo $guardian->getDni(); ?>">
-                      <button type="submit" name="operacion" value="crear" class="btn btn-danger">Crear review </button>
-                      <button type="submit" name="operacion" value="noCrear" class="btn btn-danger">Omitir / no crear </button>
+                      <button type="submit" name="operacion" value="crear-<?php echo $reserva->getId(); ?>-<?php echo $guardian->getDni(); ?>" class="btn btn-danger">Crear review </button>
+                      <button type="submit" name="operacion" value="noCrear-<?php echo $reserva->getId(); ?>-<?php echo $guardian->getDni(); ?>" class="btn btn-danger">Omitir / no crear </button>
                     </td>
                     <td rowspan="<?php echo $count; ?>"><?php echo $guardian->getNombre(); ?></td>
                     <td rowspan="<?php echo $count; ?>"><?php echo $guardian->getUserName(); ?></td>
                     <td rowspan="<?php echo $count; ?>"><?php echo $guardian->getPrecio(); ?></td>
                     <td rowspan="<?php echo $count; ?>"><?php echo $guardian->getDireccion(); ?></td>
-                    <td rowspan="<?php echo $count; ?>"><?php //php echo $guardianx->getReputacion(); 
-                                                        ?></td>
+                    <td rowspan="<?php echo $count; ?>"><?php echo $guardian->getPuntajePromedio(); ?></td>
                     <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getFechaInicio(); ?></td>
                     <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getFechaFin(); ?></td>
                     <?php foreach ($mascXres as $tabla) {
@@ -106,5 +82,5 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
   </section>
 </main>
 <?php
-require_once(VIEWS_PATH."footer.php");
+require_once(VIEWS_PATH . "footer.php");
 ?>

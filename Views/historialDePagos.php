@@ -1,25 +1,13 @@
 <?php
 require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
-
-use DAO\MYSQL\MascotaDAO as MascotaDAO;
-use DAO\MYSQL\SolicitudDAO as SolicitudDAO;
-use DAO\MYSQL\ReservaDAO as ReservaDAO;
-use DAO\MYSQL\PagoDAO as PagoDAO;
-use DAO\MYSQL\ResxMascDAO;
-use DAO\MYSQL\SolixMascDAO as SolixMascDAO;
-use Models\Guardian as Guardian;
-use Models\Dueno as Dueno;
-use Models\Mascota as Mascota;
-use Models\Pago as Pago;
-use Models\ResxMasc as ResXmasc;
 ?>
 
 <main class="py-5">
     <?php if (isset($_SESSION['loggedUser'])) { ?>
         <section id="listado" class="mb-5">
             <div class="container">
-                <h2 class="mb-4">Historial de  reservas y pagos finalizados</h2>
+                <h2 class="mb-4">Historial de reservas y pagos finalizados</h2>
                 <table class="table bg-light-alpha">
                     <thead>
                         <th>Id unico del pago</th>
@@ -35,8 +23,7 @@ use Models\ResxMasc as ResXmasc;
                         <th>Pago final de reserva</th>
                     </thead>
                     <tbody>
-                        <?php if (isset($_SESSION['loggedUser']) && $_SESSION['tipo']  == 'd') { ?>
-                            <?php } ///sacar
+                        <?php
 
                         if (isset($pagos) && !empty($pagos)) {
 
@@ -44,36 +31,7 @@ use Models\ResxMasc as ResXmasc;
                                 $soli = $solicitud->GetById($pago->getId());
                                 if (!$soli)
                                     $reser = $reservas->GetById($pago->getId());
-
-
-                                if ($soli) {
-                                    foreach ($mascXsoli as $tabla) {
-
-                                        if ($tabla->getIdSolicitud() == $soli->getId()) {
-                                            $idMascotaX = $tabla->getIdMascota();
-                                            foreach ($mascotas as $masc) {
-                                                if ($masc->getId() == $idMascotaX) { ?>
-                                                    <input type="hidden" name="animales[]" value="<?php echo $masc->getId(); ?>">
-                                                <?php
-                                                }
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    foreach ($mascXres as $tabla) {
-
-                                        if ($tabla->getIdReserva() == $reser->getId()) {
-                                            $idMascotaX = $tabla->getIdMascota();
-                                            foreach ($mascotas as $masc) {
-                                                if ($masc->getId() == $idMascotaX) { ?>
-                                                    <input type="hidden" name="animales[]" value="<?php echo $masc->getId(); ?>">
-                                <?php
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                ?>
+                        ?>
                                 <tr>
                                     <td><?php echo $pago->getId(); ?></td>
                                     <td><?php

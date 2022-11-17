@@ -36,33 +36,24 @@ class MascotaController
             $bytes = bin2hex(random_bytes(20));
             $fotoM = $bytes . '_' . basename($_FILES['fotoM']['name']);
             $filenameFM = ROOT . IMG_PATH . $fotoM;
-            //echo "filename ---> " . $filenameFM;
 
             $extension = strtolower(pathinfo($_FILES['fotoM']['name'], PATHINFO_EXTENSION));
-            //echo "<br>extension ---> " . $extension;
 
             if (strcmp($extension, 'jpg') == 0 || strcmp($extension, 'png') == 0) {
 
                 $sizeFM = $_FILES['fotoM']['size'];
-                //echo "<br>sizeFM  ----> " . $sizeFM;
 
                 if ($sizeFM > 1000000) { //1mb
-                    echo "error 1";
                     $error = true;
                 } else {
-                    //$filename = ""
                     if (move_uploaded_file($_FILES['fotoM']['tmp_name'], $filenameFM)) {
-                        //$fotoM = $this->idFotoFechaYCheck($fotoM)/* . basename($_FILES['fotoM']['name'])*/;
                     } else {
-                        echo "error 2";
                         $error = true;
-                        ///dar error desconocido, el q me diho q podia ser carpeta no creada
+                        ///dar error desconocido podia ser carpeta no creada.
                     }
                 }
             } else {
-                echo "error 3";
                 $error = true;
-                ///dar otro error
             }
 
             if (file_exists($_FILES['planVacunacion']['tmp_name'])) {
@@ -77,19 +68,15 @@ class MascotaController
                     $sizePV = $_FILES['planVacunacion']['size'];
 
                     if ($sizePV > 1000000) { // 1mb
-                        echo "error 4";
                         $error = true;
                     } else {
                         if (move_uploaded_file($_FILES['planVacunacion']['tmp_name'], $filenamePV)) {
-                            //$planVacunacion = $this->idFotoFechaYCheck($planVacunacion) . basename($_FILES['planVacunacion']['nanme']);
                         } else {
-                            echo "error 5";
                             $error = true;
-                            ///dar error desconocido, el q me diho q podia ser carpeta no creada
+                            ///dar error desconocido, podia ser carpeta no creada
                         }
                     }
                 } else {
-                    echo "error 6";
                     $error = true;
                 }
             }
@@ -103,24 +90,20 @@ class MascotaController
                     $sizeV = $_FILES['video']['size'];
 
                     if ($sizeV > 10000000) { //10mb
-                        echo "error 7";
                         $error = true;
                     } else {
                         if (move_uploaded_file($_FILES['video']['tmp_name'], $filenameV)) {
-                            //$video = $this->idFotoFechaYCheck($fotoM) . basename($_FILES['fotoM']['name']);
                         } else {
-                            echo "error 8";
                             $error = true;
-                            ///dar error desconocido, el q me diho q podia ser carpeta no creada
+                            ///dar error desconocido, podia ser carpeta no creada
                         }
                     }
                 } else {
-                    echo "error 9";
                     $error = true;
                 }
             } else
                 $video = null; //sino da error raro cuando no mando
-            ///preguntar si nombre o algo asi
+
             $mascota = new Mascota();
             $mascota->setDniDueno($_SESSION["loggedUser"]->getDni());
             $mascota->setEspecie($especie); ///ver si crear clase perro y gato
@@ -153,9 +136,9 @@ class MascotaController
     /* Borrar una mascota */
     public function Remove($id)
     {
-        if (isset($_SESSION["loggedUser"])) { ///borrar tambien intermedias
+        if (isset($_SESSION["loggedUser"])) { 
             try {
-                $bien = $this->mascotaDAO->removeMascotaById($id); //modificar funcion
+                $bien = $this->mascotaDAO->removeMascotaById($id); 
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
                 $this->loginDueno($alert);
