@@ -1,15 +1,6 @@
 <?php
 require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
-
-use Config\Autoload as Autoload;
-use DAO\MYSQL\GuardianDAO as GuardianDAO;
-use DAO\MYSQL\MascotaDAO as MascotaDAO;
-use DAO\MYSQL\SolicitudDAO as SolicitudDAO;
-use DAO\MYSQL\SolixMascDAO;
-use Models\Guardian as Guardian;
-use Models\Dueno as Dueno;
-use Models\Mascota as Mascota;
 ?>
 
 <main class="py-5">
@@ -61,12 +52,11 @@ use Models\Mascota as Mascota;
                                     } ?>
                                     <tr>
                                         <td rowspan="<?php echo $count; ?>">
-                                            <input type="hidden" name="solicitudId" value="<?php echo $solicitud->getId(); ?>">
                                             <?php if ($_SESSION['tipo'] == 'g') { ?>
-                                                <button type="submit" name="operacion" value="aceptar" class="btn btn-danger"> Aceptar </button>
-                                                <button type="submit" name="operacion" value="rechazar" class="btn btn-danger"> Rechazar </button>
+                                                <button type="submit" name="operacion" value="aceptar-<?php echo $solicitud->getId(); ?>" class="btn btn-danger"> Aceptar </button>
+                                                <button type="submit" name="operacion" value="rechazar-<?php echo $solicitud->getId(); ?>" class="btn btn-danger"> Rechazar </button>
                                             <?php } else { ?>
-                                                <button type="submit" class="btn btn-danger"> Cancelar </button>
+                                                <button type="submit" name="solicitudId" value="<?php echo $solicitud->getId(); ?>" class="btn btn-danger"> Cancelar </button>
                                             <?php } ?>
                                         </td>
                                         <td rowspan="<?php echo $count; ?>"><?php echo $solicitud->getNombreDueno(); ?></td>
@@ -85,13 +75,9 @@ use Models\Mascota as Mascota;
                                                         <td><?php echo $masc->getNombre(); ?></td>
                                                         <td><?php echo $masc->getEspecie(); ?></td>
                                                         <td><?php echo $masc->getRaza(); ?></td>
-                                                        <td><?php echo $masc->getObservaciones(); ?></td> <? //TAMAÑO Y FOTOS 
-                                                                                                            ?>
-                                                        <?php if ($_SESSION['tipo'] == 'g') { ?>
-                                                            <input type="hidden" name="animales[]" value="<?php echo $masc->getId(); ?>">
-                                                        <?php } ?>
+                                                        <td><?php echo $masc->getObservaciones(); ?></td>
                                     </tr>
-            <?php
+                <?php
                                                     }
                                                 }
                                             }
@@ -99,10 +85,10 @@ use Models\Mascota as Mascota;
                                     }
                                 } else {
                                     echo " <h4>NO HAY SOLICITUDES ENVIADAS!</h4>";
-                                    ?>
-                                Si ha enviado una solicitud anteriormente, puede que esta haya sido aceptada y
-                                deba pagar su confirmacion.
-                                <?php  } ?>
+                ?>
+                Si ha enviado una solicitud anteriormente, puede que esta haya sido aceptada y
+                deba pagar su confirmacion.
+            <?php  } ?>
                                 </form>
                     </tbody>
             </table>
