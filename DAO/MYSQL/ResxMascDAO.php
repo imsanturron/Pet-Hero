@@ -51,11 +51,11 @@ class ResxMascDAO
         }
     }
 
-    function getIdMascotaByIdReserva($idReserva) /////
+    function getIdMascotaByIdReserva($idReserva)
     {
         try {
 
-            $query = "SELECT idMascota FROM " . $this->tableName . " WHERE idReserva = :idReserva"; //Limit 1?
+            $query = "SELECT idMascota FROM " . $this->tableName . " WHERE idReserva = :idReserva"; //L 1?
 
             $parameters["idReserva"] = $idReserva;
 

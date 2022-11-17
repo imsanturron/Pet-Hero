@@ -106,7 +106,7 @@ class MascotaController
 
             $mascota = new Mascota();
             $mascota->setDniDueno($_SESSION["loggedUser"]->getDni());
-            $mascota->setEspecie($especie); ///ver si crear clase perro y gato
+            $mascota->setEspecie($especie); //desp? clase->pg
             $mascota->setNombre($nombre);
             $mascota->setRaza($raza);
             $mascota->setTamano($tamano);

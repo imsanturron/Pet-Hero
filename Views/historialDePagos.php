@@ -17,7 +17,7 @@ include('nav-bar.php');
                         <th>Hasta</th>
                         <th>Direccion de guarda</th>
                         <th>Precio total</th>
-                        <th>Monto a pagar actual</th>
+                        <th>Montos individuales</th>
                         <th>Forma de pago</th>
                         <th>Primer pago (confirma reserva)</th>
                         <th>Pago final de reserva</th>

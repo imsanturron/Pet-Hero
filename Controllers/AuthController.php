@@ -79,8 +79,8 @@ class AuthController
   /* Validaciones que se hacen cada vez que el usuario inicia sesion */
   private function validacionesLogin()
   {
-    try { ///pasar reservas a actual
-      $bool = false; //actualizar adentro
+    try {
+      $bool = false;
       if (isset($_SESSION["loggedUser"])) {
         if ($_SESSION["tipo"] == 'g') {
           $guardian = new Guardian();
