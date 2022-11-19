@@ -12,8 +12,6 @@ class Reserva extends Solicitud
 
   public function __construct(Solicitud $solicitud = null)
   {
-    // parent::__construct($solicitud->getAnimales(), $solicitud->getFechaInicio(),$solicitud->getFechaFin());
-
     if ($solicitud) {
       $this->setId($solicitud->getId());
       $this->setFechaInicio($solicitud->getFechaInicio());
@@ -44,23 +42,6 @@ class Reserva extends Solicitud
 
     return $this;
   }
-
-  /*public function getEstadoDescripcion()
-    {
-      $ret = "";
-      switch($this->estado) {
-        case "P":
-          $ret = "Pendiente";
-          break;
-        case "F":
-          $ret = "Finalizado";
-          break;
-        case "C":
-          $ret = "Cancelado";
-          break;
-      }
-      return $ret;
-    }*/
 
   public function getCrearResena()
   {

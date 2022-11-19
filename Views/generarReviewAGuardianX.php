@@ -1,19 +1,6 @@
 <?php
-require_once(VIEWS_PATH."header.php");
+require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
-use DAO\MYSQL\GuardianDAO as GuardianDAO;
-use DAO\MYSQL\MascotaDAO as MascotaDAO;
-use DAO\MYSQL\ReservaDAO;
-use DAO\MYSQL\SolicitudDAO as SolicitudDAO;
-use DAO\MYSQL\SolixMascDAO;
-use Models\Guardian as Guardian;
-use Models\Dueno as Dueno;
-use Models\Mascota as Mascota;
-
-//$guardianDAO = new GuardianDAO;
-//$guardian = $guardianDAO->GetByDni($_SESSION["dniguard"]);
-//$reservaDAO = new ReservaDAO();
-//$reserva = $reservaDAO->GetById($_SESSION["idreserva"]);
 ?>
 <div class="wrapper row4">
   <main class="container clear">
@@ -28,7 +15,6 @@ use Models\Mascota as Mascota;
               <tr>
                 <th>Puntaje</th>
                 <th>Observaciones</th>
-                <th>Enviar</th>
               </tr>
             </thead>
             <tbody align="center">

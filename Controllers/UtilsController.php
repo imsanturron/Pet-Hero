@@ -15,7 +15,7 @@ use Exception;
 use Models\Guardian as Guardian;
 use Models\Dueno as Dueno;
 use Models\Reserva as Reserva;
-use Models\Alert as Alert; ////////////
+use Models\Alert as Alert;
 
 class UtilsController
 {
@@ -271,7 +271,6 @@ class UtilsController
   la base de datos. */
   private function ValidarNuevosDatosUsuario($username = null, $email = null, $telefono = null) ///validaciones en el registro
   {
-    //array merge telefonos
     if (isset($_SESSION["loggedUser"])) {
       try {
         if (is_numeric($telefono)) {

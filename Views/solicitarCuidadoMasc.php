@@ -1,11 +1,6 @@
 <?php
 require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
-
-use DAO\MYSQL\MascotaDAO as MascotaDAO;
-use DAO\MYSQL\GuardianDAO as GuardianDAO;
-use Models\Guardian as Guardian;
-
 ?>
 <main class="py-5">
 

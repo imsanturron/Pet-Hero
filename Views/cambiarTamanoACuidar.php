@@ -1,15 +1,6 @@
 <?php
-require_once(VIEWS_PATH."header.php");
+require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
-
-use DAO\MYSQL\GuardianDAO as GuardianDAO;
-use DAO\MYSQL\MascotaDAO as MascotaDAO;
-use DAO\MYSQL\ReservaDAO;
-use DAO\MYSQL\SolicitudDAO as SolicitudDAO;
-use DAO\MYSQL\SolixMascDAO;
-use Models\Guardian as Guardian;
-use Models\Dueno as Dueno;
-use Models\Mascota as Mascota;
 
 if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == 'g') {
 ?>
@@ -42,12 +33,12 @@ if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == 'g') {
             </div>
         </main>
     </div>
-<?php } /////////// 
+<?php }
 ?>
 <!-- ################################################################################################ -->
 <div class="alert alert-<?php echo $alert->getTipo() ?>">
     <?php echo $alert->getMensaje() ?>
 </div>
 <?php
-require_once(VIEWS_PATH."footer.php");
+require_once(VIEWS_PATH . "footer.php");
 ?>

@@ -15,7 +15,6 @@ class User
     protected $direccion;
     protected $tipo; //char = "g" || "d"
     protected $telefono;
-    //protected $pais;
 
     function __construct()
     {

@@ -1,14 +1,6 @@
 <?php
-require_once(VIEWS_PATH."header.php");
+require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
-
-use Config\Autoload as Autoload;
-use DAO\MYSQL\MascotaDAO;
-
-if (isset($_SESSION['loggedUser']) && $_SESSION["tipo"] == 'd') {
-//$mascotasDao = new MascotaDAO();
-//$listaMascotas = $mascotasDao->getMascotasByDniDueno($_SESSION['loggedUser']->getDni());
-}
 ?>
 
 <main class="py-5">
@@ -33,25 +25,24 @@ if (isset($_SESSION['loggedUser']) && $_SESSION["tipo"] == 'd') {
                               if (isset($listaMascotas) && !empty($listaMascotas)) {
                                    foreach ($listaMascotas as $mascota) {
                               ?>
-                                             <tr>
-                                                  <td><?php echo $mascota->getNombre(); ?></td>
-                                                  <td><?php echo $mascota->getRaza(); ?></td>
-                                                  <td><?php echo $mascota->getTamano(); ?></td>
-                                                  <td><?php echo $mascota->getObservaciones(); ?></td>
-                                                  <td><img src="<?php echo FRONT_ROOT . IMG_PATH . $mascota->getFotoMascota() ?>" style="width:680px;height:auto;"></td>
-                                                  <td><img src="<?php echo FRONT_ROOT . IMG_PATH . $mascota->getPlanVacunacion() ?>" style="width:680px;height:auto;"></td>
-                                                  <td>
-                                                       <?php if ($mascota->getVideo()) { ?>
-                                                            <video controls width="220" height="140">
-                                                                 <source src="<?php echo FRONT_ROOT . VIDEO_PATH . $mascota->getVideo() ?>" type="video/mp4">
-                                                            </video>
-                                                       <?php } ?>
-                                                  </td>
-                                                  <td>
-                                                       <input type="hidden" name="id" value="<?php echo $mascota->getId(); ?>">
-                                                       <button type="submit" class="btn btn-danger" ?> Eliminar </button>
-                                                  </td>
-                                             </tr>
+                                        <tr>
+                                             <td><?php echo $mascota->getNombre(); ?></td>
+                                             <td><?php echo $mascota->getRaza(); ?></td>
+                                             <td><?php echo $mascota->getTamano(); ?></td>
+                                             <td><?php echo $mascota->getObservaciones(); ?></td>
+                                             <td><img src="<?php echo FRONT_ROOT . IMG_PATH . $mascota->getFotoMascota() ?>" style="width:680px;height:auto;"></td>
+                                             <td><img src="<?php echo FRONT_ROOT . IMG_PATH . $mascota->getPlanVacunacion() ?>" style="width:680px;height:auto;"></td>
+                                             <td>
+                                                  <?php if ($mascota->getVideo()) { ?>
+                                                       <video controls width="220" height="140">
+                                                            <source src="<?php echo FRONT_ROOT . VIDEO_PATH . $mascota->getVideo() ?>" type="video/mp4">
+                                                       </video>
+                                                  <?php } ?>
+                                             </td>
+                                             <td>
+                                                  <button type="submit" name="id" value="<?php echo $mascota->getId(); ?>" class="btn btn-danger" ?> Eliminar </button>
+                                             </td>
+                                        </tr>
                               <?php
                                    }
                               } else
@@ -64,5 +55,5 @@ if (isset($_SESSION['loggedUser']) && $_SESSION["tipo"] == 'd') {
      </section>
 </main>
 <?php
-require_once(VIEWS_PATH."footer.php");
+require_once(VIEWS_PATH . "footer.php");
 ?>

@@ -15,7 +15,6 @@ class Mascota
     private $fotoMascota;
     private $video;
     private $planVacunacion;
-    //private $ocupada; true false y ver si podemos mandar solicitud con mascota reservada. puede ser intermedia de fechas
 
     public function getNombre()
     {

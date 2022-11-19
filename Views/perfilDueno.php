@@ -1,10 +1,6 @@
 <?php
 require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
-
-use DAO\MYSQL\MascotaDAO;
-use Models\Mascota as Mascota;
-
 ?>
 <main class="py-5">
 

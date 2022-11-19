@@ -13,8 +13,6 @@ class Resena
 
     public function __construct($id = null, $dniDueno = null, $dniGuardian = null, $puntaje = null, $observacion = "")
     {
-        // parent::__construct($solicitud->getAnimales(), $solicitud->getFechaInicio(),$solicitud->getFechaFin());
-
         if ($id && $dniDueno && $dniGuardian) {
             $this->setId($id);
             $this->setDniDueno($dniDueno);

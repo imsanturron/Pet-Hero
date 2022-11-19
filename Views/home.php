@@ -4,7 +4,7 @@ require_once(VIEWS_PATH . "header.php");
 <div id="pageintro" class="hoc clear">
   <article class="center">
     <h3 class="heading underline">PetHero</h3>
-    <p>Bienvenido a la mejor app de cuidado de mascotas de la historia</p>
+    <p>Bienvenido a la mejor app de cuidado de mascotas</p>
   </article>
 </div>
 <form action="<?php echo FRONT_ROOT ?>Home/validarTipoDeUsuario" method="post" style="background-color: #EAEDED;padding: 2rem !important;">

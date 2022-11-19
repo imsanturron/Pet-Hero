@@ -1,5 +1,5 @@
 <?php
-require_once(VIEWS_PATH."header.php");
+require_once(VIEWS_PATH . "header.php");
 ?>
 <a href="<?php echo FRONT_ROOT ?>Home/Index">Volver al home</a>
 
@@ -15,7 +15,7 @@ require_once(VIEWS_PATH."header.php");
     <input name="dni" placeholder="DNI*" pattern=".{6,12}" required title="6 to 12 characters">
     <input class="input-login" type="email" name="email" placeholder="Email*" minlength="3" required>
     <input class="input-login" type="text" name="direccion" placeholder="Direccion*" required>
-    <input name="telefono" placeholder="Telefono"  pattern=".{6,20}" required title="6 to 20 characters">
+    <input name="telefono" placeholder="Telefono" pattern=".{6,20}" required title="6 to 20 characters">
     <input class="input-login" type="number" name="precio" placeholder="Precio*" min="1" max="999999" required>
     Tamaño a cuidar
     <select name="tamanoMasc" required>
@@ -29,5 +29,5 @@ require_once(VIEWS_PATH."header.php");
 </div>
 </div>
 <?php
-require_once(VIEWS_PATH."footer.php");
+require_once(VIEWS_PATH . "footer.php");
 ?>

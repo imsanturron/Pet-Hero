@@ -1,36 +1,7 @@
 <?php
 require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
-
-use DAO\MYSQL\GuardianDAO as GuardianDAO;
-use DAO\MYSQL\MascotaDAO as MascotaDAO;
-use DAO\MYSQL\SolicitudDAO as SolicitudDAO;
-use DAO\MYSQL\ReservaDAO as ReservaDAO;
-use DAO\MYSQL\SolixMascDAO as solixMascDAO;
-use DAO\MYSQL\ResxMascDAO as ResxMascDAO;
-use Models\Guardian as Guardian;
-use Models\Dueno as Dueno;
-use Models\Mascota as Mascota;
-
-if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
-    if ($_SESSION['tipo'] == 'g') {
-        //$guardian = $_SESSION['loggedUser'];
-        //$reservas = new ReservaDAO();
-        //$ress = $reservas->getReservasByDniGuardian($guardian->getDni());
-        // $mascota = new MascotaDAO(); ///get all by id desp
-        //$mascotas = $mascota->GetAll(); ///get all by id desp
-        //$resXmascDAO = new ResxMascDAO();
-        //$mascXres = $resXmascDAO->GetAll();
-    } else {
-        //$dueno = $_SESSION['loggedUser'];
-        //$reservas = new ReservaDAO();
-        //$ress = $reservas->getReservasByDniDueno($dueno->getDni());
-        //$mascota = new MascotaDAO(); ///get all by id desp
-        //$mascotas = $mascota->GetAll(); ///get all by id desp
-        //$resXmascDAO = new ResxMascDAO();
-        //$mascXres = $resXmascDAO->GetAll();
-    }
-} ?>
+?>
 
 <main class="py-5">
 
@@ -54,53 +25,49 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                         <th>Observaciones</th>
 
                     </thead>
-                    <tbody> <? //cambiar action a ver info mascota/dueño o borrar 
-                            ?>
-                        <form action="<?php echo FRONT_ROOT ?>Guardian/operarSolicitud" method="POST">
-                            <?php foreach ($ress as $reserva) {
-                                $count = 0;
-                                foreach ($mascXres as $tabla) {
+                    <tbody>
+                        <?php foreach ($ress as $reserva) {
+                            $count = 0;
+                            foreach ($mascXres as $tabla) {
+                                if ($tabla->getIdReserva() == $reserva->getId()) {
+                                    $idMascotaX = $tabla->getIdMascota();
+                                    foreach ($mascotas as $masc) {
+                                        if ($masc->getId() == $idMascotaX) {
+                                            $count++;
+                                        }
+                                    } //contar para hacer el rowspan
+                                }
+                            } ?>
+                            <tr>
+
+                                <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getNombreDueno(); ?></td>
+                                <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getNombreGuardian(); ?></td>
+                                <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getEstado(); ?></td>
+                                <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getFechaInicio(); ?></td>
+                                <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getFechaFin(); ?></td>
+                                <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getDireccionGuardian(); ?></td>
+
+                                <?php foreach ($mascXres as $tabla) {
+
                                     if ($tabla->getIdReserva() == $reserva->getId()) {
                                         $idMascotaX = $tabla->getIdMascota();
                                         foreach ($mascotas as $masc) {
-                                            if ($masc->getId() == $idMascotaX) {
-                                                $count++;
-                                            }
-                                        } //contar para hacer el rowspan
-                                    }
-                                } ?>
-                                <tr>
+                                            if ($masc->getId() == $idMascotaX) { ?>
 
-                                    <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getNombreDueno(); ?></td>
-                                    <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getNombreGuardian(); ?></td>
-                                    <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getEstado(); ?></td>
-                                    <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getFechaInicio(); ?></td>
-                                    <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getFechaFin(); ?></td>
-                                    <td rowspan="<?php echo $count; ?>"><?php echo $reserva->getDireccionGuardian(); ?></td>
-
-                                    <?php foreach ($mascXres as $tabla) {
-
-                                        if ($tabla->getIdReserva() == $reserva->getId()) {
-                                            $idMascotaX = $tabla->getIdMascota();
-                                            foreach ($mascotas as $masc) {
-                                                if ($masc->getId() == $idMascotaX) { ?>
-
-                                                    <td><?php echo $masc->getNombre(); ?></td>
-                                                    <td><?php echo $masc->getEspecie(); ?></td>
-                                                    <td><?php echo $masc->getRaza(); ?></td>
-                                                    <td><?php echo $masc->getObservaciones(); ?></td>
-                                </tr>
-        <?php
-                                                }
+                                                <td><?php echo $masc->getNombre(); ?></td>
+                                                <td><?php echo $masc->getEspecie(); ?></td>
+                                                <td><?php echo $masc->getRaza(); ?></td>
+                                                <td><?php echo $masc->getObservaciones(); ?></td>
+                            </tr>
+    <?php
                                             }
                                         }
                                     }
                                 }
-                            } else {
-                                echo "NO TIENE RESERVAS ACTUALMENTE";
-                            } ?>
-
-                        </form>
+                            }
+                        } else {
+                            echo "NO TIENE RESERVAS ACTUALMENTE";
+                        } ?>
                     </tbody>
             </table>
         </div>

@@ -295,7 +295,7 @@ class DuenoController
     exitoso, crea la solicitud y la intermedia de solicitudes x mascotas */
     public function ElegirGuardianFinal($animales, $dni, $desde, $hasta)
     {
-        //$guardian = new Guardian(); PARA IMPLEMENTAR EN OTROS LADOS
+        //$guardian = new Guardian(); PARA IMPLEMENTAR EN OTROS LADOS --> posible por :self
         //$guardian->setDireccion("asd")->setDni("dad")->setEmail("kasmkak");
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             try {
@@ -304,7 +304,6 @@ class DuenoController
                 $valid = UtilsController::ValidarMismaRaza($arrayMascotas, $dni, $desde, $hasta); //chequea con mascotas q ya tenga
                 $valid2 = UtilsController::VerifGuardianSoliNuestraRepetida($dni, $desde, $hasta);
                 $valid3 = UtilsController::VerifMascotaNoEstaReservadaEnFecha($arrayMascotas, $desde, $hasta);
-                ///ver ocupacion de mascotas y de guardianes.
                 if ($valid && $valid2 && $valid3) {
 
                     $guardianes = new GuardianDAO();
@@ -370,9 +369,14 @@ class DuenoController
     /* Funcion que sirve tanto para realizar el primero(confirmacion reserva)
      como el segundo pago final, y tambien la posibilidad de cancelar en caso de que
      no se haya realizado el primer pago. */
-    public function realizarPago($animales, $formaDePago, $idSoliRes, $idPago, $primerPago, $operacion) //revisar - hacer validaciones de pago tambien una vez que se paga
+    public function realizarPago($formaDePago, $operacion) //revisar - hacer validaciones de pago tambien una vez que se paga
     {
         ///hacer vista cargar tarjeta
+
+        $s = explode("-", $operacion);
+        $operacion = $s[0];
+        $idSoliResPag = $s[1];
+        $primerPago = $s[2];
 
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             try {
@@ -380,17 +384,17 @@ class DuenoController
                     $pago = new PagoDAO();
                     $mascotas = new MascotaDAO();
                     $solicitudXmasc = new SolixMascDAO();
-                    $idmascs = $solicitudXmasc->getAllIdMascotaByIdSolicitud($idSoliRes);
+                    $idmascs = $solicitudXmasc->getAllIdMascotaByIdSolicitud($idSoliResPag);
                     $arrayMascotas = $mascotas->getArrayByIds($idmascs);
 
                     ///en caso de ser el primer pago...
                     if ($primerPago == false || $primerPago == null) {
                         $solicitud = new SolicitudDAO();
-                        $soli = $solicitud->GetById($idSoliRes);
+                        $soli = $solicitud->GetById($idSoliResPag);
                         $valid = UtilsController::ValidacionesSoliPagoAReserva(
                             $arrayMascotas,
                             $soli->getDniGuardian(),
-                            $idSoliRes,
+                            $idSoliResPag,
                             $soli->getFechaInicio(),
                             $soli->getFechaFin()
                         );
@@ -398,29 +402,27 @@ class DuenoController
                             $reserva = new Reserva($soli);
                             $reservaDAO = new ReservaDAO();
                             $reservaDAO->add($reserva);
-                            $pago->updatePrimerPagoReservaById($idPago);
-                            $pago->updateFormaDePagoReservaById($formaDePago, $idPago); ///!!!!!!
-                            $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSoliRes);
-                            $resul = $solicitud->removeSolicitudById($idSoliRes);
+                            $pago->updatePrimerPagoReservaById($idSoliResPag);
+                            $pago->updateFormaDePagoReservaById($formaDePago, $idSoliResPag); ///!!!!!!
+                            $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSoliResPag);
+                            $resul = $solicitud->removeSolicitudById($idSoliResPag);
                             $intermediaMascotasXreserva = new ResxMascDAO();
-                            $intermediaMascotasXreserva->add($arrayMascotas, $idSoliRes);
+                            $intermediaMascotasXreserva->add($arrayMascotas, $idSoliResPag);
                             $alert = new Alert("success", "Primer pago realizado");
                         } else { //no puede hacerse reserva
                             $solicitud = new SolicitudDAO();
                             $solicitudXmasc = new SolixMascDAO();
                             $pago = new PagoDAO();
-                            $solicitud->removeSolicitudById($idSoliRes);
-                            $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSoliRes);
-                            $pago->removePagoById($idPago);
+                            $solicitud->removeSolicitudById($idSoliResPag);
+                            $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSoliResPag);
+                            $pago->removePagoById($idSoliResPag);
                             $alert = new Alert("warning", "Pago cancelado. <br>
                             Tiene mascotas incompatibles en la fecha o la mascota esta reservada");
 
-                            ///ver si mostrar si rechazo pago
-                            ///HACER ALERTAS
                             $this->login($alert);
                         }
                     } else { //en caso de hacer el pago final
-                        $pago->updatePagoFinalReservaById($idPago);
+                        $pago->updatePagoFinalReservaById($idSoliResPag);
                         $alert = new Alert("success", "Pago final realizado");
                     }
 
@@ -429,16 +431,14 @@ class DuenoController
                     $solicitud = new SolicitudDAO();
                     $solicitudXmasc = new SolixMascDAO();
                     $pago = new PagoDAO();
-                    $resul = $solicitud->removeSolicitudById($idSoliRes);
-                    $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSoliRes);
-                    $resul3 = $pago->removePagoById($idPago);
+                    $resul = $solicitud->removeSolicitudById($idSoliResPag);
+                    $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSoliResPag);
+                    $resul3 = $pago->removePagoById($idSoliResPag);
                     if ($resul && $resul2 && $resul3)
                         $alert = new Alert("success", "Pago cancelado");
                     else
                         $alert = new Alert("success", "Error borrando algun pago o solicitud");
 
-                    ///ver si mostrar si rechazo pago
-                    ///HACER ALERTAS
                     $this->login($alert);
                 }
             } catch (Exception $ex) {
@@ -453,27 +453,25 @@ class DuenoController
 
     /* Opcion de crear u no hacer una reseña a un guardian en el momento que una
      reserva haya finalizado. */
-    public function crearResena($idReserva, $dniGuard, $operacion)
+    public function crearResena($operacion)
     {
+        $s = explode("-", $operacion);
+        $operacion = $s[0];
+        $idReserva = $s[1];
+        $dniGuard = $s[2];
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             if ($operacion == "crear") {
-                $guardianDAO = new GuardianDAO; //NUEVO
-                $guardian = $guardianDAO->GetByDni($dniGuard); //NUEVO
-                $reservaDAO = new ReservaDAO(); //NUEVO
-                $reserva = $reservaDAO->GetById($idReserva); //NUEVO
-                ///ver si se le pasa atributo xq antes no andaba
-                // ESTO ESTABA DESCOMENTADO$_SESSION["dniguard"] = $dniGuard; ///cambiar luego pasando atributos de una
-                //ESTO ESTABA DESCOMENTADO $_SESSION["idreserva"] = $idReserva;
-                require_once(VIEWS_PATH . "generarReviewAGuardianX.php"); //PREGUNTAR PROFE VARIABLES
-                ///Y luego crear reseña, tambien persistir.
+                $guardianDAO = new GuardianDAO;
+                $guardian = $guardianDAO->GetByDni($dniGuard);
+                $reservaDAO = new ReservaDAO();
+                $reserva = $reservaDAO->GetById($idReserva);
+                require_once(VIEWS_PATH . "generarReviewAGuardianX.php");
             } else if ($operacion == "noCrear") {
                 try {
                     $reservaDAO = new ReservaDAO();
                     $reservaDAO->updateCrearResena($idReserva, false);
                     $reservaDAO->updateResHechaOrechazada($idReserva, true);
                 } catch (Exception $ex) {
-                    echo "<br>--480";
-                    echo $ex;
                     $alert = new Alert("warning", "error en base de datos");
                     $this->login($alert);
                 }
@@ -507,23 +505,7 @@ class DuenoController
                 $resenaDAO->Add($resena);
                 $alert = new Alert("success", "review agregada exitosamente");
                 $this->login($alert);
-
-                /*$reservaDAO = new ReservaDAO();
-                $reservaDAO->updateCrearResena($_SESSION["idreserva"], false);
-                $reservaDAO->updateResHechaOrechazada($_SESSION["idreserva"], true);
-
-                $guardianDAO = new GuardianDAO();
-                $guardianDAO->updateCantResenasMas1($_SESSION["dniguard"]); //no cambiar el orden
-                $guardianDAO->updatePuntajeTotalMasPuntaje($_SESSION["dniguard"], $puntos);
-                $guardianDAO->updatePuntajePromedio($_SESSION["dniguard"]);
-                $resenaDAO = new ResenaDAO();
-                $dueno = new Dueno();
-                $dueno = $_SESSION["loggedUser"];
-                $resena = new Resena($_SESSION["idreserva"], $dueno->getDni(), $_SESSION["dniguard"], $puntos, $observaciones);
-                $resenaDAO->Add($resena);  Estaba esto */
             } catch (Exception $ex) {
-                echo "<br>--528";
-                echo $ex;
                 $alert = new Alert("warning", "error en base de datos");
                 $this->login($alert);
             }

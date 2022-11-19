@@ -54,8 +54,8 @@ class GuardianController
                 $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
                 $reservas = new ReservaDAO();
                 $ress = $reservas->getReservasByDniGuardian($guardian->getDni());
-                $mascota = new MascotaDAO(); ///get all by id desp
-                $mascotas = $mascota->GetAll(); ///get all by id desp
+                $mascota = new MascotaDAO();
+                $mascotas = $mascota->GetAll();
                 $resXmascDAO = new ResxMascDAO();
                 $mascXres = $resXmascDAO->GetAll();
             } catch (Exception $ex) {
@@ -77,9 +77,8 @@ class GuardianController
                 $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
                 $solicitudes = new SolicitudDAO();
                 $solis = $solicitudes->getSolicitudesByDniGuardian($guardian->getDni());
-                $mascota = new MascotaDAO(); ///get all by id desp
-                $mascotas = $mascota->GetAll(); ///get all by id desp
-                //$mascotas = $mascota->getMascotasByIdSolicitud();
+                $mascota = new MascotaDAO();
+                $mascotas = $mascota->GetAll();
                 $mascXsoliDAO = new SolixMascDAO();
                 $mascXsoli = $mascXsoliDAO->GetAll();
             } catch (Exception $ex) {
@@ -127,7 +126,7 @@ class GuardianController
     /* Menu principal de guardian */
     public function opcionMenuPrincipal($opcion) ///cambiar tamaño mascota a cuidar
     {
-        ///alerta de disponibilidad obsoleta?
+        ///alerta de disp obs...?
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
             $opcion = $_POST['opcion'];
             try {
@@ -138,8 +137,8 @@ class GuardianController
                     $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
                     $reservas = new ReservaDAO();
                     $ress = $reservas->getReservasByDniGuardian($guardian->getDni());
-                    $mascota = new MascotaDAO(); ///get all by id desp
-                    $mascotas = $mascota->GetAll(); ///get all by id desp
+                    $mascota = new MascotaDAO();
+                    $mascotas = $mascota->GetAll();
                     $resXmascDAO = new ResxMascDAO();
                     $mascXres = $resXmascDAO->GetAll();
                     require_once(VIEWS_PATH . "verReservas.php");
@@ -152,9 +151,8 @@ class GuardianController
                     $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
                     $solicitudes = new SolicitudDAO();
                     $solis = $solicitudes->getSolicitudesByDniGuardian($guardian->getDni());
-                    $mascota = new MascotaDAO(); ///get all by id desp
-                    $mascotas = $mascota->GetAll(); ///get all by id desp
-                    //$mascotas = $mascota->getMascotasByIdSolicitud();
+                    $mascota = new MascotaDAO();
+                    $mascotas = $mascota->GetAll();
                     $mascXsoliDAO = new SolixMascDAO();
                     $mascXsoli = $mascXsoliDAO->GetAll();
                     foreach ($solis as $solicitud) {
@@ -165,32 +163,40 @@ class GuardianController
                     $solis = $envio;
                     require_once(VIEWS_PATH . "verSolicitudes.php");
                 } else if ($opcion == "verPrimerosPagosPendientes") {
+                    $envio = array();
                     $guardianDAO = new GuardianDAO();
                     $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
                     $pago = new PagoDAO();
                     $solicitud = new SolicitudDAO();
-                    $solis = $solicitud->getSolicitudesByDniGuardian($guardian->getDni()); ///get all by id desp
+                    $solis = $solicitud->getSolicitudesByDniGuardian($guardian->getDni()); 
                     $pagos = $pago->getPagosByDniGuardian($guardian->getDni());
                     $mascXsoliDAO = new SolixMascDAO();
                     $mascXsoli = $mascXsoliDAO->GetAll();
                     $mascXresDAO = new ResxMascDAO();
                     $mascXres = $mascXresDAO->GetAll();
-                    $mascota = new MascotaDAO(); ///get all by id desp
-                    $mascotas = $mascota->GetAll(); ///get all by id desp
+                    $mascota = new MascotaDAO(); 
+                    $mascotas = $mascota->GetAll(); 
                     $reservas = new ReservaDAO();
                     $ress = $reservas->getReservasByDniGuardian($guardian->getDni());
+                    foreach ($pagos as $pag) {
+                        if (($pag->getPrimerPagoReserva() == false || $pag->getPrimerPagoReserva() == null)
+                            || ($pag->getPagoFinal() == false || $pag->getPagoFinal() == null)
+                        ) {
+                            array_push($envio, $pag);
+                        }
+                    }
+                    $pagos = $envio;
                     require_once(VIEWS_PATH . "pagosPendientes.php");
                 } else if ($opcion == "cambiarTamanoACuidar") {
                     $guardianDAO = new GuardianDAO();
                     $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
-                    //linea anterior asi porque el '$_SESSION["loggedUser"]' no se actualiza con updates
                     require_once(VIEWS_PATH . "cambiarTamanoACuidar.php");
                 } else if ($opcion == "modificarDatos") {
                     require_once(VIEWS_PATH . "modificarDatos.php");
                 }else if ($opcion == "historialDePagos") {
                     $envio = array();
                     $guardianDAO = new GuardianDAO();
-                    $guardian= $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
+                    $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
                     $pago = new PagoDAO();
                     $solicitud = new SolicitudDAO();
                     $solis = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
@@ -199,7 +205,8 @@ class GuardianController
                     $mascXsoli = $mascXsoliDAO->GetAll();
                     $mascXresDAO = new ResxMascDAO();
                     $mascXres = $mascXresDAO->GetAll();
-                    $mascotas = new MascotaDAO();
+                    $mascota = new MascotaDAO();
+                    $mascotas = $mascota->GetAll();
                     $reservas = new ReservaDAO();
                     $ress = $reservas->getReservasByDniGuardian($guardian->getDni());
                     foreach ($pagos as $pag) {
@@ -210,7 +217,6 @@ class GuardianController
                     $pagos = $envio;
                     require_once(VIEWS_PATH . "historialDePagos.php");
                 }
-            
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
                 $this->login($alert);
@@ -337,10 +343,14 @@ class GuardianController
     un dueño. En caso de rechazarla se borrara la solicitud como tambien la intermedia
     de solicitudes-mascotas. Si se acepta, seguira siendo una solicitud, se le dotara de
     true en el atributo "esPago", y se creara un pago para que el dueño pueda realizar */
-    public function operarSolicitud($solicitudId, $operacion, $animales)
+    public function operarSolicitud($operacion)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
             try {
+                $s = explode("-", $operacion);
+                $operacion = $s[0];
+                $solicitudId = $s[1];
+
                 if ($operacion == "aceptar") {
                     $solicitudXmasc = new SolixMascDAO();
                     $idmascs = $solicitudXmasc->getAllIdMascotaByIdSolicitud($solicitudId);
@@ -360,16 +370,15 @@ class GuardianController
                         $soli->getFechaInicio(),
                         $soli->getFechaFin()
                     );
-                    //echo "   valid---->" . $valid;
-                    //echo "   valid2---->" . $valid2;
+
                     if ($valid && $valid2) {
                         $guardianDAO = new GuardianDAO();
                         $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
 
                         $pagos = new PagoDAO();
                         $pago = new Pago($soli, $guardian);
-                        $solicitud->updateAPagoById($soli->getId()); //podemos ver si bien
-                        $pagos->Add($pago); //podemos ver si bien
+                        $solicitud->updateAPagoById($soli->getId()); 
+                        $pagos->Add($pago);
 
                         $alert = new Alert("success", "Solicitud aceptada, pago pendiente para reservar");
                     } else {
@@ -392,11 +401,11 @@ class GuardianController
                         $alert = new Alert("warning", "No se borro alguna solicitud");
                     }
                 }
+                $this->login($alert);
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
                 $this->login($alert);
             }
-            $this->login($alert);
         } else {
             $alert = new Alert("warning", "Debe iniciar sesion para acceder a sus funciones");
             $this->home($alert);
