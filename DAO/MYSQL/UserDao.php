@@ -67,18 +67,19 @@ class UserDAO
 
       foreach ($resultSet as $row) {
         $usuario = new User();
+        $usuario->setUserName($row["username"]);
+        $usuario->setPassword($row["password"]);
         $usuario->setDni($row["dni"]);
-        $usuario->setNombre($row["nombre"]);
-        ////////
+        $usuario->setEmail($row["email"]);
+        $usuario->setTipo($row["tipo"]);
       }
-
       return $usuario;
     } catch (Exception $ex) {
       throw $ex;
     }
   }
 
-  function getTipoByUsername($username) /////
+  function getTipoByUsername($username)
   {
     try {
       $usuario = null;
@@ -105,12 +106,39 @@ class UserDAO
     }
   }
 
-  function getByUsername($username) /////
+  function getTipoByDni($dni)
   {
     try {
       $usuario = null;
 
-      $query = "SELECT tipo FROM " . $this->tableName . " WHERE username = :username";
+      $query = "SELECT tipo FROM " . $this->tableName . " WHERE dni = :dni";
+
+      $parameters["dni"] = $dni;
+
+      $this->connection = Connection::GetInstance();
+
+      $resultSet = $this->connection->Execute($query, $parameters);
+
+      foreach ($resultSet as $row) {
+        $usuario = new User();
+        $usuario->setTipo($row["tipo"]);
+      }
+
+      if ($usuario)
+        return $usuario->getTipo();
+      else
+        return null;
+    } catch (Exception $ex) {
+      throw $ex;
+    }
+  }
+
+  function getByUsername($username)
+  {
+    try {
+      $usuario = null;
+
+      $query = "SELECT * FROM " . $this->tableName . " WHERE username = :username";
 
       $parameters["username"] = $username;
 
@@ -125,16 +153,14 @@ class UserDAO
         $usuario->setDni($row["dni"]);
         $usuario->setEmail($row["email"]);
         $usuario->setTipo($row["tipo"]);
-        ////////
       }
-
       return $usuario;
     } catch (Exception $ex) {
       throw $ex;
     }
   }
 
-  function getByEmail($email) /////
+  function getByEmail($email)
   {
     try {
       $usuario = null;
@@ -154,7 +180,6 @@ class UserDAO
         $usuario->setDni($row["dni"]);
         $usuario->setEmail($row["email"]);
         $usuario->setTipo($row["tipo"]);
-        ////////
       }
 
       return $usuario;
@@ -177,47 +202,27 @@ class UserDAO
 
       $resultSet = $this->connection->Execute($query, $parameters);
 
-
       return true;
     } catch (Exception $ex) {
       throw $ex;
     }
   }
 
-  public function modificarPerfil(User $user){
-
+  public function updateDatosUser($username, $password, $email){
     try {
+      $query = "UPDATE " . $this->tableName . " SET username  = :username, password = :password, email = :email WHERE dni = :dni;";
 
-            $query = "UPDATE ".$this->tableName." SET username= :username, password= :password,email= :email
-             WHERE dni = ". $_SESSION["loggedUser"]->getDni() .";";
+      $parameters["username"] = $username;
+      $parameters["password"] = $password;
+      $parameters["email"] = $email;
+      $parameters["dni"] = $_SESSION["loggedUser"]->getDni();
 
+      $this->connection = Connection::GetInstance();
 
-             $parameters["username"] = $user->getUsername();
-             $parameters["password"] = $user->getPassword();
-             $parameters["email"] = $user->getEmail();
-
-
-        $this->connection = Connection::GetInstance();
-
-        $this->connection->ExecuteNonQuery($query, $parameters);
-
-    } catch (Excepcion $ex){
-        throw $ex;
-    }
+      $this->connection->ExecuteNonQuery($query, $parameters);
+      return true;
+  } catch (Exception $ex) {
+      throw $ex;
+  }
 }
-
-
-  ///////////////////////////////////////////FUNCIONES JSONJJSONJSON/////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  /*public function getByPais($dni) 
-    {
-      $this->retrieveData();
-      foreach($this->usuarioList as $item) 
-      {
-        if($item->getPais() == $dni)
-          return $dni;
-      }
-      return null;
-    }*/
 }

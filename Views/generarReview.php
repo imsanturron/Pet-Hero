@@ -46,7 +46,7 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
             $disponibilidad = false; //Sirve para alfinal verificar si habia guardianes o no en la fecha
             if (isset($ress) && !empty($ress)) {
               foreach ($ress as $reserva) {
-                if ($reserva->getResHechaOrechazada() == false && $reserva->crearResena() == true) {
+                if ($reserva->getResHechaOrechazada() == false && $reserva->getCrearResena() == true) {
                   $guardian = $guardianDAO->GetByDni($reserva->getDniGuardian());
 
                   $count = 0;
@@ -64,7 +64,7 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                   <tr>
                     <td rowspan="<?php echo $count; ?>">
                       <input type="hidden" name="idReserva" value="<?php echo $reserva->getId(); ?>">
-                      <input type="hidden" name="idGuardian" value="<?php echo $guardian->getDni(); ?>">
+                      <input type="hidden" name="dniGuard" value="<?php echo $guardian->getDni(); ?>">
                       <button type="submit" name="operacion" value="crear" class="btn btn-danger">Crear review </button>
                       <button type="submit" name="operacion" value="noCrear" class="btn btn-danger">Omitir / no crear </button>
                     </td>

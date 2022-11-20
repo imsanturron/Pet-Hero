@@ -16,7 +16,6 @@ use DAO\MYSQL\MascotaDAO as MascotaDAO;
 use DAO\MYSQL\ResxMascDAO as ResxMascDAO;
 use DAO\MYSQL\PagoDAO as PagoDAO;
 use Models\Pago as pago;
-use Models\User;
 
 class GuardianController
 {
@@ -97,7 +96,7 @@ class GuardianController
     /* agregar y guardar nuevo guardian */
     public function Add($username, $password, $nombre, $dni, $email, $direccion, $telefono, $precio, $tamanoMasc)
     {
-        $valid = AuthController::ValidarUsuario($username, $dni, $email);
+        $valid = AuthController::ValidarUsuario($username, $dni, $email, $telefono);
         if ($valid) {
             $guardian = new Guardian();
             $guardian->setUserName($username);
@@ -186,9 +185,32 @@ class GuardianController
                     $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
                     //linea anterior asi porque el '$_SESSION["loggedUser"]' no se actualiza con updates
                     require_once(VIEWS_PATH . "cambiarTamanoACuidar.php");
-                }else if ($opcion == "modificarDatos") {
-                    require_once(VIEWS_PATH . "modificarDatosGuardianes.php");
+                } else if ($opcion == "modificarDatos") {
+                    require_once(VIEWS_PATH . "modificarDatos.php");
+                }else if ($opcion == "historialDePagos") {
+                    $envio = array();
+                    $guardianDAO = new GuardianDAO();
+                    $guardian= $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
+                    $pago = new PagoDAO();
+                    $solicitud = new SolicitudDAO();
+                    $solis = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
+                    $pagos = $pago->getPagosByDniGuardian($guardian->getDni());
+                    $mascXsoliDAO = new SolixMascDAO();
+                    $mascXsoli = $mascXsoliDAO->GetAll();
+                    $mascXresDAO = new ResxMascDAO();
+                    $mascXres = $mascXresDAO->GetAll();
+                    $mascotas = new MascotaDAO();
+                    $reservas = new ReservaDAO();
+                    $ress = $reservas->getReservasByDniGuardian($guardian->getDni());
+                    foreach ($pagos as $pag) {
+                        if ($pag->getPrimerPagoReserva() == true && $pag->getPagoFinal() == true) {
+                            array_push($envio, $pag);
+                        }
+                    }
+                    $pagos = $envio;
+                    require_once(VIEWS_PATH . "historialDePagos.php");
                 }
+            
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
                 $this->login($alert);
@@ -198,46 +220,6 @@ class GuardianController
             $this->home($alert);
         }
     }
-
-    public function modificarDatos($username,$password,$nombre,$email,$direccion,$telefono)
-    {
-
-        $guardian = new Guardian();
-
-        $guardian->setUsername($username);
-        $guardian->setPassword($password);
-        $guardian->setNombre($nombre);
-        $guardian->setDni($_SESSION["loggedUser"]->getDni());
-        $guardian->setEmail($email);
-        $guardian->setDireccion($direccion);
-        $guardian->setTelefono($telefono);
-
-        
-        $usuario = new User();
-        $usuario->setUsername($username);
-        $usuario->setPassword($password);
-        $usuario->setEmail($email);
-        $usuario->setTipo($_SESSION["loggedUser"]->getTipo());
-
-        $users = new UserDAO();
-       
-       
-        $this->guardianDAO->modificarPerfil($guardian);
-        $users->modificarPerfil($usuario);
- 
-          
- 
-           
-        echo '<script language="javascript">alert("Su perfil fue modificado");</script>';
-        
-        $this->login();
-
-    }
-
-
-
-
-
 
     /* El guardian podra cambiar su rango de disponibilidad para cuidar mascotas.
     En caso de cambiarlo se haran las validaciones pertinentes, como si la 
@@ -359,25 +341,44 @@ class GuardianController
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
             try {
-                $mascotas = new MascotaDAO();
-                $arrayMascotas = $mascotas->getArrayByIds($animales);
                 if ($operacion == "aceptar") {
-                    $guardianDAO = new GuardianDAO();
-                    $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
-                    $solicitud = new SolicitudDAO();
                     $solicitudXmasc = new SolixMascDAO();
-
+                    $idmascs = $solicitudXmasc->getAllIdMascotaByIdSolicitud($solicitudId);
+                    $mascotas = new MascotaDAO();
+                    $arrayMascotas = $mascotas->getArrayByIds($idmascs);
+                    $solicitud = new SolicitudDAO();
                     $soli = $solicitud->GetById($solicitudId);
-                    $pagos = new PagoDAO();
-                    $pago = new Pago($soli, $guardian);
-                    $solicitud->updateAPagoById($soli->getId()); //podemos ver si bien
-                    $pagos->Add($pago); //podemos ver si bien
 
-                    //if ($resul && $resul2) { ///arreglar esto
-                    $alert = new Alert("success", "Solicitud aceptada, pago pendiente para reservar");
-                    //} else {
-                    //    $alert = new Alert("warning", "No se borro alguna solicitud");
-                    //}
+                    $valid = UtilsController::ValidarMismaRaza( //con mascotas que puede ya haber reservadas
+                        $arrayMascotas,
+                        $soli->getDniGuardian(),
+                        $soli->getFechaInicio(),
+                        $soli->getFechaFin()
+                    );
+                    $valid2 = UtilsController::VerifMascotaNoEstaReservadaEnFecha(
+                        $arrayMascotas,
+                        $soli->getFechaInicio(),
+                        $soli->getFechaFin()
+                    );
+                    //echo "   valid---->" . $valid;
+                    //echo "   valid2---->" . $valid2;
+                    if ($valid && $valid2) {
+                        $guardianDAO = new GuardianDAO();
+                        $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
+
+                        $pagos = new PagoDAO();
+                        $pago = new Pago($soli, $guardian);
+                        $solicitud->updateAPagoById($soli->getId()); //podemos ver si bien
+                        $pagos->Add($pago); //podemos ver si bien
+
+                        $alert = new Alert("success", "Solicitud aceptada, pago pendiente para reservar");
+                    } else {
+                        //el guardian tiene mascotas incompatibles en la fecha o la mascota esta reservada
+                        $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($solicitudId);
+                        $solicitud->removeSolicitudById($solicitudId);
+
+                        $alert = new Alert("warning", "Tiene mascotas incompatibles en la fecha o la mascota esta reservada");
+                    }
                 } else if ($operacion == "rechazar") {
 
                     $solicitud = new SolicitudDAO();

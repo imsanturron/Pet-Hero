@@ -20,11 +20,8 @@ class ResxMascDAO
 
                 $query = "INSERT INTO " . $this->tableName . " (idReserva, idMascota)
              VALUES (:idReserva, :idMascota);";
-                ///id fk?
-                //$parameters["idSolicitud"] = $soliXmasc->getIdSolixMasc();
                 $parameters["idReserva"] = $idReserva;
                 $parameters["idMascota"] = $masc->getId();
-                ///
                 $this->connection = Connection::GetInstance();
                 $this->connection->ExecuteNonQuery($query, $parameters);
             }

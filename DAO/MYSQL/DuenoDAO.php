@@ -58,34 +58,6 @@ class DuenoDAO
         }
     }
 
-    public function modificarPerfil(Dueno $dueno){
-
-        try {
-
-                $query = "UPDATE ".$this->tableName." SET username= :username, password= :password,nombre= :nombre,email= :email, direccion= :direccion, telefono= :telefono 
-                 WHERE dni = ". $_SESSION["loggedUser"]->getDni() .";";
-
-
-                 $parameters["username"] = $dueno->getUsername();
-                 $parameters["password"] = $dueno->getPassword();
-                 $parameters["nombre"] = $dueno->getNombre(); 
-                 $parameters["email"] = $dueno->getEmail();
-                 $parameters["direccion"] = $dueno->getDireccion();
-                 $parameters["telefono"] = $dueno->getTelefono();
-
-  
-        
-            $this->connection = Connection::GetInstance();
-
-            $this->connection->ExecuteNonQuery($query, $parameters);
-
-        } catch (Excepcion $ex){
-            throw $ex;
-        }
-    }
-
-
-
     function GetByDni($dni)
     {
         try {
@@ -167,6 +139,45 @@ class DuenoDAO
         }
         catch(Exception $ex)
         {
+            throw $ex;
+        }
+    }
+    function getTelefonos() /////
+    {
+        try {
+            $telefonoList = array();
+            $query = "SELECT telefono FROM " . $this->tableName;
+            $this->connection = Connection::GetInstance();
+            $resultSet = $this->connection->Execute($query);
+
+            foreach ($resultSet as $row) {
+                $dueno = new Dueno();
+                $dueno->setTelefono($row["telefono"]);
+                array_push($telefonoList, $dueno);
+            }
+            return $telefonoList;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public function updateDatosDueno($username, $password, $nombre, $email, $direccion, $telefono){
+        try {
+            $query = "UPDATE " . $this->tableName . " SET username  = :username, password = :password,
+             nombre = :nombre, email = :email, direccion = :direccion, telefono = :telefono WHERE dni = :dni;";
+
+            $parameters["username"] = $username;
+            $parameters["password"] = $password;
+            $parameters["nombre"] = $nombre;
+            $parameters["email"] = $email;
+            $parameters["direccion"] = $direccion;
+            $parameters["telefono"] = $telefono;
+            $parameters["dni"] = $_SESSION["loggedUser"]->getDni();
+
+            $this->connection = Connection::GetInstance();
+
+            $this->connection->ExecuteNonQuery($query, $parameters);
+        } catch (Exception $ex) {
             throw $ex;
         }
     }

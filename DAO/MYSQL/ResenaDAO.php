@@ -14,15 +14,15 @@ class ResenaDAO
     public function Add(Resena $resena)
     {
         try {
-            $query = "INSERT INTO " . $this->tableName . " (id, dniDueno, dniGuardian, puntaje, fecha, observacion)
-             VALUES (:id, :dniDueno, :dniGuardian, :puntaje, :fecha, :observacion);";
+            $query = "INSERT INTO " . $this->tableName . " (id, dniDueno, dniGuardian, puntaje, fecha, observaciones)
+             VALUES (:id, :dniDueno, :dniGuardian, :puntaje, :fecha, :observaciones);";
 
             $parameters["id"] = $resena->getId();
             $parameters["dniDueno"] = $resena->getDniDueno();
             $parameters["dniGuardian"] = $resena->getDniGuardian();
             $parameters["puntaje"] = $resena->getPuntaje();
             $parameters["fecha"] = $resena->getFecha();
-            $parameters["observacion"] = $resena->getObservacion();
+            $parameters["observaciones"] = $resena->getObservacion();
             $this->connection = Connection::GetInstance();
             $this->connection->ExecuteNonQuery($query, $parameters);
         } catch (Exception $ex) {
@@ -45,7 +45,7 @@ class ResenaDAO
                 $resena->setDniGuardian($row["dniGuardian"]);
                 $resena->setPuntaje($row["puntaje"]);
                 $resena->setFecha($row["fecha"]);
-                $resena->setObservacion($row["observacion"]);
+                $resena->setObservacion($row["observaciones"]);
                 array_push($resenaList, $resena);
             }
             return $resenaList;
@@ -74,7 +74,7 @@ class ResenaDAO
                 $resena->setDniGuardian($row["dniGuardian"]);
                 $resena->setPuntaje($row["puntaje"]);
                 $resena->setFecha($row["fecha"]);
-                $resena->setObservacion($row["observacion"]);
+                $resena->setObservacion($row["observaciones"]);
             }
 
             return $resena;
@@ -83,7 +83,7 @@ class ResenaDAO
         }
     }
 
-    function getResenasByDniGuardian($dniGuardian) /////
+    function getResenasByDniGuardian($dniGuardian)
     {
         try {
             $resenaList = array();
@@ -103,7 +103,7 @@ class ResenaDAO
                 $resena->setDniGuardian($row["dniGuardian"]);
                 $resena->setPuntaje($row["puntaje"]);
                 $resena->setFecha($row["fecha"]);
-                $resena->setObservacion($row["observacion"]);
+                $resena->setObservacion($row["observaciones"]);
                 array_push($resenaList, $resena);
             }
             if (isset($resenaList))
@@ -115,7 +115,7 @@ class ResenaDAO
         }
     }
 
-    function getReservasByDniDueno($dniDueno) /////
+    function getReservasByDniDueno($dniDueno)
     {
         try {
             $resenaList = array();
@@ -135,7 +135,7 @@ class ResenaDAO
                 $resena->setDniGuardian($row["dniGuardian"]);
                 $resena->setPuntaje($row["puntaje"]);
                 $resena->setFecha($row["fecha"]);
-                $resena->setObservacion($row["observacion"]);
+                $resena->setObservacion($row["observaciones"]);
                 array_push($resenaList, $resena);
             }
             if (isset($resenaList))

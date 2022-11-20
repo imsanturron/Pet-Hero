@@ -3,7 +3,6 @@ require_once(VIEWS_PATH . "header.php");
 include('nav-bar.php');
 
 use Config\Autoload as Autoload;
-//use DAO\JSON\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\MascotaDAO as MascotaDAO;
 use DAO\MYSQL\SolicitudDAO as SolicitudDAO;
@@ -11,28 +10,7 @@ use DAO\MYSQL\SolixMascDAO;
 use Models\Guardian as Guardian;
 use Models\Dueno as Dueno;
 use Models\Mascota as Mascota;
-
-if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
-    if ($_SESSION['tipo']  == 'g') {
-        //$guardian = $_SESSION['loggedUser'];
-        //$solicitudes = new SolicitudDAO();
-        //$solis = $solicitudes->getSolicitudesByDniGuardian($guardian->getDni());
-        //$mascota = new MascotaDAO(); ///get all by id desp
-        //$mascotas = $mascota->GetAll(); ///get all by id desp
-        ////$mascotas = $mascota->getMascotasByIdSolicitud();
-        //$mascXsoliDAO = new SolixMascDAO();
-        //$mascXsoli = $mascXsoliDAO->GetAll();
-    } else {
-        //$dueno = $_SESSION['loggedUser'];
-        // $solicitudes = new SolicitudDAO();
-        // $solis = $solicitudes->getSolicitudesByDniDueno($dueno->getDni());
-        // $mascota = new MascotaDAO(); ///get all by id desp
-        // $mascotas = $mascota->GetAll(); ///get all by id desp
-        // //$mascotas = $mascota->getMascotasByIdSolicitud();
-        // $mascXsoliDAO = new SolixMascDAO();
-        // $mascXsoli = $mascXsoliDAO->GetAll();
-    }
-} ?>
+?>
 
 <main class="py-5">
 
@@ -69,10 +47,9 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                                 <?php } ?>
 
                                 <?php foreach ($solis as $solicitud) {
-                                    // if ($solicitud->getEsPago() == false || $solicitud->getEsPago() == null) { en controller
                                     $count = 0;
                                 ?>
-                                    <?php foreach ($mascXsoli as $tabla) {
+                                    <?php foreach ($mascXsoli as $tabla) { ///no puede hacerse fuera de vista
                                         if ($tabla->getIdSolicitud() == $solicitud->getId()) {
                                             $idMascotaX = $tabla->getIdMascota();
                                             foreach ($mascotas as $masc) {
@@ -119,12 +96,13 @@ if (isset($_SESSION['loggedUser'])) { ///CAMBIAR
                                                 }
                                             }
                                         }
-                                        // }
                                     }
                                 } else {
-                                    echo "NO TIENE SOLICITUDES";
-                                } ?>
-
+                                    echo " <h4>NO HAY SOLICITUDES ENVIADAS!</h4>";
+                                    ?>
+                                Si ha enviado una solicitud anteriormente, puede que esta haya sido aceptada y
+                                deba pagar su confirmacion.
+                                <?php  } ?>
                                 </form>
                     </tbody>
             </table>

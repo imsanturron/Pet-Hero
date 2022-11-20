@@ -112,32 +112,6 @@ class GuardianDAO
         }
     }
 
-    public function modificarPerfil(Guardian $guardian){
-
-        try {
-
-                $query = "UPDATE ".$this->tableName." SET username= :username, password= :password,nombre= :nombre,email= :email, direccion= :direccion, telefono= :telefono 
-                 WHERE dni = ". $_SESSION["loggedUser"]->getDni() .";";
-
-
-                 $parameters["username"] = $guardian->getUsername();
-                 $parameters["password"] = $guardian->getPassword();
-                 $parameters["nombre"] = $guardian->getNombre(); 
-                 $parameters["email"] = $guardian->getEmail();
-                 $parameters["direccion"] = $guardian->getDireccion();
-                 $parameters["telefono"] = $guardian->getTelefono();
-
-  
-        
-            $this->connection = Connection::GetInstance();
-
-            $this->connection->ExecuteNonQuery($query, $parameters);
-
-        } catch (Excepcion $ex){
-            throw $ex;
-        }
-    }
-
     function getByUsername($username)
     {
         try {
@@ -168,7 +142,6 @@ class GuardianDAO
                 $guardian->setCantResenas($row["cantResenas"]);
                 $guardian->setPuntajeTotal($row["puntajeTotal"]);
                 $guardian->setPuntajePromedio($row["puntajePromedio"]);
-                ////////
             }
 
             return $guardian;
@@ -191,8 +164,7 @@ class GuardianDAO
             $this->connection->ExecuteNonQuery($query, $parameters);
             return true;
         } catch (Exception $ex) {
-            return false;
-            //throw $ex;
+            throw $ex;
         }
     }
 
@@ -208,10 +180,27 @@ class GuardianDAO
             $this->connection = Connection::GetInstance();
 
             $this->connection->ExecuteNonQuery($query, $parameters);
-            return true;
         } catch (Exception $ex) {
-            return false;
-            //throw $ex;
+            throw $ex;
+        }
+    }
+
+    function getTelefonos() /////
+    {
+        try {
+            $telefonoList = array();
+            $query = "SELECT telefono FROM " . $this->tableName;
+            $this->connection = Connection::GetInstance();
+            $resultSet = $this->connection->Execute($query);
+
+            foreach ($resultSet as $row) {
+                $guardian = new Guardian();
+                $guardian->setTelefono($row["telefono"]);
+                array_push($telefonoList, $guardian);
+            }
+            return $telefonoList;
+        } catch (Exception $ex) {
+            throw $ex;
         }
     }
 
@@ -241,6 +230,7 @@ class GuardianDAO
             throw $ex;
         }
     }
+
     function getPuntajeTotalByDni($dni) /////
     {
         try {
@@ -282,10 +272,8 @@ class GuardianDAO
             $this->connection = Connection::GetInstance();
 
             $this->connection->ExecuteNonQuery($query, $parameters);
-            return true;
         } catch (Exception $ex) {
-            return false;
-            //throw $ex;
+            throw $ex;
         }
     }
 
@@ -303,10 +291,8 @@ class GuardianDAO
             $this->connection = Connection::GetInstance();
 
             $this->connection->ExecuteNonQuery($query, $parameters);
-            return true;
         } catch (Exception $ex) {
-            return false;
-            //throw $ex;
+            throw $ex;
         }
     }
 
@@ -325,10 +311,8 @@ class GuardianDAO
             $this->connection = Connection::GetInstance();
 
             $this->connection->ExecuteNonQuery($query, $parameters);
-            return true;
         } catch (Exception $ex) {
-            return false;
-            //throw $ex;
+            throw $ex;
         }
     }
 
@@ -345,8 +329,7 @@ class GuardianDAO
             $this->connection->ExecuteNonQuery($query, $parameters);
             return true;
         } catch (Exception $ex) {
-            return false;
-            //throw $ex;
+            throw $ex;
         }
     }
 
@@ -365,6 +348,29 @@ class GuardianDAO
             $resultSet = $this->connection->Execute($query, $parameters);
 
 
+            return true;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public function updateDatosGuardian($username, $password, $nombre, $email, $direccion, $telefono)
+    {
+        try {
+            $query = "UPDATE " . $this->tableName . " SET username  = :username, password = :password,
+             nombre = :nombre, email = :email, direccion = :direccion, telefono = :telefono WHERE dni = :dni;";
+
+            $parameters["username"] = $username;
+            $parameters["password"] = $password;
+            $parameters["nombre"] = $nombre;
+            $parameters["email"] = $email;
+            $parameters["direccion"] = $direccion;
+            $parameters["telefono"] = $telefono;
+            $parameters["dni"] = $_SESSION["loggedUser"]->getDni();
+
+            $this->connection = Connection::GetInstance();
+
+            $this->connection->ExecuteNonQuery($query, $parameters);
             return true;
         } catch (Exception $ex) {
             throw $ex;
@@ -410,5 +416,4 @@ class GuardianDAO
             throw $ex;
         }
     }*/
-
 }
