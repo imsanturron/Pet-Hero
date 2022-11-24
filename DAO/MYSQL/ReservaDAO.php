@@ -102,7 +102,7 @@ class ReservaDAO
         }
     }
 
-    function getReservasByDniGuardian($dniGuardian) /////
+    function getReservasByDniGuardian($dniGuardian)
     {
         try {
             $reservaList = array();
@@ -142,7 +142,7 @@ class ReservaDAO
         }
     }
 
-    function getReservasByDniDueno($dniDueno) /////
+    function getReservasByDniDueno($dniDueno)
     {
         try {
             $reservaList = array();

@@ -125,7 +125,7 @@ class GuardianDAO
 
             $resultSet = $this->connection->Execute($query, $parameters);
 
-            foreach ($resultSet as $row) {
+            foreach ($resultSet as $row) { //hacer en funcion aparte
                 $guardian = new Guardian();
                 $guardian->setUserName($row["username"]);
                 $guardian->setNombre($row["nombre"]);
