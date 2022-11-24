@@ -272,7 +272,7 @@ class UtilsController
   {
     if (isset($_SESSION["loggedUser"])) {
       try {
-        if (is_numeric($telefono)) {
+        if (($telefono && is_numeric($telefono)) || !$telefono) {
           $users = new UserDAO;
           $c = null;
           $b = null;
