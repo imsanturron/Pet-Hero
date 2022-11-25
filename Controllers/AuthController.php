@@ -41,6 +41,7 @@ class AuthController
           if ($guardianx && $guardianx->getPassword() == $password) {
             $bool = true;
             $_SESSION["loggedUser"] = $guardianx;
+            $_SESSION["dni"] = $guardianx->getDni();
             $_SESSION["tipo"] = "g";
             $this->validacionesLogin();
             $alert = new Alert("success", "Bienvenido!");
@@ -56,6 +57,7 @@ class AuthController
           if ($duenox && $duenox->getPassword() == $password) {
             $bool = true;
             $_SESSION["loggedUser"] = $duenox;
+            $_SESSION["dni"] = $duenox->getDni();
             $_SESSION["tipo"] = "d";
             $this->validacionesLogin();
             $alert = new Alert("success", "Bienvenido!");
