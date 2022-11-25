@@ -48,25 +48,8 @@ class GuardianDAO
             $this->connection = Connection::GetInstance();
             $resultSet = $this->connection->Execute($query);
 
-            foreach ($resultSet as $row) {
-                $guardian = new Guardian();
-                $guardian->setUsername($row["username"]);
-                $guardian->setNombre($row["nombre"]);
-                $guardian->setPassword($row["password"]);
-                $guardian->setPrecio($row["precio"]);
-                $guardian->setDni($row["dni"]);
-                $guardian->setEmail($row["email"]);
-                $guardian->setTelefono($row["telefono"]);
-                $guardian->setDireccion($row["direccion"]);
-                $guardian->setTipo($row["tipo"]);
-                $guardian->setDisponibilidadInicio($row["FechaInicio"]);
-                $guardian->setDisponibilidadFin($row["FechaFin"]);
-                $guardian->setTamanoACuidar($row["tamanoACuidar"]);
-                $guardian->setCantResenas($row["cantResenas"]);
-                $guardian->setPuntajeTotal($row["puntajeTotal"]);
-                $guardian->setPuntajePromedio($row["puntajePromedio"]);
-                array_push($guardianList, $guardian);
-            }
+            $guardianList = $this->setter($resultSet, true);
+
             return $guardianList;
         } catch (Exception $ex) {
             throw $ex;
@@ -86,25 +69,7 @@ class GuardianDAO
 
             $resultSet = $this->connection->Execute($query, $parameters);
 
-            foreach ($resultSet as $row) {
-                $guardian = new Guardian();
-                $guardian->setUserName($row["username"]);
-                $guardian->setNombre($row["nombre"]);
-                $guardian->setPassword($row["password"]);
-                $guardian->setPrecio($row["precio"]);
-                $guardian->setDni($row["dni"]);
-                $guardian->setEmail($row["email"]);
-                $guardian->setTelefono($row["telefono"]);
-                $guardian->setDireccion($row["direccion"]);
-                $guardian->setTipo($row["tipo"]);
-                $guardian->setDisponibilidadInicio($row["FechaInicio"]);
-                $guardian->setDisponibilidadFin($row["FechaFin"]);
-                $guardian->setTamanoACuidar($row["tamanoACuidar"]);
-                $guardian->setCantResenas($row["cantResenas"]);
-                $guardian->setPuntajeTotal($row["puntajeTotal"]);
-                $guardian->setPuntajePromedio($row["puntajePromedio"]);
-                ////////
-            }
+            $guardian = $this->setter($resultSet);
 
             return $guardian;
         } catch (Exception $ex) {
@@ -125,24 +90,7 @@ class GuardianDAO
 
             $resultSet = $this->connection->Execute($query, $parameters);
 
-            foreach ($resultSet as $row) { //hacer en funcion aparte
-                $guardian = new Guardian();
-                $guardian->setUserName($row["username"]);
-                $guardian->setNombre($row["nombre"]);
-                $guardian->setPassword($row["password"]);
-                $guardian->setPrecio($row["precio"]);
-                $guardian->setDni($row["dni"]);
-                $guardian->setEmail($row["email"]);
-                $guardian->setTelefono($row["telefono"]);
-                $guardian->setDireccion($row["direccion"]);
-                $guardian->setTipo($row["tipo"]);
-                $guardian->setDisponibilidadInicio($row["FechaInicio"]);
-                $guardian->setDisponibilidadFin($row["FechaFin"]);
-                $guardian->setTamanoACuidar($row["tamanoACuidar"]);
-                $guardian->setCantResenas($row["cantResenas"]);
-                $guardian->setPuntajeTotal($row["puntajeTotal"]);
-                $guardian->setPuntajePromedio($row["puntajePromedio"]);
-            }
+            $guardian = $this->setter($resultSet);
 
             return $guardian;
         } catch (Exception $ex) {
@@ -185,7 +133,7 @@ class GuardianDAO
         }
     }
 
-    function getTelefonos() /////
+    function getTelefonos()
     {
         try {
             $telefonoList = array();
@@ -204,7 +152,7 @@ class GuardianDAO
         }
     }
 
-    function getCantResenasByDni($dni) /////
+    function getCantResenasByDni($dni)
     {
         try {
             $guardian = null;
@@ -231,7 +179,7 @@ class GuardianDAO
         }
     }
 
-    function getPuntajeTotalByDni($dni) /////
+    function getPuntajeTotalByDni($dni)
     {
         try {
             $guardian = null;
@@ -262,7 +210,7 @@ class GuardianDAO
     {
         try {
             $cantRes = $this->getCantResenasByDni($dni);
-            $cantRes = $cantRes + 1; /////
+            $cantRes = $cantRes + 1;
 
             $query = "UPDATE " . $this->tableName . " SET cantResenas = :cantResenas WHERE dni = :dni;";
 
@@ -281,7 +229,7 @@ class GuardianDAO
     {
         try {
             $punTotal = $this->getPuntajeTotalByDni($dni);
-            $punTotal = $punTotal + $puntaje; /////
+            $punTotal = $punTotal + $puntaje;
 
             $query = "UPDATE " . $this->tableName . " SET puntajeTotal = :puntajeTotal WHERE dni = :dni;";
 
@@ -377,6 +325,35 @@ class GuardianDAO
         }
     }
 
+    function setter($resultSet, $list = false)
+    {
+        $lista = array();
+
+        foreach ($resultSet as $row) {
+            $guardian = new Guardian();
+            $guardian->setUserName($row["username"]);
+            $guardian->setNombre($row["nombre"]);
+            $guardian->setPassword($row["password"]);
+            $guardian->setPrecio($row["precio"]);
+            $guardian->setDni($row["dni"]);
+            $guardian->setEmail($row["email"]);
+            $guardian->setTelefono($row["telefono"]);
+            $guardian->setDireccion($row["direccion"]);
+            $guardian->setTipo($row["tipo"]);
+            $guardian->setDisponibilidadInicio($row["FechaInicio"]);
+            $guardian->setDisponibilidadFin($row["FechaFin"]);
+            $guardian->setTamanoACuidar($row["tamanoACuidar"]);
+            $guardian->setCantResenas($row["cantResenas"]);
+            $guardian->setPuntajeTotal($row["puntajeTotal"]);
+            $guardian->setPuntajePromedio($row["puntajePromedio"]);
+            if ($list == true)
+                array_push($lista, $guardian);
+        }
+        if ($list == true)
+            return $lista;
+        else
+            return $guardian;
+    }
 
     /*function getGuardianesEntreFechas($desde, $hasta)
     {

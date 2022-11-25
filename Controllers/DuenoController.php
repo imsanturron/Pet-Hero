@@ -389,6 +389,7 @@ class DuenoController
 
                     ///en caso de ser el primer pago...
                     if ($primerPago == false || $primerPago == null) {
+                        $this->cargarTarjeta(); //////!!!!!!////////
                         $solicitud = new SolicitudDAO();
                         $soli = $solicitud->GetById($idSoliResPag);
                         $valid = UtilsController::ValidacionesSoliPagoAReserva(
@@ -449,6 +450,10 @@ class DuenoController
             $alert = new Alert("warning", "Debe iniciar sesion para acceder a sus funciones!");
             $this->home($alert);
         }
+    }
+
+    public function cargarTarjeta(){
+
     }
 
     /* Opcion de crear u no hacer una reseña a un guardian en el momento que una
