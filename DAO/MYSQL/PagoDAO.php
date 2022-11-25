@@ -39,18 +39,8 @@ class PagoDAO
             $this->connection = Connection::GetInstance();
             $resultSet = $this->connection->Execute($query);
 
-            foreach ($resultSet as $row) {
-                $pago = new Pago();
-                $pago->setId($row["id"]);
-                $pago->setDniDueno($row["dniDueno"]);
-                $pago->setDniGuardian($row["dniGuardian"]);
-                $pago->setMontoAPagar($row["montoAPagar"]);
-                $pago->setPrimerPagoReserva($row["primerPagoReserva"]);
-                $pago->setPagoFinal($row["pagoFinal"]);
-                $pago->setFormaDePago($row["formaDePago"]);
-                $pago->setPrecioGuardian(($pago->getMontoAPagar() * 2));
-                array_push($pagoList, $pago);
-            }
+            $pagoList = $this->setter($resultSet, true);
+
             return $pagoList;
         } catch (Exception $ex) {
             throw $ex;
@@ -70,17 +60,8 @@ class PagoDAO
 
             $resultSet = $this->connection->Execute($query, $parameters);
 
-            foreach ($resultSet as $row) {
-                $pago = new Pago();
-                $pago->setId($row["id"]);
-                $pago->setDniDueno($row["dniDueno"]);
-                $pago->setDniGuardian($row["dniGuardian"]);
-                $pago->setMontoAPagar($row["montoAPagar"]);
-                $pago->setPrimerPagoReserva($row["primerPagoReserva"]);
-                $pago->setPagoFinal($row["pagoFinal"]);
-                $pago->setFormaDePago($row["formaDePago"]);
-                $pago->setPrecioGuardian(($pago->getMontoAPagar() * 2));
-            }
+            $pago = $this->setter($resultSet);
+
             return $pago;
         } catch (Exception $ex) {
             throw $ex;
@@ -100,18 +81,8 @@ class PagoDAO
 
             $resultSet = $this->connection->Execute($query, $parameters);
 
-            foreach ($resultSet as $row) {
-                $pago = new Pago();
-                $pago->setId($row["id"]);
-                $pago->setDniDueno($row["dniDueno"]);
-                $pago->setDniGuardian($row["dniGuardian"]);
-                $pago->setMontoAPagar($row["montoAPagar"]);
-                $pago->setPrimerPagoReserva($row["primerPagoReserva"]);
-                $pago->setPagoFinal($row["pagoFinal"]);
-                $pago->setFormaDePago($row["formaDePago"]);
-                $pago->setPrecioGuardian(($pago->getMontoAPagar() * 2));
-                array_push($pagoList, $pago);
-            }
+            $pagoList = $this->setter($resultSet, true);
+
             if (isset($pagoList))
                 return $pagoList;
             else
@@ -134,18 +105,8 @@ class PagoDAO
 
             $resultSet = $this->connection->Execute($query, $parameters);
 
-            foreach ($resultSet as $row) {
-                $pago = new Pago();
-                $pago->setId($row["id"]);
-                $pago->setDniDueno($row["dniDueno"]);
-                $pago->setDniGuardian($row["dniGuardian"]);
-                $pago->setMontoAPagar($row["montoAPagar"]);
-                $pago->setPrimerPagoReserva($row["primerPagoReserva"]);
-                $pago->setPagoFinal($row["pagoFinal"]);
-                $pago->setFormaDePago($row["formaDePago"]);
-                $pago->setPrecioGuardian(($pago->getMontoAPagar() * 2));
-                array_push($pagoList, $pago);
-            }
+            $pagoList = $this->setter($resultSet, true);
+            
             if (isset($pagoList))
                 return $pagoList;
             else
@@ -221,5 +182,28 @@ class PagoDAO
         } catch (Exception $ex) {
             throw $ex;
         }
+    }
+
+    function setter($resultSet, $list = false)
+    {
+        $lista = array();
+
+        foreach ($resultSet as $row) {
+            $pago = new Pago();
+            $pago->setId($row["id"]);
+            $pago->setDniDueno($row["dniDueno"]);
+            $pago->setDniGuardian($row["dniGuardian"]);
+            $pago->setMontoAPagar($row["montoAPagar"]);
+            $pago->setPrimerPagoReserva($row["primerPagoReserva"]);
+            $pago->setPagoFinal($row["pagoFinal"]);
+            $pago->setFormaDePago($row["formaDePago"]);
+            $pago->setPrecioGuardian(($pago->getMontoAPagar() * 2));
+            if ($list == true)
+                array_push($lista, $pago);
+        }
+        if ($list == true)
+            return $lista;
+        else
+            return $pago;
     }
 }

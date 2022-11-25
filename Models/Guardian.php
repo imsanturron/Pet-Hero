@@ -14,7 +14,6 @@ class Guardian extends User
 
     function __construct()
     {
-        parent::__construct();
         $this->tipo = 'g';
         $this->cantResenas = 0;
         $this->puntajeTotal = 0;

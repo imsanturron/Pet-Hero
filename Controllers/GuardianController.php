@@ -3,6 +3,8 @@
 namespace Controllers;
 
 //use Exception;
+
+use DAO\MYSQL\DuenoDAO as DuenoDAO;
 use Models\Guardian;
 use Models\Alert as Alert;
 use Models\Solicitud as Solicitud;
@@ -20,9 +22,9 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-require 'phpmailer/src/Exception.php';
-require 'phpmailer/src/PHPMailer.php';
-require 'phpmailer/src/SMTP.php'; 
+require 'phpmailer/src/Exception.php'; //no sacar
+require 'phpmailer/src/PHPMailer.php'; //no sacar
+require 'phpmailer/src/SMTP.php'; //no sacar
 
 class GuardianController
 {
@@ -99,46 +101,41 @@ class GuardianController
         }
     }
 
-    public function enviarEmail()
+    public function enviarEmail($dniDueno)
     {
-        try {
-            $mail = new PHPMailer();
-            //$mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
-            $mail->isSMTP();                                            //Send using SMTP
-            $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
-            $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-            $mail->Username   = 'suppethero@gmail.com';                     //SMTP username
-            $mail->Password   = 'pbohmjcvvusrddwx';                               //SMTP password
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-            $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+        if (isset($_SESSION["loggedUser"])) {
+            try {
+                $duenoDAO = new DuenoDAO();
+                $dueno = $duenoDAO->GetByDni($dniDueno);
+                $mail = new PHPMailer();
+                //$mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+                $mail->isSMTP();                                            //Send using SMTP
+                $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+                $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+                $mail->Username   = 'suppethero@gmail.com';                     //SMTP username
+                $mail->Password   = 'pbohmjcvvusrddwx';                               //SMTP password
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+                $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
-            $mail->setFrom('suppethero@gmail.com', 'Pet Hero');
-            $mail->addAddress('santialexandre99@gmail.com');
-            $mail->Subject = 'Cupon de Pago - Pet Hero';
-            /*$mail->Body = 'Aqui esta el link de pago: 
-            http://localhost/TP-FINAL-PET-HERO/cupon/verCupon?id_cupon='.$idCupon.' ';*/
-            $mail->Body = '<div style="display:flex;flex-direction:column;align-items:center;width:600px;height:450px;background-color:rgb(231, 231, 179);">
-            <div style="margin-top:3.5em;position:inherit;display:flex;flex-direction: column;justify-content: space-around;width:65%;height:300px;background-color: rgb(245, 255, 240);line-height: 1.6rem;border-radius:5px;">
-            
-            <h2 style="font-family:Arial;color:#054605;margin-left: 1.3em;margin-bottom: -0.5em;">'.'*cambiado nombre usuario*'.', Tu Cupon de Pago Esta Listo</h2>
-    
-            <span style="font-family:arial;margin-left: 4.75em;letter-spacing: 1px;width:65%">Haz click en el boton inferior para acceder a tu cupon de pago y confirmar tu reserva </span>
-            
-            <button style="width:30%;height:11%;align-self:center;margin-bottom: 1em;cursor:pointer;background-color:#628b33;border:none;border-radius:6px;color:white;">
-            <a style="color:white;" href="http://localhost/TP-FINAL-PET-HERO/cupon/verCupon?id_cupon='.'*cambiado id cupon*'.'">Ver Cupon</a></button>
-    
-            </div>
-    
-            <span style="margin-top:3em;">Pet Heroe - 2022</span>
-    
-            </div>';
-            $mail->IsHTML(true);
-            $mail->send();
-            $alert = new Alert("success", "email enviado");
-            $this->login($alert);
-        } catch (Exception $e) {
-            $alert = new Alert("warning", "Problema enviando el email");
-            $this->login($alert);
+                $mail->setFrom('suppethero@gmail.com', 'Pet Hero');
+                $mail->addAddress($dueno->getEmail());
+                $mail->Subject = 'Cupon de Pago - Pet Hero';
+                $mail->Body = "Hola " . $dueno->getNombre() . "! Han aceptado una solicitud que ha enviado, y
+                su pago esta pendiente para confirmacion. Gracias por utilizar Pet Hero!";
+                //problema en body para enviar codigo html por parametro. Puede mejorarse el body pero se 
+                //rompe patron MVC.
+                $mail->IsHTML(true);
+                $mail->send();
+                return true;
+                //$alert = new Alert("success", "email enviado");
+                //$this->login($alert);
+            } catch (Exception $e) {
+                $alert = new Alert("warning", "Problema enviando el email");
+                $this->login($alert);
+            }
+        } else {
+            $alert = new Alert("warning", "Debe iniciar sesion para acceder a sus funciones");
+            $this->home($alert);
         }
     }
 
@@ -182,8 +179,6 @@ class GuardianController
             try {
                 if ($opcion == "indicarDisponibilidad") {
                     require_once(VIEWS_PATH . "indicarDisponibilidad.php");
-                } else if($opcion == "cc"){
-                    $this->enviarEmail();
                 } else if ($opcion == "verListadReservas") {
                     $guardianDAO = new GuardianDAO();
                     $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
@@ -220,14 +215,14 @@ class GuardianController
                     $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
                     $pago = new PagoDAO();
                     $solicitud = new SolicitudDAO();
-                    $solis = $solicitud->getSolicitudesByDniGuardian($guardian->getDni()); 
+                    $solis = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
                     $pagos = $pago->getPagosByDniGuardian($guardian->getDni());
                     $mascXsoliDAO = new SolixMascDAO();
                     $mascXsoli = $mascXsoliDAO->GetAll();
                     $mascXresDAO = new ResxMascDAO();
                     $mascXres = $mascXresDAO->GetAll();
-                    $mascota = new MascotaDAO(); 
-                    $mascotas = $mascota->GetAll(); 
+                    $mascota = new MascotaDAO();
+                    $mascotas = $mascota->GetAll();
                     $reservas = new ReservaDAO();
                     $ress = $reservas->getReservasByDniGuardian($guardian->getDni());
                     foreach ($pagos as $pag) {
@@ -245,7 +240,7 @@ class GuardianController
                     require_once(VIEWS_PATH . "cambiarTamanoACuidar.php");
                 } else if ($opcion == "modificarDatos") {
                     require_once(VIEWS_PATH . "modificarDatos.php");
-                }else if ($opcion == "historialDePagos") {
+                } else if ($opcion == "historialDePagos") {
                     $envio = array();
                     $guardianDAO = new GuardianDAO();
                     $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
@@ -426,13 +421,15 @@ class GuardianController
                     if ($valid && $valid2) {
                         $guardianDAO = new GuardianDAO();
                         $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
+                        $this->enviarEmail($soli->getDniDueno());
 
                         $pagos = new PagoDAO();
                         $pago = new Pago($soli, $guardian);
-                        $solicitud->updateAPagoById($soli->getId()); 
+                        $solicitud->updateAPagoById($soli->getId());
                         $pagos->Add($pago);
 
-                        $alert = new Alert("success", "Solicitud aceptada, pago pendiente para reservar");
+                        $alert = new Alert("success", "Solicitud aceptada y mail con cupon enviado,
+                         pago pendiente para reservar");
                     } else {
                         //el guardian tiene mascotas incompatibles en la fecha o la mascota esta reservada
                         $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($solicitudId);

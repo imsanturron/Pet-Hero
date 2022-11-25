@@ -40,21 +40,8 @@ class SolicitudDAO
             $this->connection = Connection::GetInstance();
             $resultSet = $this->connection->Execute($query);
 
-            foreach ($resultSet as $row) {
-                $solicitud = new Solicitud();
-                $solicitud->setId($row["id"]);
-                $solicitud->setFechaInicio($row["FechaInicio"]);
-                $solicitud->setFechaFin($row["FechaFin"]);
-                $solicitud->setNombreDueno($row["nombreDueno"]);
-                $solicitud->setDniDueno($row["dniDueno"]);
-                $solicitud->setNombreGuardian($row["nombreGuardian"]);
-                $solicitud->setDniGuardian($row["dniGuardian"]);
-                $solicitud->setDireccionGuardian($row["direccionGuardian"]);
-                $solicitud->setTelefonoDueno($row["telefonoDueno"]);
-                $solicitud->setTelefonoGuardian($row["telefonoGuardian"]);
-                $solicitud->setEsPago($row["esPago"]);
-                array_push($solicitudList, $solicitud);
-            }
+            $solicitudList = $this->setter($resultSet, true);
+
             return $solicitudList;
         } catch (Exception $ex) {
             throw $ex;
@@ -75,20 +62,7 @@ class SolicitudDAO
 
             $resultSet = $this->connection->Execute($query, $parameters);
 
-            foreach ($resultSet as $row) {
-                $solicitud = new Solicitud();
-                $solicitud->setId($row["id"]);
-                $solicitud->setFechaInicio($row["FechaInicio"]);
-                $solicitud->setFechaFin($row["FechaFin"]);
-                $solicitud->setNombreDueno($row["nombreDueno"]);
-                $solicitud->setDniDueno($row["dniDueno"]);
-                $solicitud->setNombreGuardian($row["nombreGuardian"]);
-                $solicitud->setDniGuardian($row["dniGuardian"]);
-                $solicitud->setDireccionGuardian($row["direccionGuardian"]);
-                $solicitud->setTelefonoDueno($row["telefonoDueno"]);
-                $solicitud->setTelefonoGuardian($row["telefonoGuardian"]);
-                $solicitud->setEsPago($row["esPago"]);
-            }
+            $solicitud = $this->setter($resultSet);
 
             return $solicitud;
         } catch (Exception $ex) {
@@ -138,21 +112,8 @@ class SolicitudDAO
 
             $resultSet = $this->connection->Execute($query, $parameters);
 
-            foreach ($resultSet as $row) {
-                $solicitud = new Solicitud();
-                $solicitud->setId($row["id"]);
-                $solicitud->setFechaInicio($row["FechaInicio"]);
-                $solicitud->setFechaFin($row["FechaFin"]);
-                $solicitud->setNombreDueno($row["nombreDueno"]);
-                $solicitud->setDniDueno($row["dniDueno"]);
-                $solicitud->setNombreGuardian($row["nombreGuardian"]);
-                $solicitud->setDniGuardian($row["dniGuardian"]);
-                $solicitud->setDireccionGuardian($row["direccionGuardian"]);
-                $solicitud->setTelefonoDueno($row["telefonoDueno"]);
-                $solicitud->setTelefonoGuardian($row["telefonoGuardian"]);
-                $solicitud->setEsPago($row["esPago"]);
-                array_push($solicitudList, $solicitud);
-            }
+            $solicitudList = $this->setter($resultSet, true);
+
             if (isset($solicitudList))
                 return $solicitudList;
             else
@@ -177,21 +138,8 @@ class SolicitudDAO
 
             $resultSet = $this->connection->Execute($query, $parameters);
 
-            foreach ($resultSet as $row) {
-                $solicitud = new Solicitud();
-                $solicitud->setId($row["id"]);
-                $solicitud->setFechaInicio($row["FechaInicio"]);
-                $solicitud->setFechaFin($row["FechaFin"]);
-                $solicitud->setNombreDueno($row["nombreDueno"]);
-                $solicitud->setDniDueno($row["dniDueno"]);
-                $solicitud->setNombreGuardian($row["nombreGuardian"]);
-                $solicitud->setDniGuardian($row["dniGuardian"]);
-                $solicitud->setDireccionGuardian($row["direccionGuardian"]);
-                $solicitud->setTelefonoDueno($row["telefonoDueno"]);
-                $solicitud->setTelefonoGuardian($row["telefonoGuardian"]);
-                $solicitud->setEsPago($row["esPago"]);
-                array_push($solicitudList, $solicitud);
-            }
+            $solicitudList = $this->setter($resultSet, true);
+            
             if (isset($solicitudList))
                 return $solicitudList;
             else
@@ -201,7 +149,8 @@ class SolicitudDAO
         }
     }
 
-    function updateAPagoById($id){
+    function updateAPagoById($id)
+    {
         try {
             $query = "UPDATE " . $this->tableName . " SET esPago = :esPago WHERE id = :id;";
 
@@ -217,7 +166,7 @@ class SolicitudDAO
         }
     }
 
-    
+
     public function removeSolicitudById($idSolicitud)
     {
 
@@ -263,8 +212,6 @@ class SolicitudDAO
     {
 
         try {
-            $solicitud = null;
-
             $query = "DELETE FROM " . $this->tableName . " WHERE dniGuardian = :dniGuardian";
 
             $parameters["dniGuardian"] = $dniGuardian;
@@ -273,10 +220,35 @@ class SolicitudDAO
 
             $resultSet = $this->connection->Execute($query, $parameters);
 
-
             return true;
         } catch (Exception $ex) {
             throw $ex;
         }
+    }
+
+    function setter($resultSet, $list = false)
+    {
+        $lista = array();
+
+        foreach ($resultSet as $row) {
+            $solicitud = new Solicitud();
+            $solicitud->setId($row["id"]);
+            $solicitud->setFechaInicio($row["FechaInicio"]);
+            $solicitud->setFechaFin($row["FechaFin"]);
+            $solicitud->setNombreDueno($row["nombreDueno"]);
+            $solicitud->setDniDueno($row["dniDueno"]);
+            $solicitud->setNombreGuardian($row["nombreGuardian"]);
+            $solicitud->setDniGuardian($row["dniGuardian"]);
+            $solicitud->setDireccionGuardian($row["direccionGuardian"]);
+            $solicitud->setTelefonoDueno($row["telefonoDueno"]);
+            $solicitud->setTelefonoGuardian($row["telefonoGuardian"]);
+            $solicitud->setEsPago($row["esPago"]);
+            if ($list == true)
+                array_push($lista, $solicitud);
+        }
+        if ($list == true)
+            return $lista;
+        else
+            return $solicitud;
     }
 }

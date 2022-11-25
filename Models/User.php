@@ -2,9 +2,6 @@
 
 namespace Models;
 
-use Models\Solicitud as Solicitud;
-use Models\Reserva as Reserva;
-
 class User
 {
     protected $username;
@@ -15,12 +12,6 @@ class User
     protected $direccion;
     protected $tipo; //char = "g" || "d"
     protected $telefono;
-
-    function __construct()
-    {
-        $this->solicitudes = array();
-        $this->reservas = array();
-    }
 
     public function getUserName()
     {

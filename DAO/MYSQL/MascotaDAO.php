@@ -43,20 +43,8 @@ class MascotaDAO
             $this->connection = Connection::GetInstance();
             $resultSet = $this->connection->Execute($query);
 
-            foreach ($resultSet as $row) {
-                $mascota = new Mascota();
-                $mascota->setId($row["id"]);
-                $mascota->setNombre($row["nombre"]);
-                $mascota->setRaza($row["raza"]);
-                $mascota->setEspecie($row["especie"]);
-                $mascota->setDniDueno($row["dueno"]);
-                $mascota->setTamano($row["tamano"]);
-                $mascota->setObservaciones($row["observaciones"]);
-                $mascota->setFotoMascota($row["fotoMascota"]);
-                $mascota->setVideo($row["video"]);
-                $mascota->setPlanVacunacion($row["planVacunacion"]);
-                array_push($mascotaList, $mascota);
-            }
+            $mascotaList = $this->setter($resultSet, true);
+
             return $mascotaList;
         } catch (Exception $ex) {
             throw $ex;
@@ -68,7 +56,7 @@ class MascotaDAO
         try {
             $mascotaList = array();
 
-            foreach ($ids as $id) {
+            foreach ($ids as $id) { //no usar setter
                 $query = "SELECT * FROM " . $this->tableName . " WHERE id = :id";
 
                 $parameters["id"] = $id;
@@ -99,7 +87,7 @@ class MascotaDAO
         }
     }
 
-    function getMascotasByDniDueno($dniDueno) 
+    function getMascotasByDniDueno($dniDueno)
     {
         try {
             $mascotaList = array();
@@ -113,20 +101,8 @@ class MascotaDAO
 
             $resultSet = $this->connection->Execute($query, $parameters);
 
-            foreach ($resultSet as $row) {
-                $mascota = new Mascota();
-                $mascota->setId($row["id"]);
-                $mascota->setNombre($row["nombre"]);
-                $mascota->setRaza($row["raza"]);
-                $mascota->setEspecie($row["especie"]);
-                $mascota->setDniDueno($row["dueno"]);
-                $mascota->setTamano($row["tamano"]);
-                $mascota->setObservaciones($row["observaciones"]);
-                $mascota->setFotoMascota($row["fotoMascota"]);
-                $mascota->setVideo($row["video"]);
-                $mascota->setPlanVacunacion($row["planVacunacion"]);
-                array_push($mascotaList, $mascota);
-            }
+            $mascotaList = $this->setter($resultSet, true);
+
             if (isset($mascotaList))
                 return $mascotaList;
             else
@@ -147,19 +123,7 @@ class MascotaDAO
 
             $resultSet = $this->connection->Execute($query, $parameters);
 
-            foreach ($resultSet as $row) {
-                $mascota = new Mascota();
-                $mascota->setId($row["id"]);
-                $mascota->setNombre($row["nombre"]);
-                $mascota->setRaza($row["raza"]);
-                $mascota->setEspecie($row["especie"]);
-                $mascota->setDniDueno($row["dueno"]);
-                $mascota->setTamano($row["tamano"]);
-                $mascota->setObservaciones($row["observaciones"]);
-                $mascota->setFotoMascota($row["fotoMascota"]);
-                $mascota->setVideo($row["video"]);
-                $mascota->setPlanVacunacion($row["planVacunacion"]);
-            }
+            $mascota = $this->setter($resultSet);
 
             return $mascota;
         } catch (Exception $ex) {
@@ -186,5 +150,30 @@ class MascotaDAO
         } catch (Exception $ex) {
             throw $ex;
         }
+    }
+
+    function setter($resultSet, $list = false)
+    {
+        $lista = array();
+
+        foreach ($resultSet as $row) {
+            $mascota = new Mascota();
+            $mascota->setId($row["id"]);
+            $mascota->setNombre($row["nombre"]);
+            $mascota->setRaza($row["raza"]);
+            $mascota->setEspecie($row["especie"]);
+            $mascota->setDniDueno($row["dueno"]);
+            $mascota->setTamano($row["tamano"]);
+            $mascota->setObservaciones($row["observaciones"]);
+            $mascota->setFotoMascota($row["fotoMascota"]);
+            $mascota->setVideo($row["video"]);
+            $mascota->setPlanVacunacion($row["planVacunacion"]);
+            if ($list == true)
+                array_push($lista, $mascota);
+        }
+        if ($list == true)
+            return $lista;
+        else
+            return $mascota;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use DAO\MYSQL\TarjetaDAO as TarjetaDAO;
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\DuenoDAO as DuenoDAO;
 use DAO\MYSQL\MascotaDAO as MascotaDAO;
@@ -301,6 +302,35 @@ class UtilsController
               }
             }
             if ($a != null || $b != null || $c != null)
+              return false;
+            else
+              return true;
+          }
+          return true;
+        } else
+          return false;
+      } catch (Exception $ex) {
+        $alert = new Alert("warning", "error en base de datos");
+        UtilsController::index($alert);
+      }
+    } else {
+      $alert = new Alert("warning", "Debe iniciar sesion");
+      UtilsController::Index($alert);
+    }
+  }
+
+  /* Valida los datos de una tarjeta de credito/debito ingresada */
+  public static function ValidarDatosTarjeta($numTarj, $mVenc, $aVenc, $codigo) ///validaciones en el registro
+  {
+    if (isset($_SESSION["loggedUser"])) {
+      try {
+        if (is_numeric($numTarj) && is_numeric($mVenc) && is_numeric($aVenc) && is_numeric($codigo)) {
+          $tarjetas = new TarjetaDAO;
+          $a = null;
+          if ($tarjetas->getAll() != null) {
+              $a = $tarjetas->getByNumeroTarjeta($numTarj);
+
+            if ($a != null)
               return false;
             else
               return true;
