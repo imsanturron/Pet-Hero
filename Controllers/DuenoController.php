@@ -42,7 +42,7 @@ class DuenoController
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             try {
                 $mascotasDao = new MascotaDAO();
-                $listaMascotas = $mascotasDao->getMascotasByDniDueno($_SESSION['loggedUser']->getDni());
+                $listaMascotas = $mascotasDao->getMascotasByDniDueno($_SESSION["dni"]);
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
                 $this->login($alert);
@@ -115,7 +115,7 @@ class DuenoController
 
                 if ($opcion == "verMascotas") {
                     $mascotasDao = new MascotaDAO();
-                    $listaMascotas = $mascotasDao->getMascotasByDniDueno($_SESSION['loggedUser']->getDni());
+                    $listaMascotas = $mascotasDao->getMascotasByDniDueno($_SESSION["dni"]);
                     require_once(VIEWS_PATH . "verMascotas.php");
                 } else if ($opcion == "agregarMascota") {
                     require_once(VIEWS_PATH . "agregarMascotas.php");
@@ -126,7 +126,7 @@ class DuenoController
                 } else if ($opcion == "verSolicitudes") { //muestra de distinta especie misma raza !!!
                     $envio = array();
                     $duenoDAO = new DuenoDAO();
-                    $dueno = $duenoDAO->GetByDni($_SESSION["loggedUser"]->getDni());
+                    $dueno = $duenoDAO->GetByDni($_SESSION["dni"]);
                     $solicitudes = new SolicitudDAO();
                     $solis = $solicitudes->getSolicitudesByDniDueno($dueno->getDni());
                     $mascota = new MascotaDAO();
@@ -142,7 +142,7 @@ class DuenoController
                     require_once(VIEWS_PATH . "verSolicitudes.php");
                 } else if ($opcion == "verReservas") {
                     $duenoDAO = new DuenoDAO();
-                    $dueno = $duenoDAO->GetByDni($_SESSION["loggedUser"]->getDni());
+                    $dueno = $duenoDAO->GetByDni($_SESSION["dni"]);
                     $reservas = new ReservaDAO();
                     $ress = $reservas->getReservasByDniDueno($dueno->getDni());
                     $mascota = new MascotaDAO();
@@ -153,7 +153,7 @@ class DuenoController
                 } else if ($opcion == "verSolicitudesAceptadasAPagar") {
                     $envio = array();
                     $duenoDAO = new DuenoDAO();
-                    $dueno = $duenoDAO->GetByDni($_SESSION["loggedUser"]->getDni());
+                    $dueno = $duenoDAO->GetByDni($_SESSION["dni"]);
                     $pago = new PagoDAO();
                     $solicitud = new SolicitudDAO();
                     $solis = $solicitud->getSolicitudesByDniDueno($dueno->getDni());
@@ -177,7 +177,7 @@ class DuenoController
                     require_once(VIEWS_PATH . "pagosPendientes.php");
                 } else if ($opcion == "generarNuevaReview") {
                     $duenoDAO = new DuenoDAO();
-                    $dueno = $duenoDAO->GetByDni($_SESSION["loggedUser"]->getDni());
+                    $dueno = $duenoDAO->GetByDni($_SESSION["dni"]);
                     $reservas = new ReservaDAO();
                     $ress = $reservas->getReservasByDniDueno($dueno->getDni());
                     $mascota = new MascotaDAO();
@@ -191,7 +191,7 @@ class DuenoController
                 } else if ($opcion == "historialDePagos") {
                     $envio = array();
                     $duenoDAO = new DuenoDAO();
-                    $dueno = $duenoDAO->GetByDni($_SESSION["loggedUser"]->getDni());
+                    $dueno = $duenoDAO->GetByDni($_SESSION["dni"]);
                     $pago = new PagoDAO();
                     $solicitud = new SolicitudDAO();
                     $solis = $solicitud->getSolicitudesByDniDueno($dueno->getDni());
@@ -267,7 +267,7 @@ class DuenoController
             try {
                 $envio = array();
                 $mascotasDao = new MascotaDAO();
-                $listaMascotas = $mascotasDao->getMascotasByDniDueno($_SESSION["loggedUser"]->getDni());
+                $listaMascotas = $mascotasDao->getMascotasByDniDueno($_SESSION["dni"]);
                 $guardianes = new GuardianDAO();
                 $guardian = $guardianes->getByDni($dni);
                 if (isset($listaMascotas) && !empty($listaMascotas)) {
@@ -310,7 +310,7 @@ class DuenoController
                     $guardian = $guardianes->getByDni($dni);
 
                     $duenoDAO = new DuenoDAO();
-                    $dueno = $duenoDAO->GetByDni($_SESSION["loggedUser"]->getDni());
+                    $dueno = $duenoDAO->GetByDni($_SESSION["dni"]);
 
                     $solicitud = new Solicitud($guardian, $dueno, $desde, $hasta);
                     $solicitudesD = new SolicitudDAO;
@@ -505,7 +505,7 @@ class DuenoController
                 $resenaDAO = new ResenaDAO();
                 $dueno = new Dueno();
                 $duenoDAO = new DuenoDAO();
-                $dueno = $duenoDAO->GetByDni($_SESSION["loggedUser"]->getDni());
+                $dueno = $duenoDAO->GetByDni($_SESSION["dni"]);
                 $resena = new Resena($idReserva, $dueno->getDni(), $dniGuard, $puntos, $observaciones);
                 $resenaDAO->Add($resena);
                 $alert = new Alert("success", "review agregada exitosamente");

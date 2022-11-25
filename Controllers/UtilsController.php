@@ -161,7 +161,7 @@ class UtilsController
         $solicitudes = $solicitud->getSolicitudesByDniGuardian($dniGuard);
         if (isset($solicitudes) && !empty($solicitudes)) {
           foreach ($solicitudes as $soli) {
-            if ($soli->getDniDueno() == $_SESSION["loggedUser"]->getDni()) {
+            if ($soli->getDniDueno() == $_SESSION["dni"]) {
               if (
                 UtilsController::ValidarFecha($soli->getFechaInicio(), $soli->getFechaFin(), $fini)
                 || UtilsController::ValidarFecha($soli->getFechaInicio(), $soli->getFechaFin(), $ffin)
@@ -359,7 +359,7 @@ class UtilsController
           if ($_SESSION["tipo"] == 'd') {
 
             $duenoDAO = new DuenoDAO();
-            $dueno = $duenoDAO->GetByDni($_SESSION["loggedUser"]->getDni());
+            $dueno = $duenoDAO->GetByDni($_SESSION["dni"]);
             if (!$username)
               $username = $dueno->getUserName();
             if (!$password)
@@ -382,7 +382,7 @@ class UtilsController
           } else {
             ///guardian
             $guardianDAO = new GuardianDAO();
-            $guardian = $guardianDAO->GetByDni($_SESSION["loggedUser"]->getDni());
+            $guardian = $guardianDAO->GetByDni($_SESSION["dni"]);
             if (!$username)
               $username = $guardian->getUserName();
             if (!$password)

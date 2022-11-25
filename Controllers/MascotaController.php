@@ -31,7 +31,7 @@ class MascotaController
     public function Add($especie, $nombre, $raza, $tamano, $fotoM, $planVacunacion, $video = null, $observaciones = "")
     {
         $error = false;
-        if (isset($_SESSION["loggedUser"])) {
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
 
             $bytes = bin2hex(random_bytes(20));
             $fotoM = $bytes . '_' . basename($_FILES['fotoM']['name']);
@@ -105,7 +105,7 @@ class MascotaController
                 $video = null; //sino da error raro cuando no mando
 
             $mascota = new Mascota();
-            $mascota->setDniDueno($_SESSION["loggedUser"]->getDni());
+            $mascota->setDniDueno($_SESSION["dni"]);
             $mascota->setEspecie($especie); //desp? clase->pg
             $mascota->setNombre($nombre);
             $mascota->setRaza($raza);
