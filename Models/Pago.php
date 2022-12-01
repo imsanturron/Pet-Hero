@@ -4,14 +4,14 @@ namespace Models;
 
 class Pago
 {
-    private $id; //PK mismo que solicitud/reserva/reseña --  //ver si cambiar por numero grande
+    private $id; //PK mismo id que solicitud/reserva/reseña --  //ver si cambiar por numero grande
     private $dniDueno; //FK
     private $dniGuardian; //FK
     private $precioGuardian;
     private $montoAPagar; //50% de precio guardian
     private $primerPagoReserva; //booleano
     private $pagoFinal; //booleano
-    private $formaDePago;
+    private $formaDePago; //Credito - debito
 
     public function  __construct(Solicitud $solicitud = null, Guardian $guardian = null)
     {

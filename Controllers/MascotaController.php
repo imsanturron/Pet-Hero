@@ -136,7 +136,7 @@ class MascotaController
     /* Borrar una mascota */
     public function Remove($id)
     {
-        if (isset($_SESSION["loggedUser"])) { 
+        if (isset($_SESSION["loggedUser"])) { //cuando se elimina mascota faltan validaciones, se ve mal cuando falta en lugares como ver reservas
             try {
                 $bien = $this->mascotaDAO->removeMascotaById($id); 
             } catch (Exception $ex) {

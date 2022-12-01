@@ -82,10 +82,7 @@ class ResenaDAO
 
             $resenaList = $this->setter($resultSet, true);
 
-            if (isset($resenaList))
-                return $resenaList;
-            else
-                return null;
+            return $resenaList;
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -106,10 +103,7 @@ class ResenaDAO
 
             $resenaList = $this->setter($resultSet, true);
 
-            if (isset($resenaList))
-                return $resenaList;
-            else
-                return null;
+            return $resenaList;
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -130,9 +124,16 @@ class ResenaDAO
             if ($list == true)
                 array_push($lista, $resena);
         }
-        if ($list == true)
-            return $lista;
-        else
-            return $resena;
+        if ($list == true) {
+            if (isset($lista) && !empty($lista))
+                return $lista;
+            else
+                return null;
+        } else {
+            if (isset($resena))
+                return $resena;
+            else
+                return null;
+        }
     }
 }

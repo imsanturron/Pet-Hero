@@ -5,19 +5,19 @@ namespace Models;
 use Models\Guardian as Guardian;
 use Models\Dueno as Dueno;
 
-class Solicitud 
+class Solicitud
 {
-    protected $id;
+    protected $id; //mismo id que pago/reserva/reseña, en caso de aceptarse.
     protected $fechaInicio;
     protected $fechaFin;
-    protected $nombreDueno; 
-    protected $dniDueno;
-    protected $nombreGuardian; 
-    protected $dniGuardian;
-    protected $direccionGuardian; 
-    protected $telefonoDueno; 
-    protected $telefonoGuardian; 
-    protected $esPago = false; //booleano de pago
+    protected $nombreDueno; //no esta en DB
+    protected $dniDueno; //FK
+    protected $nombreGuardian; //no esta en DB
+    protected $dniGuardian; //FK
+    protected $direccionGuardian; //no esta en DB
+    protected $telefonoDueno; //no esta en DB
+    protected $telefonoGuardian; //no esta en DB
+    protected $esPago = false; //booleano de pago. Es true una vez que se acepta y el pago debe realizarse.
 
     public function  __construct(Guardian $guardian = null, Dueno $dueno = null, $desde = "", $hasta = "")
     {

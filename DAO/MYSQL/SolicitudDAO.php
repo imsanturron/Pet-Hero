@@ -114,10 +114,7 @@ class SolicitudDAO
 
             $solicitudList = $this->setter($resultSet, true);
 
-            if (isset($solicitudList))
-                return $solicitudList;
-            else
-                return null;
+            return $solicitudList;
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -139,11 +136,8 @@ class SolicitudDAO
             $resultSet = $this->connection->Execute($query, $parameters);
 
             $solicitudList = $this->setter($resultSet, true);
-            
-            if (isset($solicitudList))
-                return $solicitudList;
-            else
-                return null;
+
+            return $solicitudList;
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -246,9 +240,16 @@ class SolicitudDAO
             if ($list == true)
                 array_push($lista, $solicitud);
         }
-        if ($list == true)
-            return $lista;
-        else
-            return $solicitud;
+        if ($list == true) {
+            if (isset($lista) && !empty($lista))
+                return $lista;
+            else
+                return null;
+        } else {
+            if (isset($solicitud))
+                return $solicitud;
+            else
+                return null;
+        }
     }
 }

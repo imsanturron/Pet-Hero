@@ -44,7 +44,11 @@ class SolixMascDAO
                 $soliXmasc->setIdMascota($row["idMascota"]);
                 array_push($soliXmascList, $soliXmasc);
             }
-            return $soliXmascList;
+
+            if (isset($soliXmascList) && !empty($soliXmascList))
+                return $soliXmascList;
+            else
+                return null;
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -88,7 +92,11 @@ class SolixMascDAO
             foreach ($resultSet as $row) {
                 array_push($soliXmascList, $row["idMascota"]);
             }
-            return $soliXmascList;
+
+            if (isset($soliXmascList) && !empty($soliXmascList))
+                return $soliXmascList;
+            else
+                return null;
         } catch (Exception $ex) {
             throw $ex;
         }

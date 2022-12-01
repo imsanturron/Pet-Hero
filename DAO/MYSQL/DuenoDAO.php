@@ -149,11 +149,11 @@ class DuenoDAO
             throw $ex;
         }
     }
-    
+
     function setter($resultSet, $list = false)
     {
         $lista = array();
-            
+
         foreach ($resultSet as $row) {
             $dueno = new Dueno();
             $dueno->setNombre($row["nombre"]);
@@ -167,9 +167,16 @@ class DuenoDAO
             if ($list == true)
                 array_push($lista, $dueno);
         }
-        if ($list == true)
-            return $lista;
-        else
-            return $dueno;
+        if ($list == true) {
+            if (isset($lista) && !empty($lista))
+                return $lista;
+            else
+                return null;
+        } else {
+            if (isset($dueno))
+                return $dueno;
+            else
+                return null;
+        }
     }
 }

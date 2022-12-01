@@ -202,9 +202,11 @@ class GuardianController
                     $mascotas = $mascota->GetAll();
                     $mascXsoliDAO = new SolixMascDAO();
                     $mascXsoli = $mascXsoliDAO->GetAll();
-                    foreach ($solis as $solicitud) {
-                        if ($solicitud->getEsPago() == false || $solicitud->getEsPago() == null) {
-                            array_push($envio, $solicitud);
+                    if (isset($solis) && !empty($solis)) {
+                        foreach ($solis as $solicitud) {
+                            if ($solicitud->getEsPago() == false || $solicitud->getEsPago() == null) {
+                                array_push($envio, $solicitud);
+                            }
                         }
                     }
                     $solis = $envio;
@@ -225,11 +227,13 @@ class GuardianController
                     $mascotas = $mascota->GetAll();
                     $reservas = new ReservaDAO();
                     $ress = $reservas->getReservasByDniGuardian($guardian->getDni());
-                    foreach ($pagos as $pag) {
-                        if (($pag->getPrimerPagoReserva() == false || $pag->getPrimerPagoReserva() == null)
-                            || ($pag->getPagoFinal() == false || $pag->getPagoFinal() == null)
-                        ) {
-                            array_push($envio, $pag);
+                    if (isset($pagos) && !empty($pagos)) {
+                        foreach ($pagos as $pag) {
+                            if (($pag->getPrimerPagoReserva() == false || $pag->getPrimerPagoReserva() == null)
+                                || ($pag->getPagoFinal() == false || $pag->getPagoFinal() == null)
+                            ) {
+                                array_push($envio, $pag);
+                            }
                         }
                     }
                     $pagos = $envio;
@@ -256,9 +260,11 @@ class GuardianController
                     $mascotas = $mascota->GetAll();
                     $reservas = new ReservaDAO();
                     $ress = $reservas->getReservasByDniGuardian($guardian->getDni());
-                    foreach ($pagos as $pag) {
-                        if ($pag->getPrimerPagoReserva() == true && $pag->getPagoFinal() == true) {
-                            array_push($envio, $pag);
+                    if (isset($pagos) && !empty($pagos)) {
+                        foreach ($pagos as $pag) {
+                            if ($pag->getPrimerPagoReserva() == true && $pag->getPagoFinal() == true) {
+                                array_push($envio, $pag);
+                            }
                         }
                     }
                     $pagos = $envio;
@@ -315,17 +321,19 @@ class GuardianController
                             $solicitudes = $solicitud->getSolicitudesByDniGuardian($guardian->getDni());
                             $solicitudXmasc = new SolixMascDAO();
                             $pagoDAO = new PagoDAO();
-                            foreach ($solicitudes as $soli) {
-                                if (
-                                    !UtilsController::ValidarFecha($desde, $hasta, $soli->getFechaInicio())
-                                    || !UtilsController::ValidarFecha($desde, $hasta, $soli->getFechaFin())
-                                ) {
-                                    if ($soli->getEsPago())
-                                        $pagoDAO->removePagoById($soli->getId());
+                            if (isset($solicitudes) && !empty($solicitudes)) {
+                                foreach ($solicitudes as $soli) {
+                                    if (
+                                        !UtilsController::ValidarFecha($desde, $hasta, $soli->getFechaInicio())
+                                        || !UtilsController::ValidarFecha($desde, $hasta, $soli->getFechaFin())
+                                    ) {
+                                        if ($soli->getEsPago())
+                                            $pagoDAO->removePagoById($soli->getId());
 
-                                    $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
-                                    $solicitud->removeSolicitudById($soli->getId()); //creo q bien, checkear
-                                    $alert = new Alert("success", "Disponibilidad actualizada + solis removidas");
+                                        $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($soli->getId());
+                                        $solicitud->removeSolicitudById($soli->getId()); //creo q bien, checkear
+                                        $alert = new Alert("success", "Disponibilidad actualizada + solis removidas");
+                                    }
                                 }
                             }
                             /////////

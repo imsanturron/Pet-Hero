@@ -14,7 +14,7 @@ class TarjetaDAO
   public function Add(Tarjeta $tarjeta)
   {
     try {
-      $query = "INSERT INTO " . $this->tableName . " (numeroTajeta, dniPropietario, nombreTarjeta, vencimiento, codigoSeguridad)
+      $query = "INSERT INTO " . $this->tableName . " (numeroTarjeta, dniPropietario, nombreTarjeta, vencimiento, codigoSeguridad)
              VALUES (:numeroTarjeta, :dniPropietario, :nombreTarjeta, :vencimiento, :codigoSeguridad);";
 
       $parameters["numeroTarjeta"] = $tarjeta->getNumeroTarjeta();
@@ -137,9 +137,16 @@ class TarjetaDAO
       if ($list == true)
         array_push($lista, $tarjeta);
     }
-    if ($list == true)
-      return $lista;
-    else
-      return $tarjeta;
+    if ($list == true) {
+      if (isset($lista) && !empty($lista))
+        return $lista;
+      else
+        return null;
+    } else {
+      if (isset($tarjeta))
+        return $tarjeta;
+      else
+        return null;
+    }
   }
 }

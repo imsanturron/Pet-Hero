@@ -103,10 +103,7 @@ class MascotaDAO
 
             $mascotaList = $this->setter($resultSet, true);
 
-            if (isset($mascotaList))
-                return $mascotaList;
-            else
-                return null;
+            return $mascotaList;
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -171,9 +168,16 @@ class MascotaDAO
             if ($list == true)
                 array_push($lista, $mascota);
         }
-        if ($list == true)
-            return $lista;
-        else
-            return $mascota;
+        if ($list == true) {
+            if (isset($lista) && !empty($lista))
+                return $lista;
+            else
+                return null;
+        } else {
+            if (isset($mascota))
+                return $mascota;
+            else
+                return null;
+        }
     }
 }
