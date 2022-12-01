@@ -14,7 +14,6 @@ class ResxMasc
         return $this->idResxMasc;
     }
 
-
     public function setIdResxMasc($idResxMasc): self
     {
         $this->idResxMasc = $idResxMasc;

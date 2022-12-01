@@ -17,6 +17,7 @@ use DAO\MYSQL\SolixMascDAO as SolixMascDAO;
 use DAO\MYSQL\ResxMascDAO as ResxMascDAO;
 use DAO\MYSQL\ReservaDAO as ReservaDAO;
 use DAO\MYSQL\ResenaDAO as ResenaDao;
+use DAO\MYSQL\TarjetaDAO as TarjetaDAO;
 use DAO\MYSQL\UserDAO as UserDAO;
 use Models\Pago;
 use Models\Resena;
@@ -133,9 +134,11 @@ class DuenoController
                     $mascotas = $mascota->getMascotasByDniDueno($dueno->getDni());
                     $mascXsoliDAO = new SolixMascDAO();
                     $mascXsoli = $mascXsoliDAO->GetAll();
-                    foreach ($solis as $solicitud) {
-                        if ($solicitud->getEsPago() == false || $solicitud->getEsPago() == null) {
-                            array_push($envio, $solicitud);
+                    if (isset($solis) && !empty($solis)) {
+                        foreach ($solis as $solicitud) {
+                            if ($solicitud->getEsPago() == false || $solicitud->getEsPago() == null) {
+                                array_push($envio, $solicitud);
+                            }
                         }
                     }
                     $solis = $envio;
@@ -166,11 +169,13 @@ class DuenoController
                     $mascotas = $mascota->getMascotasByDniDueno($dueno->getDni());
                     $reservas = new ReservaDAO();
                     $ress = $reservas->getReservasByDniDueno($dueno->getDni());
-                    foreach ($pagos as $pag) {
-                        if (($pag->getPrimerPagoReserva() == false || $pag->getPrimerPagoReserva() == null)
-                            || ($pag->getPagoFinal() == false || $pag->getPagoFinal() == null)
-                        ) {
-                            array_push($envio, $pag);
+                    if (isset($pagos) && !empty($pagos)) {
+                        foreach ($pagos as $pag) {
+                            if (($pag->getPrimerPagoReserva() == false || $pag->getPrimerPagoReserva() == null)
+                                || ($pag->getPagoFinal() == false || $pag->getPagoFinal() == null)
+                            ) {
+                                array_push($envio, $pag);
+                            }
                         }
                     }
                     $pagos = $envio;
@@ -204,9 +209,11 @@ class DuenoController
                     $mascotas = $mascota->getMascotasByDniDueno($dueno->getDni());
                     $reservas = new ReservaDAO();
                     $ress = $reservas->getReservasByDniDueno($dueno->getDni());
-                    foreach ($pagos as $pag) {
-                        if ($pag->getPrimerPagoReserva() == true && $pag->getPagoFinal() == true) {
-                            array_push($envio, $pag);
+                    if (isset($pagos) && !empty($pagos)) {
+                        foreach ($pagos as $pag) {
+                            if ($pag->getPrimerPagoReserva() == true && $pag->getPagoFinal() == true) {
+                                array_push($envio, $pag);
+                            }
                         }
                     }
                     $pagos = $envio;
@@ -233,13 +240,15 @@ class DuenoController
                 try {
                     $guardianDao = new GuardianDAO();
                     $listaguardianes = $guardianDao->GetAll();
-                    foreach ($listaguardianes as $guardian) {
-                        if ($guardian->getDisponibilidadInicio() && $guardian->getDisponibilidadFin()) {
-                            if (
-                                UtilsController::ValidarFecha($guardian->getDisponibilidadInicio(), $desde)
-                                && UtilsController::ValidarFecha($hasta, $guardian->getDisponibilidadFin())
-                            )
-                                array_push($envio, $guardian);
+                    if (isset($listaguardianes) && !empty($listaguardianes)) {
+                        foreach ($listaguardianes as $guardian) {
+                            if ($guardian->getDisponibilidadInicio() && $guardian->getDisponibilidadFin()) {
+                                if (
+                                    UtilsController::ValidarFecha($guardian->getDisponibilidadInicio(), $desde)
+                                    && UtilsController::ValidarFecha($hasta, $guardian->getDisponibilidadFin())
+                                )
+                                    array_push($envio, $guardian);
+                            }
                         }
                     }
                     $listaguardianes = $envio;
@@ -366,32 +375,60 @@ class DuenoController
         $this->login($alert);
     }
 
+    public function cargarTarjeta($formaDePago, $operacion)
+    {
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
+            try {
+                $s = explode("-", $operacion);
+                $operacion = $s[0];
+                $idSoliResPag = $s[1];
+                $primerPago = $s[2];
+
+                if ($primerPago == false || $primerPago == null) {
+                    $tarjetaDAO = new TarjetaDAO();
+                    $tarjetas = $tarjetaDAO->GetByDniPropietario($_SESSION["dni"]);
+                    require_once(VIEWS_PATH . "cargarTarjeta.php");
+                } else {
+                    $this->realizarPago($formaDePago, $operacion, $idSoliResPag, $primerPago);
+                }
+            } catch (Exception $ex) {
+                $alert = new Alert("warning", "error en base de datos");
+                $this->login($alert);
+            }
+        } else {
+            $alert = new Alert("warning", "Debe iniciar sesion para acceder a sus funciones!");
+            $this->home($alert);
+        }
+    }
+
     /* Funcion que sirve tanto para realizar el primero(confirmacion reserva)
      como el segundo pago final, y tambien la posibilidad de cancelar en caso de que
      no se haya realizado el primer pago. */
-    public function realizarPago($formaDePago, $operacion) //revisar - hacer validaciones de pago tambien una vez que se paga
-    {
-        ///hacer vista cargar tarjeta
-
-        $s = explode("-", $operacion);
-        $operacion = $s[0];
-        $idSoliResPag = $s[1];
-        $primerPago = $s[2];
-
+    public function realizarPago(
+        $formaDePago,
+        $operacion,
+        $idSoliResPag,
+        $primerPago,
+        $nombreTarj = null,
+        $numeroTarj = null,
+        $Mvencimiento = null,
+        $Avencimiento = null,
+        $codigoSeg = null
+    ) {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             try {
                 if ($operacion == "pagar") {
                     $pago = new PagoDAO();
-                    $mascotas = new MascotaDAO();
-                    $solicitudXmasc = new SolixMascDAO();
-                    $idmascs = $solicitudXmasc->getAllIdMascotaByIdSolicitud($idSoliResPag);
-                    $arrayMascotas = $mascotas->getArrayByIds($idmascs);
 
                     ///en caso de ser el primer pago...
                     if ($primerPago == false || $primerPago == null) {
-                        $this->cargarTarjeta(); //////!!!!!!////////
+                        $mascotas = new MascotaDAO();
+                        $solicitudXmasc = new SolixMascDAO();
+                        $idmascs = $solicitudXmasc->getAllIdMascotaByIdSolicitud($idSoliResPag);
+                        $arrayMascotas = $mascotas->getArrayByIds($idmascs);
                         $solicitud = new SolicitudDAO();
                         $soli = $solicitud->GetById($idSoliResPag);
+
                         $valid = UtilsController::ValidacionesSoliPagoAReserva(
                             $arrayMascotas,
                             $soli->getDniGuardian(),
@@ -399,12 +436,15 @@ class DuenoController
                             $soli->getFechaInicio(),
                             $soli->getFechaFin()
                         );
-                        if ($valid) {
+
+                        $valid2 = UtilsController::ValidarDatosTarjetaYCrear($numeroTarj, $Mvencimiento, $Avencimiento, $codigoSeg, $nombreTarj);
+
+                        if ($valid && $valid2) {
                             $reserva = new Reserva($soli);
                             $reservaDAO = new ReservaDAO();
                             $reservaDAO->add($reserva);
                             $pago->updatePrimerPagoReservaById($idSoliResPag);
-                            $pago->updateFormaDePagoReservaById($formaDePago, $idSoliResPag); ///!!!!!!
+                            $pago->updateFormaDePagoReservaById($formaDePago, $idSoliResPag);
                             $resul2 = $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSoliResPag);
                             $resul = $solicitud->removeSolicitudById($idSoliResPag);
                             $intermediaMascotasXreserva = new ResxMascDAO();
@@ -417,8 +457,12 @@ class DuenoController
                             $solicitud->removeSolicitudById($idSoliResPag);
                             $solicitudXmasc->removeSolicitudMascIntByIdSolicitud($idSoliResPag);
                             $pago->removePagoById($idSoliResPag);
-                            $alert = new Alert("warning", "Pago cancelado. <br>
+                            if ($valid2) {
+                                $alert = new Alert("warning", "Pago cancelado. <br>
                             Tiene mascotas incompatibles en la fecha o la mascota esta reservada");
+                            } else {
+                                $alert = new Alert("warning", "Pago cancelado.<br>Datos erroneos en la tarjeta.");
+                            }
 
                             $this->login($alert);
                         }
@@ -450,10 +494,6 @@ class DuenoController
             $alert = new Alert("warning", "Debe iniciar sesion para acceder a sus funciones!");
             $this->home($alert);
         }
-    }
-
-    public function cargarTarjeta(){
-
     }
 
     /* Opcion de crear u no hacer una reseña a un guardian en el momento que una

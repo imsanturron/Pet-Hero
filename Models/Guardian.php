@@ -7,7 +7,7 @@ class Guardian extends User
     private $disponibilidadInicio;
     private $disponibilidadFin;
     private $precio;
-    private $TamanoACuidar;
+    private $TamanoACuidar; // chico - mediano - grande
     private $cantResenas; ///tipo reseña o id de reseñas
     private $puntajeTotal;
     private $puntajePromedio;

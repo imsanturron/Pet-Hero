@@ -45,7 +45,11 @@ class ResxMascDAO
                 $resXmasc->setIdMascota($row["idMascota"]);
                 array_push($resXmascList, $resXmasc);
             }
-            return $resXmascList;
+
+            if (isset($resXmascList) && !empty($resXmascList))
+                return $resXmascList;
+            else
+                return null;
         } catch (Exception $ex) {
             throw $ex;
         }

@@ -213,9 +213,16 @@ class UserDAO
       if ($list == true)
         array_push($lista, $usuario);
     }
-    if ($list == true)
-      return $lista;
-    else
-      return $usuario;
+    if ($list == true) {
+      if (isset($lista) && !empty($lista))
+        return $lista;
+      else
+        return null;
+    } else {
+      if (isset($usuario))
+        return $usuario;
+      else
+        return null;
+    }
   }
 }

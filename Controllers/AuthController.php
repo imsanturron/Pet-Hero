@@ -4,10 +4,8 @@ namespace Controllers;
 
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\DuenoDAO as DuenoDAO;
-use DAO\MYSQL\MascotaDAO as MascotaDAO;
 use DAO\MYSQL\ReservaDAO;
 use DAO\MYSQL\PagoDAO;
-use DAO\MYSQL\ResxMascDAO;
 use DAO\MYSQL\SolicitudDAO;
 use DAO\MYSQL\SolixMascDAO;
 use DAO\MYSQL\UserDAO as UserDAO;

@@ -349,10 +349,17 @@ class GuardianDAO
             if ($list == true)
                 array_push($lista, $guardian);
         }
-        if ($list == true)
-            return $lista;
-        else
-            return $guardian;
+        if ($list == true) {
+            if (isset($lista) && !empty($lista))
+                return $lista;
+            else
+                return null;
+        } else {
+            if (isset($guardian))
+                return $guardian;
+            else
+                return null;
+        }
     }
 
     /*function getGuardianesEntreFechas($desde, $hasta)

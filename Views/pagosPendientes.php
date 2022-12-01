@@ -29,7 +29,7 @@ include('nav-bar.php');
                     </thead>
                     <tbody>
                         <?php if (isset($_SESSION['loggedUser']) && $_SESSION['tipo']  == 'd') { ?>
-                            <form action="<?php echo FRONT_ROOT ?>Dueno/realizarPago" method="POST">
+                            <form action="<?php echo FRONT_ROOT ?>Dueno/cargarTarjeta" method="POST">
                                 <?php }
 
                             if (isset($pagos) && !empty($pagos)) {

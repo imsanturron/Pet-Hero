@@ -6,9 +6,9 @@ use Models\Solicitud as Solicitud;
 
 class Reserva extends Solicitud
 {
-  private $estado; ///"finalizado", "actual", "proximo"
+  private $estado; ///"finalizado" - "actual" - "proximo"
   private $crearResena; ///boolean  -- si debe crearse es true
-  private $resHechaOrechazada; //bool. ve si ya se hizo o rechazo la reseña. Podria ser atributo de reserva tamb
+  private $resHechaOrechazada; //boolean. Muestra si ya se hizo o rechazo hacer la reseña.
 
   public function __construct(Solicitud $solicitud = null)
   {
@@ -24,7 +24,7 @@ class Reserva extends Solicitud
       $this->setTelefonoDueno($solicitud->getTelefonoDueno());
       $this->setTelefonoGuardian($solicitud->getTelefonoGuardian());
 
-      ///setear estado comaparando con fecha actual.
+      ///setear estado comaparando con fecha actual, en login.
       $this->estado = "proximo";
       $this->crearResena = false;
       $this->resHechaOrechazada = false;

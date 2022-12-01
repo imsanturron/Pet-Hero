@@ -10,7 +10,7 @@ class User
     protected $dni;
     protected $email;
     protected $direccion;
-    protected $tipo; //char = "g" || "d"
+    protected $tipo; //char ---  "g" -> guardian || "d" -> dueño
     protected $telefono;
 
     public function getUserName()

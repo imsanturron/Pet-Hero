@@ -88,10 +88,7 @@ class ReservaDAO
 
             $reservaList = $this->setter($resultSet, true);
 
-            if (isset($reservaList))
-                return $reservaList;
-            else
-                return null;
+            return $reservaList;
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -113,10 +110,7 @@ class ReservaDAO
 
             $reservaList = $this->setter($resultSet, true);
 
-            if (isset($reservaList))
-                return $reservaList;
-            else
-                return null;
+            return $reservaList;
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -195,9 +189,16 @@ class ReservaDAO
             if ($list == true)
                 array_push($lista, $reserva);
         }
-        if ($list == true)
-            return $lista;
-        else
-            return $reserva;
+        if ($list == true) {
+            if (isset($lista) && !empty($lista))
+                return $lista;
+            else
+                return null;
+        } else {
+            if (isset($reserva))
+                return $reserva;
+            else
+                return null;
+        }
     }
 }

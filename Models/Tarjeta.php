@@ -6,9 +6,20 @@ class Tarjeta
 {
     private $numeroTarjeta; //PK
     private $dniPropietario; //FK
-    private $nombreTarjeta;
-    private $vencimiento;
-    private $codigoSeguridad;
+    private $nombreTarjeta; // nombre que aparece en tarjeta
+    private $vencimiento; // 'MM/YY'
+    private $codigoSeguridad; //Codigo de 3 digitos del lado posterior
+
+    public function __construct($numTarj = null, $dniP = null, $nombreTarj = null, $vencim = null, $codigo = null)
+    {
+        if (isset($numTarj) && isset($dniP) && isset($vencim)) {
+            $this->numeroTarjeta = $numTarj;
+            $this->dniPropietario = $dniP;
+            $this->nombreTarjeta = $nombreTarj;
+            $this->vencimiento = $vencim;
+            $this->codigoSeguridad = $codigo;
+        }
+    }
 
     public function getNumeroTarjeta()
     {

@@ -4,7 +4,7 @@ namespace Models;
 
 class Alert
 {
-    private $tipo;
+    private $tipo; //success - info - warning - danger - primary - secondary - light - dark
     private $mensaje;
 
     public function __construct($tipo = "", $mensaje = "")

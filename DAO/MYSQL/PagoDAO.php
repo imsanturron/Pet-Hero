@@ -83,10 +83,7 @@ class PagoDAO
 
             $pagoList = $this->setter($resultSet, true);
 
-            if (isset($pagoList))
-                return $pagoList;
-            else
-                return null;
+            return $pagoList;
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -106,17 +103,15 @@ class PagoDAO
             $resultSet = $this->connection->Execute($query, $parameters);
 
             $pagoList = $this->setter($resultSet, true);
-            
-            if (isset($pagoList))
-                return $pagoList;
-            else
-                return null;
+
+            return $pagoList;
         } catch (Exception $ex) {
             throw $ex;
         }
     }
 
-    function updatePrimerPagoReservaById($id){
+    function updatePrimerPagoReservaById($id)
+    {
         try {
             $query = "UPDATE " . $this->tableName . " SET primerPagoReserva = :primerPagoReserva WHERE id = :id;";
 
@@ -132,7 +127,8 @@ class PagoDAO
         }
     }
 
-    function updatePagoFinalReservaById($id){
+    function updatePagoFinalReservaById($id)
+    {
         try {
             $query = "UPDATE " . $this->tableName . " SET pagoFinal = :pagoFinal WHERE id = :id;";
 
@@ -148,7 +144,8 @@ class PagoDAO
         }
     }
 
-    function updateFormaDePagoReservaById($formaPago, $id){
+    function updateFormaDePagoReservaById($formaPago, $id)
+    {
         try {
             $query = "UPDATE " . $this->tableName . " SET formaDePago = :formaDePago WHERE id = :id;";
 
@@ -201,9 +198,16 @@ class PagoDAO
             if ($list == true)
                 array_push($lista, $pago);
         }
-        if ($list == true)
-            return $lista;
-        else
-            return $pago;
+        if ($list == true) {
+            if (isset($lista) && !empty($lista))
+                return $lista;
+            else
+                return null;
+        } else {
+            if (isset($pago))
+                return $pago;
+            else
+                return null;
+        }
     }
 }
