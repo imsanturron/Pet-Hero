@@ -3,26 +3,26 @@
 namespace DAO\MYSQL;
 
 use Models\Guardian as Guardian;
-use Models\chat as chat;
+use Models\Chat as Chat;
 use DAO\MYSQL\Connection as Connection;
 use \Exception as Exception;
 
-class chatDAO
+class ChatDAO
 {
     private $connection;
-    private $tableName = "chats";
+    private $tableName = "Chats";
 
-    public function Add(chat $chat)
+    public function Add(Chat $Chat)
     {
         try {
-            $query = "INSERT INTO " . $this->tableName . " (dniDueno, dniGuardian,nombreDueno,nombreGuardian,mensaje)
-             VALUES ( :dniDueno, :dniGuardian,:nombreDueno,:nombreGuardian,:mensaje);";
+            $query = "INSERT INTO " . $this->tableName . " (dniDueno,dniGuardian,nombreDueno,nombreGuardian,mensaje)
+             VALUES (:dniDueno,:dniGuardian,:nombreDueno,:nombreGuardian,:mensaje);";
 
-            $parameters["dniDueno"] = $chat->getDniDueno();
-            $parameters["dniGuardian"] = $chat->getDniGuardian();
-            $parameters["nombreDueno"] = $chat->getNombreDueno();
-            $parameters["nombreGuardian"] = $chat->getNombreGuardian();
-            $parameters["mensaje"] = $chat->getMensaje();
+            $parameters["dniDueno"] = $Chat->getDniDueno();
+            $parameters["dniGuardian"] = $Chat->getDniGuardian();
+            $parameters["nombreDueno"] = $Chat->getNombreDueno();
+            $parameters["nombreGuardian"] = $Chat->getNombreGuardian();
+            $parameters["mensaje"] = $Chat->getMensaje();
             
             $this->connection = Connection::GetInstance();
             $this->connection->ExecuteNonQuery($query, $parameters);
@@ -34,15 +34,15 @@ class chatDAO
     public function GetAll()
     {
         try {
-            $chatList = array();
+            $ChatList = array();
             $query = "SELECT c.*, g.nombre as nombreGuardian, d.nombre as nombreDueno,mensaje
               FROM " . $this->tableName . " c join duenos d on c.dniDueno = c.dni join guardianes g on c.dniGuardian = g.dni";
             $this->connection = Connection::GetInstance();
             $resultSet = $this->connection->Execute($query);
 
-            $chatList = $this->setter($resultSet, true);
+            $ChatList = $this->setter($resultSet, true);
 
-            return $chatList;
+            return $ChatList;
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -51,7 +51,7 @@ class chatDAO
     function GetById($id)
     {
         try {
-            $chat = null;
+            $Chat = null;
 
             $query = "SELECT c.*, g.nombre as nombreGuardian, d.nombre as nombreDueno, 
              FROM " . $this->tableName . " c join duenos d on c.dniDueno = d.dni join guardianes g on c.dniGuardian = g.dni WHERE id = :id";
@@ -62,9 +62,9 @@ class chatDAO
 
             $resultSet = $this->connection->Execute($query, $parameters);
 
-            $chat = $this->setter($resultSet);
+            $Chat = $this->setter($resultSet);
 
-            return $chat;
+            return $Chat;
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -73,7 +73,7 @@ class chatDAO
     function GetIdByDniDuenoYGuardian($dniDueno, $dniGuardian)
     {
         try {
-            $chat = null;
+            $Chat = null;
 
             $query = "SELECT id FROM " . $this->tableName . " WHERE dniDueno = :dniDueno AND dniGuardian = :dniGuardian";
 
@@ -86,11 +86,11 @@ class chatDAO
             $resultSet = $this->connection->Execute($query, $parameters);
 
             foreach ($resultSet as $row) {
-                $chat = new chat();
-                $chat->setId($row["id"]);
+                $Chat = new Chat();
+                $Chat->setId($row["id"]);
             }
 
-            return $chat->getId();
+            return $Chat->getId();
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -98,10 +98,10 @@ class chatDAO
 
 
 
-    function getchatsByDniGuardian($dniGuardian) /////
+    function getChatsByDniGuardian($dniGuardian) /////
     {
         try {
-            $chatList = array();
+            $ChatList = array();
 
             $query = "SELECT c.*, g.nombre as nombreGuardian, d.nombre as nombreDueno, 
             FROM " . $this->tableName . " c join duenos d on c.dniDueno = d.dni join guardianes g on c.dniGuardian = g.dni WHERE dniGuardian = :dniGuardian";
@@ -112,18 +112,18 @@ class chatDAO
 
             $resultSet = $this->connection->Execute($query, $parameters);
 
-            $chatList = $this->setter($resultSet, true);
+            $ChatList = $this->setter($resultSet, true);
 
-            return $chatList;
+            return $ChatList;
         } catch (Exception $ex) {
             throw $ex;
         }
     }
 
-    function getchatsByDniDueno($dniDueno) /////
+    function getChatsByDniDueno($dniDueno) /////
     {
         try {
-            $chatList = array();
+            $ChatList = array();
 
 
             $query = "SELECT c.*, g.nombre as nombreGuardian, d.nombre as nombreDueno
@@ -135,9 +135,9 @@ class chatDAO
 
             $resultSet = $this->connection->Execute($query, $parameters);
 
-            $chatList = $this->setter($resultSet, true);
+            $ChatList = $this->setter($resultSet, true);
 
-            return $chatList;
+            return $ChatList;
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -150,17 +150,17 @@ class chatDAO
         $lista = array();
 
         foreach ($resultSet as $row) {
-            $chat = new chat();
-            $chat->setId($row["id"]);
+            $Chat = new Chat();
+            $Chat->setId($row["id"]);
       
-            $chat->setDniDueno($row["dniDueno"]);
-            $chat->setNombreGuardian($row["nombreGuardian"]);
-            $chat->setNombreDueno($row["nombreDueno"]);
-            $chat->setDniGuardian($row["dniGuardian"]);
-            $chat->setMensaje($row["mensaje"]);
+            $Chat->setDniDueno($row["dniDueno"]);
+            $Chat->setNombreGuardian($row["nombreGuardian"]);
+            $Chat->setNombreDueno($row["nombreDueno"]);
+            $Chat->setDniGuardian($row["dniGuardian"]);
+            $Chat->setMensaje($row["mensaje"]);
             
             if ($list == true)
-                array_push($lista, $chat);
+                array_push($lista, $Chat);
         }
         if ($list == true) {
             if (isset($lista) && !empty($lista))
@@ -168,8 +168,8 @@ class chatDAO
             else
                 return null;
         } else {
-            if (isset($chat))
-                return $chat;
+            if (isset($Chat))
+                return $Chat;
             else
                 return null;
         }

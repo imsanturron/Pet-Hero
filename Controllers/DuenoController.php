@@ -304,27 +304,26 @@ class DuenoController
         }
     }
 
-
+   //Recibe el ultimo dni, no el que se elije arreglar
     public function EnviarNuevoMensaje($dni,$mensaje = null)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             try {
                
                 if($mensaje == null){
-
+             
                     require_once(VIEWS_PATH . "escribirMensaje.php");
 
                 }else{
-   
+                  
+                   
                     $guardianes = new GuardianDAO();
                     $guardian = $guardianes->getByDni($dni);
-
                     $duenoDAO = new DuenoDAO();
                     $dueno = $duenoDAO->GetByDni($_SESSION["dni"]);
-
+                  
                     $chat = new Chat($guardian, $dueno,$mensaje);
                     $chatD = new chatDAO();
-
                     $chatD->Add($chat); // Aca esta el error creo
 
                 }

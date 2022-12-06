@@ -9,8 +9,8 @@ include('nav-bar.php');
         <textarea name="mensaje" style="background-color:#DC8E47;color:white;"  cols="30" rows="10"  required ></textarea>
       
         <br> <br>
-       
-        <input type="hidden" name="dni" value="<?php $dni;?>"> <?php //aca se manda el dni del guardian que eligio ?>
+   
+        <input type="hidden" name="dni" value="<?php echo $dni;?>"> <?php //aca se manda el dni del guardian que eligio ?>
         <button type="submit" class="btn" style="background-color:#DC8E47;color:white;">Enviar</button>
 </form>
 <div class="alert alert-<?php echo $alert->getTipo() ?>">
