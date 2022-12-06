@@ -40,18 +40,8 @@ class DuenoDAO
             $this->connection = Connection::GetInstance();
             $resultSet = $this->connection->Execute($query);
 
-            foreach ($resultSet as $row) {
-                $dueno = new Dueno();
-                $dueno->setNombre($row["nombre"]);
-                $dueno->setUsername($row["username"]);
-                $dueno->setPassword($row["password"]);
-                $dueno->setDni($row["dni"]);
-                $dueno->setEmail($row["email"]);
-                $dueno->setDireccion($row["direccion"]);
-                $dueno->setTelefono($row["telefono"]);
-                $dueno->setTipo($row["tipo"]);
-                array_push($duenoList, $dueno);
-            }
+            $duenoList = $this->setter($resultSet, true);
+
             return $duenoList;
         } catch (Exception $ex) {
             throw $ex;
@@ -71,17 +61,7 @@ class DuenoDAO
 
             $resultSet = $this->connection->Execute($query, $parameters);
 
-            foreach ($resultSet as $row) {
-                $dueno = new Dueno();
-                $dueno->setNombre($row["nombre"]);
-                $dueno->setUserName($row["username"]);
-                $dueno->setPassword($row["password"]);
-                $dueno->setDni($row["dni"]);
-                $dueno->setEmail($row["email"]);
-                $dueno->setDireccion($row["direccion"]);
-                $dueno->setTelefono($row["telefono"]);
-                $dueno->setTipo($row["tipo"]);
-            }
+            $dueno = $this->setter($resultSet);
 
             return $dueno;
         } catch (Exception $ex) {
@@ -102,17 +82,7 @@ class DuenoDAO
 
             $resultSet = $this->connection->Execute($query, $parameters);
 
-            foreach ($resultSet as $row) {
-                $dueno = new Dueno();
-                $dueno->setNombre($row["nombre"]);
-                $dueno->setUserName($row["username"]);
-                $dueno->setPassword($row["password"]);
-                $dueno->setDni($row["dni"]);
-                $dueno->setEmail($row["email"]);
-                $dueno->setDireccion($row["direccion"]);
-                $dueno->setTelefono($row["telefono"]);
-                $dueno->setTipo($row["tipo"]);
-            }
+            $dueno = $this->setter($resultSet);
 
             return $dueno;
         } catch (Exception $ex) {
@@ -120,29 +90,26 @@ class DuenoDAO
         }
     }
 
-    public function removeDuenoByDni($dni){
-
-        try
-        {
+    public function removeDuenoByDni($dni)
+    {
+        try {
             $solicitud = null;
 
-            $query = "DELETE FROM ".$this->tableName." WHERE dni = :dni";
+            $query = "DELETE FROM " . $this->tableName . " WHERE dni = :dni";
 
             $parameters["dni"] = $dni;
 
             $this->connection = Connection::GetInstance();
 
             $resultSet = $this->connection->Execute($query, $parameters);
-            
-      
+
+
             return true;
-        }
-        catch(Exception $ex)
-        {
+        } catch (Exception $ex) {
             throw $ex;
         }
     }
-    function getTelefonos() /////
+    function getTelefonos()
     {
         try {
             $telefonoList = array();
@@ -161,7 +128,8 @@ class DuenoDAO
         }
     }
 
-    public function updateDatosDueno($username, $password, $nombre, $email, $direccion, $telefono){
+    public function updateDatosDueno($username, $password, $nombre, $email, $direccion, $telefono)
+    {
         try {
             $query = "UPDATE " . $this->tableName . " SET username  = :username, password = :password,
              nombre = :nombre, email = :email, direccion = :direccion, telefono = :telefono WHERE dni = :dni;";
@@ -179,6 +147,36 @@ class DuenoDAO
             $this->connection->ExecuteNonQuery($query, $parameters);
         } catch (Exception $ex) {
             throw $ex;
+        }
+    }
+
+    function setter($resultSet, $list = false)
+    {
+        $lista = array();
+
+        foreach ($resultSet as $row) {
+            $dueno = new Dueno();
+            $dueno->setNombre($row["nombre"]);
+            $dueno->setUserName($row["username"]);
+            $dueno->setPassword($row["password"]);
+            $dueno->setDni($row["dni"]);
+            $dueno->setEmail($row["email"]);
+            $dueno->setDireccion($row["direccion"]);
+            $dueno->setTelefono($row["telefono"]);
+            $dueno->setTipo($row["tipo"]);
+            if ($list == true)
+                array_push($lista, $dueno);
+        }
+        if ($list == true) {
+            if (isset($lista) && !empty($lista))
+                return $lista;
+            else
+                return null;
+        } else {
+            if (isset($dueno))
+                return $dueno;
+            else
+                return null;
         }
     }
 }

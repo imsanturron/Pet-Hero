@@ -4,10 +4,8 @@ namespace Controllers;
 
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\DuenoDAO as DuenoDAO;
-use DAO\MYSQL\MascotaDAO as MascotaDAO;
 use DAO\MYSQL\ReservaDAO;
 use DAO\MYSQL\PagoDAO;
-use DAO\MYSQL\ResxMascDAO;
 use DAO\MYSQL\SolicitudDAO;
 use DAO\MYSQL\SolixMascDAO;
 use DAO\MYSQL\UserDAO as UserDAO;
@@ -41,6 +39,7 @@ class AuthController
           if ($guardianx && $guardianx->getPassword() == $password) {
             $bool = true;
             $_SESSION["loggedUser"] = $guardianx;
+            $_SESSION["dni"] = $guardianx->getDni();
             $_SESSION["tipo"] = "g";
             $this->validacionesLogin();
             $alert = new Alert("success", "Bienvenido!");
@@ -56,6 +55,7 @@ class AuthController
           if ($duenox && $duenox->getPassword() == $password) {
             $bool = true;
             $_SESSION["loggedUser"] = $duenox;
+            $_SESSION["dni"] = $duenox->getDni();
             $_SESSION["tipo"] = "d";
             $this->validacionesLogin();
             $alert = new Alert("success", "Bienvenido!");

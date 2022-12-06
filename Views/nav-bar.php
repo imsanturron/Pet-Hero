@@ -6,7 +6,7 @@
     <nav id="mainav" class="fl_right">
       <?php if (isset($_SESSION['loggedUser'])) { ?>
         <ul class="clear">
-          <li class="active"><a class="drop" href="#">Actions</a>
+          <li class="active"><a class="drop" href="#">Menu</a>
             <ul>
               <?php if ($_SESSION['loggedUser']->getTipo() == 'd') { ?>
                 <li><a href="<?php echo FRONT_ROOT ?>Dueno/login">Home</a></li>

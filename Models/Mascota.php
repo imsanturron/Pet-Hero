@@ -7,10 +7,10 @@ class Mascota
 
     private $dniDueno; //FK
     private $id; //PK
-    private $especie;
+    private $especie; // Perro - gato
     private $nombre;
     private $raza;
-    private $tamano;
+    private $tamano; // Chico - mediano - grande
     private $observaciones;
     private $fotoMascota;
     private $video;

@@ -13,6 +13,7 @@ include('nav-bar.php');
   <button name="opcion" value="historialDePagos" type="submit" class="btn" style="background-color:#DC8E47;color:white;">Historial de reservas/pagos</button>
   <button name="opcion" value="verPerfil" type="submit" class="btn" style="background-color:#DC8E47;color:white;">Mi perfil</button>
   <button name="opcion" value="modificarDatos" type="submit" class="btn" style="background-color:#DC8E47;color:white;">Modificar datos</button>
+  <button name="opcion" value="enviarMensaje" type="submit" class="btn" style="background-color:#DC8E47;color:white;">Enviar Mensaje a Guardian</button>
 
   <div class="alert alert-<?php echo $alert->getTipo() ?>">
     <?php echo $alert->getMensaje() ?>
