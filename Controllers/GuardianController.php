@@ -9,6 +9,7 @@ use Models\Guardian;
 use Models\Alert as Alert;
 use Models\Solicitud as Solicitud;
 use Models\Reserva as Reserva;
+use Models\Chat as Chat;
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\SolicitudDAO;
 use DAO\MYSQL\UserDAO as UserDAO;
@@ -17,6 +18,7 @@ use DAO\MYSQL\SolixMascDAO as SolixMascDAO;
 use DAO\MYSQL\MascotaDAO as MascotaDAO;
 use DAO\MYSQL\ResxMascDAO as ResxMascDAO;
 use DAO\MYSQL\PagoDAO as PagoDAO;
+use DAO\MYSQL\ChatDAO as ChatDAO;
 use Models\Pago as pago;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
@@ -53,6 +55,11 @@ class GuardianController
     public function registro(Alert $alert = null)
     {
         require_once(VIEWS_PATH . "registroGuardian.php");
+    }
+
+    public function EnviarNuevoMsjNoUsar($dni)
+    {
+        $this->EnviarNuevoMensaje($dni);
     }
 
     public function verReservas(Alert $alert = null)
@@ -269,6 +276,10 @@ class GuardianController
                     }
                     $pagos = $envio;
                     require_once(VIEWS_PATH . "historialDePagos.php");
+                } else if ($opcion == "enviarMensaje") {
+                    $duenoDAO = new DuenoDAO();
+                    $listaguardianes = $duenoDAO->GetAll(); //cambiar el lista GUARDIANES
+                    require_once(VIEWS_PATH . "seleccionarGuardian.php");
                 }
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
@@ -390,6 +401,37 @@ class GuardianController
             }
         } else {
             $alert = new Alert("warning", "Debe iniciar sesion para acceder a sus funciones");
+            $this->home($alert);
+        }
+    }
+
+    //Recibe el ultimo dni, no el que se elije arreglar
+    public function EnviarNuevoMensaje($dni, $mensaje = null)
+    {
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
+            try {
+                if ($mensaje == null) {
+                    $chatD = new ChatDAO();
+                    $historialMensajes = $chatD->getHistorialChatsByDnis($dni, $_SESSION["dni"]);
+                    require_once(VIEWS_PATH . "escribirMensaje.php");
+                } else {
+                    $guardianes = new GuardianDAO();
+                    $guardian = $guardianes->getByDni($_SESSION["dni"]);
+                    $duenoDAO = new DuenoDAO();
+                    $dueno = $duenoDAO->GetByDni($dni);
+
+                    $chat = new Chat($guardian, $dueno, $mensaje, 'g');
+                    $chatD = new chatDAO();
+                    $chatD->Add($chat);
+                    $alert = new Alert("success", "Mensaje enviado!");
+                    $this->EnviarNuevoMsjNoUsar($dni);
+                }
+            } catch (Exception $ex) {
+                $alert = new Alert("warning", "error en base de datos 3");
+                $this->login($alert);
+            }
+        } else {
+            $alert = new Alert("warning", "Debe iniciar sesion para acceder a sus funciones!");
             $this->home($alert);
         }
     }
