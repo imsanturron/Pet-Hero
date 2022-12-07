@@ -341,7 +341,7 @@ class UtilsController
           $tarjetas = new TarjetaDAO;
           $a = null;
           if ($tarjetas->getAll() != null) { //Warning: Undefined variable $tarjeta in C:\XAMPP\htdocs\Pet-Hero\DAO\MYSQL\TarjetaDAO.php on line 143
-            $a = $tarjetas->getByNumeroTarjeta($numTarj);
+            $a = $tarjetas->getByNumeroTarjeta($numTarj); ///
 
             if ($a != null)
               return false;
