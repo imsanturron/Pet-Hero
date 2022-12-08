@@ -1,152 +1,111 @@
 <?php
+
 namespace Models;
 
-class chat{
-
- private $id;
- private $dniDueno;
- private $dniGuardian;
- private $nombreDueno;
- private $nombreGuardian;
- private $mensaje;
- 
-
- public function  __construct(Guardian $guardian = null, Dueno $dueno = null, $mensaje = null)
- {
-     if (isset($guardian) && isset($dueno) ) {
-       
-         $this->nombreDueno = $dueno->getNombre();
-         $this->dniDueno = $dueno->getDni();
-         $this->nombreGuardian = $guardian->getNombre();
-         $this->dniGuardian = $guardian->getdni();
-         $this->mensaje = $mensaje;
-     }
- }
+class chat
+{
+    private $idC; //PK
+    private $dniDueno; //FK
+    private $dniGuardian; //FK
+    private $nombreDueno; //NO ESTA EN DB
+    private $nombreGuardian; //NO ESTA EN DB
+    private $nuevo; // Hay mensajes nuevos. Boolean
+    private $senderUlt; // char: guardian = 'g' - dueño = 'd' --> quien envio el chat
 
 
+    public function  __construct(Guardian $guardian = null, Dueno $dueno = null, $senderUlt = null)
+    {
+        if (isset($guardian) && isset($dueno)) {
+            $this->nombreDueno = $dueno->getNombre();
+            $this->dniDueno = $dueno->getDni();
+            $this->nombreGuardian = $guardian->getNombre();
+            $this->dniGuardian = $guardian->getdni();
+            $this->nuevo = true;
+            $this->senderUlt = $senderUlt;
+        }
+    }
 
+    public function getIdC()
+    {
+        return $this->idC;
+    }
 
- /**
-  * Get the value of id
-  */ 
- public function getId()
- {
-  return $this->id;
- }
+    public function setIdC($idC): self
+    {
+        $this->idC = $idC;
 
- /**
-  * Set the value of id
-  *
-  * @return  self
-  */ 
- public function setId($id)
- {
-  $this->id = $id;
+        return $this;
+    }
 
-  return $this;
- }
+    public function getDniDueno()
+    {
+        return $this->dniDueno;
+    }
 
- /**
-  * Get the value of dniDueno
-  */ 
- public function getDniDueno()
- {
-  return $this->dniDueno;
- }
+    public function setDniDueno($dniDueno): self
+    {
+        $this->dniDueno = $dniDueno;
 
- /**
-  * Set the value of dniDueno
-  *
-  * @return  self
-  */ 
- public function setDniDueno($dniDueno)
- {
-  $this->dniDueno = $dniDueno;
+        return $this;
+    }
 
-  return $this;
- }
+    public function getDniGuardian()
+    {
+        return $this->dniGuardian;
+    }
 
- /**
-  * Get the value of dniGuardian
-  */ 
- public function getDniGuardian()
- {
-  return $this->dniGuardian;
- }
+    public function setDniGuardian($dniGuardian): self
+    {
+        $this->dniGuardian = $dniGuardian;
 
- /**
-  * Set the value of dniGuardian
-  *
-  * @return  self
-  */ 
- public function setDniGuardian($dniGuardian)
- {
-  $this->dniGuardian = $dniGuardian;
+        return $this;
+    }
 
-  return $this;
- }
+    public function getNombreDueno()
+    {
+        return $this->nombreDueno;
+    }
 
- /**
-  * Get the value of nombreDueno
-  */ 
- public function getNombreDueno()
- {
-  return $this->nombreDueno;
- }
+    public function setNombreDueno($nombreDueno): self
+    {
+        $this->nombreDueno = $nombreDueno;
 
- /**
-  * Set the value of nombreDueno
-  *
-  * @return  self
-  */ 
- public function setNombreDueno($nombreDueno)
- {
-  $this->nombreDueno = $nombreDueno;
+        return $this;
+    }
 
-  return $this;
- }
+    public function getNombreGuardian()
+    {
+        return $this->nombreGuardian;
+    }
 
- /**
-  * Get the value of nombreGuardian
-  */ 
- public function getNombreGuardian()
- {
-  return $this->nombreGuardian;
- }
+    public function setNombreGuardian($nombreGuardian): self
+    {
+        $this->nombreGuardian = $nombreGuardian;
 
- /**
-  * Set the value of nombreGuardian
-  *
-  * @return  self
-  */ 
- public function setNombreGuardian($nombreGuardian)
- {
-  $this->nombreGuardian = $nombreGuardian;
+        return $this;
+    }
 
-  return $this;
- }
+    public function getNuevo()
+    {
+        return $this->nuevo;
+    }
 
- /**
-  * Get the value of mensaje
-  */ 
- public function getMensaje()
- {
-  return $this->mensaje;
- }
+    public function setNuevo($nuevo): self
+    {
+        $this->nuevo = $nuevo;
 
- /**
-  * Set the value of mensaje
-  *
-  * @return  self
-  */ 
- public function setMensaje($mensaje)
- {
-  $this->mensaje = $mensaje;
+        return $this;
+    }
 
-  return $this;
- }
+    public function getSenderUlt()
+    {
+        return $this->senderUlt;
+    }
+
+    public function setSenderUlt($senderUlt): self
+    {
+        $this->senderUlt = $senderUlt;
+
+        return $this;
+    }
 }
- 
-
-
-?>

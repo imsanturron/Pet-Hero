@@ -338,10 +338,12 @@ class UtilsController
     if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == 'd') {
       try {
         if (is_numeric($numTarj) && is_numeric($mVenc) && is_numeric($aVenc) && is_numeric($codigo)) {
+          //$comparaVenc = date("Y-m-d"); // YYYY/MM/DD
+          //if($mVenc >= substr($comparaVenc, -4)) ver que mvenc y avenc > hoy
           $tarjetas = new TarjetaDAO;
           $a = null;
           if ($tarjetas->getAll() != null) { //Warning: Undefined variable $tarjeta in C:\XAMPP\htdocs\Pet-Hero\DAO\MYSQL\TarjetaDAO.php on line 143
-            $a = $tarjetas->getByNumeroTarjeta($numTarj);
+            $a = $tarjetas->getByNumeroTarjeta($numTarj); ///
 
             if ($a != null)
               return false;

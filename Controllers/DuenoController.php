@@ -8,6 +8,7 @@ use Models\Solicitud as Solicitud;
 use Models\Guardian as Guardian;
 use Models\Reserva as Reserva;
 use Models\Chat as Chat;
+use Models\Mensaje as Mensaje;
 use Models\Alert as Alert;
 use DAO\MYSQL\DuenoDAO as DuenoDAO;
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
@@ -20,7 +21,8 @@ use DAO\MYSQL\ReservaDAO as ReservaDAO;
 use DAO\MYSQL\ResenaDAO as ResenaDao;
 use DAO\MYSQL\TarjetaDAO as TarjetaDAO;
 use DAO\MYSQL\UserDAO as UserDAO;
-use DAO\MYSQL\chatDAO as chatDAO;
+use DAO\MYSQL\ChatDAO as ChatDAO;
+use DAO\MYSQL\MensajeDAO as MensajeDAO;
 use Models\Pago;
 use Models\Resena;
 use Models\ResxMasc;
@@ -76,6 +78,11 @@ class DuenoController
     public function home(Alert $alert = null)
     {
         require_once(VIEWS_PATH . "home.php");
+    }
+
+    public function EnviarNuevoMsjNoUsar($dni)
+    {
+        $this->EnviarNuevoMensaje($dni);
     }
 
     /* Agregar y guardar un dueño */
@@ -220,14 +227,13 @@ class DuenoController
                     }
                     $pagos = $envio;
                     require_once(VIEWS_PATH . "historialDePagos.php");
-             
-                }  else if ($opcion == "enviarMensaje") {
-
-                   $this->enviarMensaje();
-
+                } else if ($opcion == "enviarMensaje") {
+                    $guardianDao = new GuardianDAO();
+                    $listaUsuarios = $guardianDao->GetAll();
+                    require_once(VIEWS_PATH . "seleccionarUsuarioChat.php");
                 }
             } catch (Exception $ex) {
-                $alert = new Alert("warning", "error en base de datos 1 ");
+                $alert = new Alert("warning", "error en base de datos");
                 $this->login($alert);
             }
         } else {
@@ -274,66 +280,77 @@ class DuenoController
         }
     }
 
-    public function enviarMensaje()
+    /* Busca el usuario, o usuarios con una coincidencia mayor al 84%, para poder seleccionar 
+    para chatear, y los mostrara */
+    public function BuscarUsuario($username)
     {
-        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
-         
-                try {
-                    $guardianDao = new GuardianDAO();
-                    $listaguardianes = $guardianDao->GetAll();
-                  
-                    if (isset($listaguardianes) && !empty($listaguardianes)) {
-                       
-                        require_once(VIEWS_PATH . "seleccionarGuardian.php");
-                    
-                    }else{
- 
-                        $alert = new Alert("warning", "No hay guardianes para enviar mensaje");
-                        $this->home($alert);
-                    }
-          
-                } catch (Exception $ex) {
-                    $alert = new Alert("warning", "error en base de datos 2");
-                    $this->login($alert);
-                }
-               
-           
-        } else {
-            $alert = new Alert("warning", "Debe iniciar sesion para acceder a sus funciones!");
-            $this->home($alert);
+        $buscaDeUsername = true;
+        $envio = array();
+        $similar = 0;
+        $guardianDao = new GuardianDAO();
+        $listaUsuarios = $guardianDao->GetAll();
+        if (isset($listaUsuarios) && !empty($listaUsuarios)) {
+            foreach ($listaUsuarios as $user) {
+                similar_text($username, $user->getUserName(), $similar);
+                if ($similar > 84)
+                    array_push($envio, $user);
+            }
         }
+        $listaUsuarios = $envio;
+        require_once(VIEWS_PATH . "seleccionarUsuarioChat.php");
     }
 
-   //Recibe el ultimo dni, no el que se elije arreglar
-    public function EnviarNuevoMensaje($dni,$mensaje = null)
+    //Recibe el ultimo dni, no el que se elije arreglar
+    public function EnviarNuevoMensaje($dni, $mensaje = null)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
             try {
-               
-                if($mensaje == null){
-             
-                    require_once(VIEWS_PATH . "escribirMensaje.php");
+                if ($mensaje == null) {
+                    $historialMensajes = null;
+                    $chatD = new ChatDAO();
+                    $mensajeD = new MensajeDAO();
+                    $idchat = $chatD->GetIdByDniDuenoYGuardian($_SESSION["dni"], $dni);
 
-                }else{
-                  
-                   
+                    if (isset($idchat)) {
+                        $historialMensajes = $mensajeD->getHistorialMensajesByIdChat($idchat);
+                        if ($chatD->getSenderById($idchat) == 'g') //ver
+                            $chatD->updateNuevo(false, $idchat);
+
+                        $chat = $chatD->GetById($idchat);
+                    }
+
+                    require_once(VIEWS_PATH . "escribirMensaje.php");
+                } else {
+                    $mensajeD = new MensajeDAO();
                     $guardianes = new GuardianDAO();
                     $guardian = $guardianes->getByDni($dni);
                     $duenoDAO = new DuenoDAO();
                     $dueno = $duenoDAO->GetByDni($_SESSION["dni"]);
-                  
-                    $chat = new Chat($guardian, $dueno,$mensaje);
-                    $chatD = new chatDAO();
-                    $chatD->Add($chat); // Aca esta el error creo
 
+                    $chatD = new chatDAO();
+                    $idchat = $chatD->GetIdByDniDuenoYGuardian($_SESSION["dni"], $dni);
+                    if ($idchat) {
+                        echo "a";
+                        $mensj = new Mensaje($idchat, $mensaje, 'd');
+                        $mensajeD->Add($mensj);
+                        $chatD->updateNuevo(true, $idchat);
+                        $chatD->updateUltSender('d', $idchat);
+                    } else {
+                        echo "b";
+                        $chat = new Chat($guardian, $dueno, 'd');
+                        $chatD->Add($chat);
+                        $idchat = $chatD->GetIdByDniDuenoYGuardian($_SESSION["dni"], $dni);
+                        $mensj = new Mensaje($idchat, $mensaje, 'd');
+                        $mensajeD->Add($mensj);
+                    }
+                    //$alert = new Alert("success", "Mensaje enviado!");
+                    $this->EnviarNuevoMsjNoUsar($dni);
                 }
-                    
-               
             } catch (Exception $ex) {
+                echo $ex;
                 $alert = new Alert("warning", "error en base de datos 3");
                 $this->login($alert);
             }
-          
         } else {
             $alert = new Alert("warning", "Debe iniciar sesion para acceder a sus funciones!");
             $this->home($alert);
@@ -370,7 +387,6 @@ class DuenoController
             $this->home($alert);
         }
     }
-
 
     /* con la solicitud totalmente armada, verifica que las mascotas que hayamos
     seleccionado sean de la misma raza, que ese guardian no tenga otras solicitudes nuestras
@@ -451,7 +467,7 @@ class DuenoController
 
     public function cargarTarjeta($formaDePago, $operacion)
     {
-        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") {
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "d") { //esta agarrando ultima forma de pago, si ya esta seleccionada manda default -
             try {
                 $s = explode("-", $operacion);
                 $operacion = $s[0];
@@ -460,7 +476,7 @@ class DuenoController
 
                 if ($primerPago == false || $primerPago == null) {
                     $tarjetaDAO = new TarjetaDAO();
-                    $tarjetas = $tarjetaDAO->GetByDniPropietario($_SESSION["dni"]);
+                    $tarjetas = $tarjetaDAO->GetTarjetasByDniPropietario($_SESSION["dni"]);
                     require_once(VIEWS_PATH . "cargarTarjeta.php");
                 } else {
                     $this->realizarPago($formaDePago, $operacion, $idSoliResPag, $primerPago);
@@ -483,8 +499,8 @@ class DuenoController
         $operacion,
         $idSoliResPag,
         $primerPago,
-        $nombreTarj = null,
         $numeroTarj = null,
+        $nombreTarj = null,
         $Mvencimiento = null,
         $Avencimiento = null,
         $codigoSeg = null
@@ -511,7 +527,11 @@ class DuenoController
                             $soli->getFechaFin()
                         );
 
-                        $valid2 = UtilsController::ValidarDatosTarjetaYCrear($numeroTarj, $Mvencimiento, $Avencimiento, $codigoSeg, $nombreTarj);
+                        if ($numeroTarj && $nombreTarj && $codigoSeg)
+                            $valid2 = UtilsController::ValidarDatosTarjetaYCrear($numeroTarj, $Mvencimiento, $Avencimiento, $codigoSeg, $nombreTarj);
+
+                        if ($numeroTarj && !$nombreTarj && !$codigoSeg)
+                            $valid2 = true;
 
                         if ($valid && $valid2) {
                             $reserva = new Reserva($soli);

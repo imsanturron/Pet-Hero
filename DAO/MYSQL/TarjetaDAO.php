@@ -66,10 +66,10 @@ class TarjetaDAO
     }
   }
 
-  function GetByDniPropietario($dniPropietario)
+  function GetTarjetasByDniPropietario($dniPropietario)
   {
     try {
-      $tarjeta = null;
+      $tarjetaList = array();
 
       $query = "SELECT * FROM " . $this->tableName . " WHERE dniPropietario = :dniPropietario";
 
@@ -79,9 +79,9 @@ class TarjetaDAO
 
       $resultSet = $this->connection->Execute($query, $parameters);
 
-      $tarjeta = $this->setter($resultSet);
+      $tarjetaList = $this->setter($resultSet, true);
 
-      return $tarjeta;
+      return $tarjetaList;
     } catch (Exception $ex) {
       throw $ex;
     }
