@@ -11,19 +11,19 @@ include('nav-bar.php');
             <?php
             if (isset($historialMensajes) && !empty($historialMensajes)) {
                 foreach ($historialMensajes as $msj) {
-                    if ($msj->getSender() == 'd') {
+                    if ($msj->getSenderMsj() == 'd') {
                         echo "<p style='color:red;'>" . $msj->getFecha() . "<br>";
-                        echo "<p style='color:red;'>" . $msj->getNombreDueno() . ": " . $msj->getMensaje() . "<br><br>";
+                        echo "<p style='color:red;'>" . $chat->getNombreDueno() . ": " . $msj->getMensaje() . "<br><br>";
                     } else {
                         echo "<p style='color:green;'>" . $msj->getFecha() . "<br>";
-                        echo "<p style='color:green;'>" . $msj->getNombreGuardian() . ": " . $msj->getMensaje() . "<br><br>";
+                        echo "<p style='color:green;'>" . $chat->getNombreGuardian() . ": " . $msj->getMensaje() . "<br><br>";
                     }
                 }
             }
             ?>
             <br>
-            <FONT COLOR="black">Escriba aqui: </FONT>
-            <textarea name="mensaje" style="background-color:#DC8E47;color:white;" cols="30" rows="10" required></textarea>
+            <FONT COLOR="black"> Escriba aqui: </FONT>
+            <textarea name="mensaje" style="background-color:#DC8E47;color:white;" cols="110" rows="8" required></textarea>
 
             <br> <br>
 
@@ -31,6 +31,7 @@ include('nav-bar.php');
 
             <button type="submit" class="btn" style="background-color:#DC8E47;color:white;"> Enviar </button>
         </form>
+
         <div class="alert alert-<?php echo $alert->getTipo() ?>">
             <?php echo $alert->getMensaje() ?>
         </div>

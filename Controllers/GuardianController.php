@@ -9,6 +9,7 @@ use Models\Guardian;
 use Models\Alert as Alert;
 use Models\Solicitud as Solicitud;
 use Models\Reserva as Reserva;
+use Models\Mensaje as Mensaje;
 use Models\Chat as Chat;
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\SolicitudDAO;
@@ -19,6 +20,7 @@ use DAO\MYSQL\MascotaDAO as MascotaDAO;
 use DAO\MYSQL\ResxMascDAO as ResxMascDAO;
 use DAO\MYSQL\PagoDAO as PagoDAO;
 use DAO\MYSQL\ChatDAO as ChatDAO;
+use DAO\MYSQL\MensajeDAO as MensajeDAO;
 use Models\Pago as pago;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
@@ -278,8 +280,8 @@ class GuardianController
                     require_once(VIEWS_PATH . "historialDePagos.php");
                 } else if ($opcion == "enviarMensaje") {
                     $duenoDAO = new DuenoDAO();
-                    $listaguardianes = $duenoDAO->GetAll(); //cambiar el lista GUARDIANES
-                    require_once(VIEWS_PATH . "seleccionarGuardian.php");
+                    $listaUsuarios = $duenoDAO->GetAll();
+                    require_once(VIEWS_PATH . "seleccionarUsuarioChat.php");
                 }
             } catch (Exception $ex) {
                 $alert = new Alert("warning", "error en base de datos");
@@ -405,25 +407,69 @@ class GuardianController
         }
     }
 
+    /* Busca el usuario, o usuarios con una coincidencia mayor al 84%, para poder seleccionar 
+    para chatear, y los mostrara */
+    public function BuscarUsuario($username)
+    {
+        $buscaDeUsername = true;
+        $envio = array();
+        $similar = 0;
+        $duenoDao = new DuenoDAO();
+        $listaUsuarios = $duenoDao->GetAll();
+        if (isset($listaUsuarios) && !empty($listaUsuarios)) {
+            foreach ($listaUsuarios as $user) {
+                similar_text($username, $user->getUserName(), $similar);
+                if ($similar > 84)
+                    array_push($envio, $user);
+            }
+        }
+        $listaUsuarios = $envio;
+        require_once(VIEWS_PATH . "seleccionarUsuarioChat.php");
+    }
+
     //Recibe el ultimo dni, no el que se elije arreglar
     public function EnviarNuevoMensaje($dni, $mensaje = null)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
             try {
                 if ($mensaje == null) {
+                    $historialMensajes = null;
                     $chatD = new ChatDAO();
-                    $historialMensajes = $chatD->getHistorialChatsByDnis($dni, $_SESSION["dni"]);
+                    $mensajeD = new MensajeDAO();
+                    $idchat = $chatD->GetIdByDniDuenoYGuardian($dni, $_SESSION["dni"]);
+
+                    if (isset($idchat)) {
+                        $historialMensajes = $mensajeD->getHistorialMensajesByIdChat($idchat);
+                        if ($chatD->getSenderById($idchat) == 'd')
+                            $chatD->updateNuevo(false, $idchat);
+
+                        $chat = $chatD->GetById($idchat);
+                    }
+
                     require_once(VIEWS_PATH . "escribirMensaje.php");
                 } else {
-                    $guardianes = new GuardianDAO();
-                    $guardian = $guardianes->getByDni($_SESSION["dni"]);
+                    $mensajeD = new MensajeDAO();
+                    $guardianDAO = new GuardianDAO();
+                    $guardian = $guardianDAO->getByDni($_SESSION["dni"]);
                     $duenoDAO = new DuenoDAO();
                     $dueno = $duenoDAO->GetByDni($dni);
 
-                    $chat = new Chat($guardian, $dueno, $mensaje, 'g');
                     $chatD = new chatDAO();
-                    $chatD->Add($chat);
-                    $alert = new Alert("success", "Mensaje enviado!");
+                    $idchat = $chatD->GetIdByDniDuenoYGuardian($dni, $_SESSION["dni"]);
+                    if ($idchat) {
+                        echo "aaa";
+                        $mensj = new Mensaje($idchat, $mensaje, 'g');
+                        $mensajeD->Add($mensj);
+                        $chatD->updateNuevo(true, $idchat);
+                        $chatD->updateUltSender('g', $idchat);
+                    } else {
+                        $chat = new Chat($guardian, $dueno, 'g');
+                        $chatD->Add($chat);
+                        $idchat = $chatD->GetIdByDniDuenoYGuardian($dni, $_SESSION["dni"]);
+                        $mensj = new Mensaje($idchat, $mensaje, 'g');
+                        $mensajeD->Add($mensj);
+                    }
+                    //$alert = new Alert("success", "Mensaje enviado!");
                     $this->EnviarNuevoMsjNoUsar($dni);
                 }
             } catch (Exception $ex) {
