@@ -4,37 +4,35 @@ namespace Models;
 
 class chat
 {
-    private $id; //PK
+    private $idC; //PK
     private $dniDueno; //FK
     private $dniGuardian; //FK
     private $nombreDueno; //NO ESTA EN DB
     private $nombreGuardian; //NO ESTA EN DB
-    private $mensaje;
-    private $fecha; // YYYY/MM/DD HH/MM/SS
-    private $sender; // char: guardian = 'g' - dueño = 'd' --> quien envio el chat
+    private $nuevo; // Hay mensajes nuevos. Boolean
+    private $senderUlt; // char: guardian = 'g' - dueño = 'd' --> quien envio el chat
 
 
-    public function  __construct(Guardian $guardian = null, Dueno $dueno = null, $mensaje = null, $sender = null)
+    public function  __construct(Guardian $guardian = null, Dueno $dueno = null, $senderUlt = null)
     {
         if (isset($guardian) && isset($dueno)) {
             $this->nombreDueno = $dueno->getNombre();
             $this->dniDueno = $dueno->getDni();
             $this->nombreGuardian = $guardian->getNombre();
             $this->dniGuardian = $guardian->getdni();
-            $this->mensaje = $mensaje;
-            $this->fecha = date("Y-m-d H:i:s");
-            $this->sender = $sender;
+            $this->nuevo = true;
+            $this->senderUlt = $senderUlt;
         }
     }
 
-    public function getId()
+    public function getIdC()
     {
-        return $this->id;
+        return $this->idC;
     }
 
-    public function setId($id): self
+    public function setIdC($idC): self
     {
-        $this->id = $id;
+        $this->idC = $idC;
 
         return $this;
     }
@@ -87,38 +85,26 @@ class chat
         return $this;
     }
 
-    public function getMensaje()
+    public function getNuevo()
     {
-        return $this->mensaje;
+        return $this->nuevo;
     }
 
-    public function setMensaje($mensaje): self
+    public function setNuevo($nuevo): self
     {
-        $this->mensaje = $mensaje;
+        $this->nuevo = $nuevo;
 
         return $this;
     }
 
-    public function getFecha()
+    public function getSenderUlt()
     {
-        return $this->fecha;
+        return $this->senderUlt;
     }
 
-    public function setFecha($fecha): self
+    public function setSenderUlt($senderUlt): self
     {
-        $this->fecha = $fecha;
-
-        return $this;
-    }
-
-    public function getSender()
-    {
-        return $this->sender;
-    }
-
-    public function setSender($sender): self
-    {
-        $this->sender = $sender;
+        $this->senderUlt = $senderUlt;
 
         return $this;
     }
