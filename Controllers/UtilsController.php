@@ -379,6 +379,8 @@ class UtilsController
       try {
         if ($username || $email || $telefono)
           $valid = $this->ValidarNuevosDatosUsuario($username, $email, $telefono);
+        else
+          $valid = true;
         if ($valid) {
           if ($_SESSION["tipo"] == 'd') {
 
