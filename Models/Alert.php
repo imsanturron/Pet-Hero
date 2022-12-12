@@ -36,4 +36,9 @@ class Alert
 
         return $this;
     }
+
+    public function addToMensaje($add)
+    {
+        $this->mensaje .= $add;
+    }
 }

@@ -21,13 +21,13 @@ include('nav-bar.php');
                 }
             }
             ?>
+            <input type="hidden" name="dni" value="<?php echo $dni; ?>">
             <br>
             <FONT COLOR="black"> Escriba aqui: </FONT>
             <textarea name="mensaje" style="background-color:#DC8E47;color:white;" cols="110" rows="8" required></textarea>
 
             <br> <br>
 
-            <input type="hidden" name="dni" value="<?php echo $dni; ?>">
 
             <button type="submit" class="btn" style="background-color:#DC8E47;color:white;"> Enviar </button>
         </form>
