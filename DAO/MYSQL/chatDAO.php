@@ -97,6 +97,60 @@ class ChatDAO
         }
     }
 
+    function GetChatIfNuevoByDniDueno($dni)
+    {
+        try {
+            $chatList = array();
+
+            $query = "SELECT c.*, g.nombre as nombreGuardian, d.nombre as nombreDueno FROM " . $this->tableName .
+                " c join duenos d on c.dniDueno = d.dni join guardianes g on c.dniGuardian = g.dni WHERE dniDueno = :dniDueno AND nuevo = :nuevo AND senderUlt = :senderUlt";
+
+            $parameters["dniDueno"] = $dni;
+            $parameters["nuevo"] = 1;
+            $parameters["senderUlt"] = "g";
+
+            $this->connection = Connection::GetInstance();
+
+            $resultSet = $this->connection->Execute($query, $parameters);
+
+            $chatList = $this->setter($resultSet, true);
+
+            if (isset($chatList) && !empty($chatList))
+                return $chatList;
+            else
+                return null;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    function GetChatIfNuevoByDniGuardian($dni)
+    {
+        try {
+            $chatList = array();
+
+            $query = "SELECT c.*, g.nombre as nombreGuardian, d.nombre as nombreDueno FROM " . $this->tableName .
+                " c join duenos d on c.dniDueno = d.dni join guardianes g on c.dniGuardian = g.dni WHERE dniGuardian = :dniGuardian AND nuevo = :nuevo AND senderUlt = :senderUlt";
+
+            $parameters["dniGuardian"] = $dni;
+            $parameters["nuevo"] = 1;
+            $parameters["senderUlt"] = "d";
+
+            $this->connection = Connection::GetInstance();
+
+            $resultSet = $this->connection->Execute($query, $parameters);
+
+            $chatList = $this->setter($resultSet, true);
+
+            if (isset($chatList) && !empty($chatList))
+                return $chatList;
+            else
+                return null;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
     function getChatsByDniGuardian($dniGuardian) /////
     {
         try {

@@ -51,6 +51,25 @@ class GuardianController
 
     public function login(Alert $alert = null)
     {
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
+            try {
+                $chatDAO = new ChatDAO();
+                $nuevosMensajes = $chatDAO->GetChatIfNuevoByDniGuardian($_SESSION["dni"]);
+                if (isset($nuevosMensajes) && !empty($nuevosMensajes)) {
+                    if (isset($alert))
+                        $alert->addToMensaje("<br> Tienes nuevos mensajes");
+                    else
+                        $alert = new Alert("secondary", "Tienes nuevos mensajes");
+                }
+            } catch (Exception $ex) {
+                $alert = new Alert("warning", "error en base de datos");
+                $this->login($alert);
+            }
+        } else {
+            $alert = new Alert("warning", "Debe iniciar sesion para acceder a sus funciones");
+            $this->home($alert);
+        }
+
         require_once(VIEWS_PATH . "loginGuardian.php");
     }
 
@@ -280,7 +299,9 @@ class GuardianController
                     require_once(VIEWS_PATH . "historialDePagos.php");
                 } else if ($opcion == "enviarMensaje") {
                     $duenoDAO = new DuenoDAO();
+                    $chatDao = new ChatDAO();
                     $listaUsuarios = $duenoDAO->GetAll();
+                    $chatsNuevos = $chatDao->GetChatIfNuevoByDniGuardian($_SESSION["dni"]);
                     require_once(VIEWS_PATH . "seleccionarUsuarioChat.php");
                 }
             } catch (Exception $ex) {
@@ -408,26 +429,39 @@ class GuardianController
     }
 
     /* Busca el usuario, o usuarios con una coincidencia mayor al 84%, para poder seleccionar 
-    para chatear, y los mostrara */
+    para chatear, y los mostrara en caso de encontrarlos */
     public function BuscarUsuario($username)
     {
-        $buscaDeUsername = true;
-        $envio = array();
-        $similar = 0;
-        $duenoDao = new DuenoDAO();
-        $listaUsuarios = $duenoDao->GetAll();
-        if (isset($listaUsuarios) && !empty($listaUsuarios)) {
-            foreach ($listaUsuarios as $user) {
-                similar_text($username, $user->getUserName(), $similar);
-                if ($similar > 84)
-                    array_push($envio, $user);
+        if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
+            try {
+                $buscaDeUsername = true;
+                $envio = array();
+                $similar = 0;
+                $duenoDao = new DuenoDAO();
+                $listaUsuarios = $duenoDao->GetAll();
+                if (isset($listaUsuarios) && !empty($listaUsuarios)) {
+                    foreach ($listaUsuarios as $user) {
+                        similar_text($username, $user->getUserName(), $similar);
+                        if ($similar > 84)
+                            array_push($envio, $user);
+                    }
+                }
+                $listaUsuarios = $envio;
+                require_once(VIEWS_PATH . "seleccionarUsuarioChat.php");
+            } catch (Exception $ex) {
+                $alert = new Alert("warning", "error en base de datos");
+                $this->login($alert);
             }
+        } else {
+            $alert = new Alert("warning", "Debe iniciar sesion para acceder a sus funciones!");
+            $this->home($alert);
         }
-        $listaUsuarios = $envio;
-        require_once(VIEWS_PATH . "seleccionarUsuarioChat.php");
     }
 
-    //Recibe el ultimo dni, no el que se elije arreglar
+    /* Recibe un dni de a quien se le desea enviar un mensaje o leer/entrar el chat. Si no
+    se envia ningun mensaje, se abrira el chat, se vera el historial de mensajes si existe, y se
+    tomara como leido. Si se recibe el mensaje, se enviara al destinatario y la otra persona tendra
+    el chat como no leido hasta que ingrese, envie un mensaje o no*/
     public function EnviarNuevoMensaje($dni, $mensaje = null)
     {
         if (isset($_SESSION["loggedUser"]) && $_SESSION["tipo"] == "g") {
@@ -457,7 +491,6 @@ class GuardianController
                     $chatD = new chatDAO();
                     $idchat = $chatD->GetIdByDniDuenoYGuardian($dni, $_SESSION["dni"]);
                     if ($idchat) {
-                        echo "aaa";
                         $mensj = new Mensaje($idchat, $mensaje, 'g');
                         $mensajeD->Add($mensj);
                         $chatD->updateNuevo(true, $idchat);

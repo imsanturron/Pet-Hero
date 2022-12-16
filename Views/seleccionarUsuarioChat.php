@@ -17,6 +17,54 @@ include('nav-bar.php');
                     <button class="btn-login btn" type="submit">Buscar</button>
                     </form>
                     <br>
+                    <br>
+
+                    <?php if (isset($chatsNuevos) && !empty($chatsNuevos)) { ?>
+                        <b> Tiene nuevos mensajes en los siguientes chats:</b>
+                        <table class="table bg-light-alpha">
+                            <thead>
+                                <th>Nombre</th>
+                                <th>Opcion</th>
+                            </thead>
+                            <tbody>
+                                <?php if ($_SESSION["tipo"] == 'd') { ?>
+                                    <form action="<?php echo FRONT_ROOT ?>Dueno/EnviarNuevoMensaje" method="POST">
+                                    <?php } else { ?>
+                                        <form action="<?php echo FRONT_ROOT ?>Guardian/EnviarNuevoMensaje" method="POST">
+                                        <?php } ?>
+                                        <?php
+
+                                        if (isset($chatsNuevos) && !empty($chatsNuevos)) {
+                                            foreach ($chatsNuevos as $chat) {
+                                        ?>
+                                                <?php if ($_SESSION["tipo"] == 'd') { ?>
+                                                    <tr>
+                                                        <td><?php echo $chat->getNombreGuardian(); ?></td>
+                                                        <td>
+                                                            <button type="submit" name="dni" value="<?php echo $chat->getDniGuardian(); ?>" class="btn btn-danger"> Elegir </button>
+                                                        </td>
+                                                    </tr>
+                                                <?php } else { ?>
+                                                    <tr>
+                                                        <td><?php echo $chat->getNombreDueno(); ?></td>
+                                                        <td>
+                                                            <button type="submit" name="dni" value="<?php echo $chat->getDniDueno(); ?>" class="btn btn-danger"> Elegir </button>
+                                                        </td>
+                                                    </tr>
+                                                <?php } ?>
+                                        <?php
+                                            }
+                                        } else {
+                                            echo " <label><h2> No tiene nuevos chats por ver </label></h2> ";
+                                        }
+                                        ?>
+                                        </form>
+                            </tbody>
+                        </table>
+                        <br>
+                        <br>
+                    <?php } ?>
+
                     <?php if (!isset($buscaDeUsername)) { ?>
                         Todos los usuarios
                     <?php } ?>
@@ -49,7 +97,8 @@ include('nav-bar.php');
                                     <?php
                                         }
                                     } else {
-                                        echo " <label><h2> no se encontraron guardianes para chatear </label></h2> ";
+                                        echo " <label><h2> no se encontraron usuarios para chatear, o tu busqueda
+                                         no encontro similitudes </label></h2> ";
                                     }
                                     ?>
                                     </form>
