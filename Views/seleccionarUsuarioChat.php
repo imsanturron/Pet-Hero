@@ -5,22 +5,31 @@ include('nav-bar.php');
 <main class="py-5">
     <section id="listado" class="mb-5">
         <div class="container">
-            <h2 class="mb-4">Selecccione con quien desea chatear</h2>
+    
+        <article class="center">
+                <div class="div-login"><br>
+                <h1 class="text-login"><FONT SIZE=6>Selecccione con quien desea chatear</font></h1>
+                </div>
+        </article>
+        
             <br>
-            Buscar por nombre de usuario
+           
+            <h2 class="text-login"><FONT SIZE=4> Buscar por nombre de usuario</font></h1>
+           
             <?php if ($_SESSION["tipo"] == 'd') { ?>
                 <form action="<?php echo FRONT_ROOT ?>Dueno/BuscarUsuario" method="POST">
                 <?php } else { ?>
                     <form action="<?php echo FRONT_ROOT ?>Guardian/BuscarUsuario" method="POST">
                     <?php } ?>
-                    <input class="input-login" type="text" name="username" placeholder="Username" minlength="1" required>
-                    <button class="btn-login btn" type="submit">Buscar</button>
+                    <input class="input-login" type="text" name="username" placeholder="Username" minlength="1" style="height:35px" required>
+                    <button class="btn-login btn" type="submit" style="height:35px" >Buscar</button>
                     </form>
                     <br>
                     <br>
 
                     <?php if (isset($chatsNuevos) && !empty($chatsNuevos)) { ?>
-                        <b> Tiene nuevos mensajes en los siguientes chats:</b>
+                  
+            <h2 class="text-login"><FONT SIZE=4> Tiene nuevos mensajes en los siguientes chats: </font></h2>
                         <table class="table bg-light-alpha">
                             <thead>
                                 <th>Nombre</th>
@@ -66,7 +75,8 @@ include('nav-bar.php');
                     <?php } ?>
 
                     <?php if (!isset($buscaDeUsername)) { ?>
-                        Todos los usuarios
+                        
+            <h2 class="text-login"><FONT SIZE=4> Todos los usuarios: </font></h1>
                     <?php } ?>
                     <table class="table bg-light-alpha">
                         <thead>

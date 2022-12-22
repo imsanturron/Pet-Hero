@@ -6,8 +6,13 @@ include('nav-bar.php');
 
     <section id="listado" class="mb-5">
         <div class="container">
-            <h2 class="mb-4">Mi perfil</h2>
-            <small>Tu perfil</small>
+          
+        <article class="center">
+                <div class="div-login"><br>
+                <h1 class="text-login"><FONT SIZE=6>Mi perfil</font></h1>
+                </div>
+        </article>
+
             <table class="table bg-light-alpha">
                 <thead>
                     <th>Nombre</th>
