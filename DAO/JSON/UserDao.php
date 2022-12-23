@@ -6,8 +6,6 @@ use Models\User as User;
 
 class UserDAO
 {
-  //private $connection;
-  //private $tableName = "students";
   private $usuarioList = array();
   private $filename;
 
