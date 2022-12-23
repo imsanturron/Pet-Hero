@@ -7,8 +7,6 @@ use Models\Solicitud as Solicitud;
 
 class GuardianDAO
 {
-    //private $connection;
-    //private $tableName = "guardianes";
     private $usuarioList = array();
     private $filename;
 

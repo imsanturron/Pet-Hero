@@ -8,8 +8,6 @@ use Models\Reserva as Reserva;
 
 class ReservaDAO
 {
-    //private $connection;
-    //private $tableName = "reservas";
     private $usuarioList = array();
     private $filename;
 

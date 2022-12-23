@@ -6,8 +6,6 @@ use Models\Mascota as Mascota;
 
 class MascotaDAO
 {
-    //private $connection;
-    //private $tableName = "students";
     private $usuarioList = array();
     private $filename;
 
