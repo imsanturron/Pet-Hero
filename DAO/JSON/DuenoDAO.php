@@ -6,8 +6,6 @@ use Models\Dueno as Dueno;
 
 class DuenoDAO
 {
-    //private $connection;
-    //private $tableName = "duenos";
     private $usuarioList = array();
     private $filename;
 

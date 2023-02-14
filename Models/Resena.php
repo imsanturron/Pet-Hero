@@ -4,10 +4,10 @@ namespace Models;
 
 class Resena
 {
-    private $id; //PK   --> id de reserva/solicitud/pago
+    private $id; //PK   --> mismo id de reserva/solicitud/pago
     private $dniDueno; //FK
     private $dniGuardian; //FK
-    private $puntaje; ///del 1 al 10
+    private $puntaje; ///del 1 al 100
     private $fecha; ///que se hizo la observacion
     private $observacion; ///comentarios
 

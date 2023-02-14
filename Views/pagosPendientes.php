@@ -29,7 +29,7 @@ include('nav-bar.php');
                     </thead>
                     <tbody>
                         <?php if (isset($_SESSION['loggedUser']) && $_SESSION['tipo']  == 'd') { ?>
-                            <form action="<?php echo FRONT_ROOT ?>Dueno/realizarPago" method="POST">
+                            <form action="<?php echo FRONT_ROOT ?>Dueno/cargarTarjeta" method="POST">
                                 <?php }
 
                             if (isset($pagos) && !empty($pagos)) {
@@ -76,10 +76,9 @@ include('nav-bar.php');
                                         <?php if ($_SESSION['tipo']  == 'd' && $pago->getFormaDePago() == null) { ?>
                                             <td><select name="formaDePago" required>
                                                     <option value="credito"> Credito </option>
-                                                    <option value="debito"> Debito </option>
                                                 </select></td>
                                         <?php } else { ?>
-                                            <input type="hidden" name="formaDePago" value="-">
+                                            <input type="hidden" name="formaDePago" value="credito">
                                             <td><?php echo $pago->getFormaDePago(); ?></td>
                                         <?php } ?>
                                         <td>

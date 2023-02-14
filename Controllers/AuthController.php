@@ -2,12 +2,11 @@
 
 namespace Controllers;
 
+use DAO\MYSQL\ChatDAO;
 use DAO\MYSQL\GuardianDAO as GuardianDAO;
 use DAO\MYSQL\DuenoDAO as DuenoDAO;
-use DAO\MYSQL\MascotaDAO as MascotaDAO;
 use DAO\MYSQL\ReservaDAO;
 use DAO\MYSQL\PagoDAO;
-use DAO\MYSQL\ResxMascDAO;
 use DAO\MYSQL\SolicitudDAO;
 use DAO\MYSQL\SolixMascDAO;
 use DAO\MYSQL\UserDAO as UserDAO;
@@ -41,9 +40,14 @@ class AuthController
           if ($guardianx && $guardianx->getPassword() == $password) {
             $bool = true;
             $_SESSION["loggedUser"] = $guardianx;
+            $_SESSION["dni"] = $guardianx->getDni();
             $_SESSION["tipo"] = "g";
-            $this->validacionesLogin();
-            $alert = new Alert("success", "Bienvenido!");
+            $newMsj = $this->validacionesLogin();
+            if ($newMsj)
+              $alert = new Alert("success", "Bienvenido! <br> Tiene mensajes nuevos");
+            else
+              $alert = new Alert("success", "Bienvenido!");
+
             require_once(VIEWS_PATH . "loginGuardian.php");
           } else {
             $alert = new Alert("warning", "Usuario o password incorrecto");
@@ -56,9 +60,13 @@ class AuthController
           if ($duenox && $duenox->getPassword() == $password) {
             $bool = true;
             $_SESSION["loggedUser"] = $duenox;
+            $_SESSION["dni"] = $duenox->getDni();
             $_SESSION["tipo"] = "d";
-            $this->validacionesLogin();
-            $alert = new Alert("success", "Bienvenido!");
+            $newMsj = $this->validacionesLogin();
+            if ($newMsj)
+              $alert = new Alert("success", "Bienvenido! <br> Tiene mensajes nuevos");
+            else
+              $alert = new Alert("success", "Bienvenido!");
             require_once(VIEWS_PATH . "loginDueno.php");
           } else {
             $alert = new Alert("warning", "Usuario o password incorrecto");
@@ -80,7 +88,6 @@ class AuthController
   private function validacionesLogin()
   {
     try {
-      $bool = false;
       if (isset($_SESSION["loggedUser"])) {
         if ($_SESSION["tipo"] == 'g') {
           $guardian = new Guardian();
@@ -159,6 +166,12 @@ class AuthController
               }
             }
           }
+          $chatDAO = new ChatDAO();
+          $nuevosMensajes = $chatDAO->GetChatIfNuevoByDniGuardian($_SESSION["dni"]);
+          if (isset($nuevosMensajes) && !empty($nuevosMensajes))
+            return true;
+          else
+            return false;
         } else {
           //caso dueño
           $dueno = new Dueno();
@@ -195,6 +208,12 @@ class AuthController
               }
             }
           }
+          $chatDAO = new ChatDAO();
+          $nuevosMensajes = $chatDAO->GetChatIfNuevoByDniDueno($_SESSION["dni"]);
+          if (isset($nuevosMensajes) && !empty($nuevosMensajes))
+            return true;
+          else
+            return false;
         }
       } else {
         $alert = new Alert("warning", "Debe iniciar sesion");
@@ -204,7 +223,6 @@ class AuthController
       $alert = new Alert("warning", "error en base de datos");
       $this->index($alert);
     }
-    return $bool; //////////
   }
 
   public static function ValidarUsuario($username, $dni, $email, $telefono) ///validaciones en el registro

@@ -37,15 +37,8 @@ class UserDAO
       $this->connection = Connection::GetInstance();
       $resultSet = $this->connection->Execute($query);
 
-      foreach ($resultSet as $row) {
-        $usuario = new User();
-        $usuario->setUsername($row["username"]);
-        $usuario->setPassword($row["password"]);
-        $usuario->setDni($row["dni"]);
-        $usuario->setEmail($row["email"]);
-        $usuario->setTipo($row["tipo"]);
-        array_push($usuarioList, $usuario);
-      }
+      $usuarioList = $this->setter($resultSet, true);
+
       return $usuarioList;
     } catch (Exception $ex) {
       throw $ex;
@@ -65,14 +58,8 @@ class UserDAO
 
       $resultSet = $this->connection->Execute($query, $parameters);
 
-      foreach ($resultSet as $row) {
-        $usuario = new User();
-        $usuario->setUserName($row["username"]);
-        $usuario->setPassword($row["password"]);
-        $usuario->setDni($row["dni"]);
-        $usuario->setEmail($row["email"]);
-        $usuario->setTipo($row["tipo"]);
-      }
+      $usuario = $this->setter($resultSet);
+
       return $usuario;
     } catch (Exception $ex) {
       throw $ex;
@@ -146,14 +133,8 @@ class UserDAO
 
       $resultSet = $this->connection->Execute($query, $parameters);
 
-      foreach ($resultSet as $row) {
-        $usuario = new User();
-        $usuario->setUserName($row["username"]);
-        $usuario->setPassword($row["password"]);
-        $usuario->setDni($row["dni"]);
-        $usuario->setEmail($row["email"]);
-        $usuario->setTipo($row["tipo"]);
-      }
+      $usuario = $this->setter($resultSet);
+
       return $usuario;
     } catch (Exception $ex) {
       throw $ex;
@@ -173,14 +154,7 @@ class UserDAO
 
       $resultSet = $this->connection->Execute($query, $parameters);
 
-      foreach ($resultSet as $row) {
-        $usuario = new User();
-        $usuario->setUserName($row["username"]);
-        $usuario->setPassword($row["password"]);
-        $usuario->setDni($row["dni"]);
-        $usuario->setEmail($row["email"]);
-        $usuario->setTipo($row["tipo"]);
-      }
+      $usuario = $this->setter($resultSet);
 
       return $usuario;
     } catch (Exception $ex) {
@@ -192,8 +166,6 @@ class UserDAO
   {
 
     try {
-      $solicitud = null;
-
       $query = "DELETE FROM " . $this->tableName . " WHERE dni = :dni";
 
       $parameters["dni"] = $dni;
@@ -208,7 +180,8 @@ class UserDAO
     }
   }
 
-  public function updateDatosUser($username, $password, $email){
+  public function updateDatosUser($username, $password, $email)
+  {
     try {
       $query = "UPDATE " . $this->tableName . " SET username  = :username, password = :password, email = :email WHERE dni = :dni;";
 
@@ -221,8 +194,35 @@ class UserDAO
 
       $this->connection->ExecuteNonQuery($query, $parameters);
       return true;
-  } catch (Exception $ex) {
+    } catch (Exception $ex) {
       throw $ex;
+    }
   }
-}
+
+  function setter($resultSet, $list = false)
+  {
+    $lista = array();
+
+    foreach ($resultSet as $row) {
+      $usuario = new User();
+      $usuario->setUsername($row["username"]);
+      $usuario->setPassword($row["password"]);
+      $usuario->setDni($row["dni"]);
+      $usuario->setEmail($row["email"]);
+      $usuario->setTipo($row["tipo"]);
+      if ($list == true)
+        array_push($lista, $usuario);
+    }
+    if ($list == true) {
+      if (isset($lista) && !empty($lista))
+        return $lista;
+      else
+        return null;
+    } else {
+      if (isset($usuario))
+        return $usuario;
+      else
+        return null;
+    }
+  }
 }

@@ -43,23 +43,8 @@ class ReservaDAO
             $this->connection = Connection::GetInstance();
             $resultSet = $this->connection->Execute($query);
 
-            foreach ($resultSet as $row) {
-                $reserva = new Reserva();
-                $reserva->setId($row["id"]);
-                $reserva->setFechaInicio($row["FechaInicio"]);
-                $reserva->setFechaFin($row["FechaFin"]);
-                $reserva->setNombreDueno($row["nombreDueno"]);
-                $reserva->setDniDueno($row["dniDueno"]);
-                $reserva->setNombreGuardian($row["nombreGuardian"]);
-                $reserva->setDniGuardian($row["dniGuardian"]);
-                $reserva->setDireccionGuardian($row["direccionGuardian"]);
-                $reserva->setTelefonoDueno($row["telefonoDueno"]);
-                $reserva->setTelefonoGuardian($row["telefonoGuardian"]);
-                $reserva->setEstado($row["estado"]);
-                $reserva->setCrearResena($row["crearResena"]);
-                $reserva->setResHechaOrechazada($row["hechaOrechazada"]);
-                array_push($reservaList, $reserva);
-            }
+            $reservaList = $this->setter($resultSet, true);
+
             return $reservaList;
         } catch (Exception $ex) {
             throw $ex;
@@ -79,22 +64,7 @@ class ReservaDAO
 
             $resultSet = $this->connection->Execute($query, $parameters);
 
-            foreach ($resultSet as $row) {
-                $reserva = new Reserva();
-                $reserva->setId($row["id"]);
-                $reserva->setFechaInicio($row["FechaInicio"]);
-                $reserva->setFechaFin($row["FechaFin"]);
-                $reserva->setNombreDueno($row["nombreDueno"]);
-                $reserva->setDniDueno($row["dniDueno"]);
-                $reserva->setNombreGuardian($row["nombreGuardian"]);
-                $reserva->setDniGuardian($row["dniGuardian"]);
-                $reserva->setDireccionGuardian($row["direccionGuardian"]);
-                $reserva->setTelefonoDueno($row["telefonoDueno"]);
-                $reserva->setTelefonoGuardian($row["telefonoGuardian"]);
-                $reserva->setEstado($row["estado"]);
-                $reserva->setCrearResena($row["crearResena"]);
-                $reserva->setResHechaOrechazada($row["hechaOrechazada"]);
-            }
+            $reserva = $this->setter($resultSet);
 
             return $reserva;
         } catch (Exception $ex) {
@@ -102,7 +72,7 @@ class ReservaDAO
         }
     }
 
-    function getReservasByDniGuardian($dniGuardian) /////
+    function getReservasByDniGuardian($dniGuardian)
     {
         try {
             $reservaList = array();
@@ -116,33 +86,15 @@ class ReservaDAO
 
             $resultSet = $this->connection->Execute($query, $parameters);
 
-            foreach ($resultSet as $row) {
-                $reserva = new Reserva();
-                $reserva->setId($row["id"]);
-                $reserva->setFechaInicio($row["FechaInicio"]);
-                $reserva->setFechaFin($row["FechaFin"]);
-                $reserva->setNombreDueno($row["nombreDueno"]);
-                $reserva->setDniDueno($row["dniDueno"]);
-                $reserva->setNombreGuardian($row["nombreGuardian"]);
-                $reserva->setDniGuardian($row["dniGuardian"]);
-                $reserva->setDireccionGuardian($row["direccionGuardian"]);
-                $reserva->setTelefonoDueno($row["telefonoDueno"]);
-                $reserva->setTelefonoGuardian($row["telefonoGuardian"]);
-                $reserva->setEstado($row["estado"]);
-                $reserva->setCrearResena($row["crearResena"]);
-                $reserva->setResHechaOrechazada($row["hechaOrechazada"]);
-                array_push($reservaList, $reserva);
-            }
-            if (isset($reservaList))
-                return $reservaList;
-            else
-                return null;
+            $reservaList = $this->setter($resultSet, true);
+
+            return $reservaList;
         } catch (Exception $ex) {
             throw $ex;
         }
     }
 
-    function getReservasByDniDueno($dniDueno) /////
+    function getReservasByDniDueno($dniDueno)
     {
         try {
             $reservaList = array();
@@ -156,27 +108,9 @@ class ReservaDAO
 
             $resultSet = $this->connection->Execute($query, $parameters);
 
-            foreach ($resultSet as $row) {
-                $reserva = new Reserva();
-                $reserva->setId($row["id"]);
-                $reserva->setFechaInicio($row["FechaInicio"]);
-                $reserva->setFechaFin($row["FechaFin"]);
-                $reserva->setNombreDueno($row["nombreDueno"]);
-                $reserva->setDniDueno($row["dniDueno"]);
-                $reserva->setNombreGuardian($row["nombreGuardian"]);
-                $reserva->setDniGuardian($row["dniGuardian"]);
-                $reserva->setDireccionGuardian($row["direccionGuardian"]);
-                $reserva->setTelefonoDueno($row["telefonoDueno"]);
-                $reserva->setTelefonoGuardian($row["telefonoGuardian"]);
-                $reserva->setEstado($row["estado"]);
-                $reserva->setCrearResena($row["crearResena"]);
-                $reserva->setResHechaOrechazada($row["hechaOrechazada"]);
-                array_push($reservaList, $reserva);
-            }
-            if (isset($reservaList))
-                return $reservaList;
-            else
-                return null;
+            $reservaList = $this->setter($resultSet, true);
+
+            return $reservaList;
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -230,6 +164,41 @@ class ReservaDAO
             return true;
         } catch (Exception $ex) {
             throw $ex;
+        }
+    }
+
+    function setter($resultSet, $list = false)
+    {
+        $lista = array();
+
+        foreach ($resultSet as $row) {
+            $reserva = new Reserva();
+            $reserva->setId($row["id"]);
+            $reserva->setFechaInicio($row["FechaInicio"]);
+            $reserva->setFechaFin($row["FechaFin"]);
+            $reserva->setNombreDueno($row["nombreDueno"]);
+            $reserva->setDniDueno($row["dniDueno"]);
+            $reserva->setNombreGuardian($row["nombreGuardian"]);
+            $reserva->setDniGuardian($row["dniGuardian"]);
+            $reserva->setDireccionGuardian($row["direccionGuardian"]);
+            $reserva->setTelefonoDueno($row["telefonoDueno"]);
+            $reserva->setTelefonoGuardian($row["telefonoGuardian"]);
+            $reserva->setEstado($row["estado"]);
+            $reserva->setCrearResena($row["crearResena"]);
+            $reserva->setResHechaOrechazada($row["hechaOrechazada"]);
+            if ($list == true)
+                array_push($lista, $reserva);
+        }
+        if ($list == true) {
+            if (isset($lista) && !empty($lista))
+                return $lista;
+            else
+                return null;
+        } else {
+            if (isset($reserva))
+                return $reserva;
+            else
+                return null;
         }
     }
 }

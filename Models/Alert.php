@@ -4,7 +4,7 @@ namespace Models;
 
 class Alert
 {
-    private $tipo;
+    private $tipo; //success - info - warning - danger - primary - secondary - light - dark
     private $mensaje;
 
     public function __construct($tipo = "", $mensaje = "")
@@ -35,5 +35,10 @@ class Alert
         $this->mensaje = $mensaje;
 
         return $this;
+    }
+
+    public function addToMensaje($add)
+    {
+        $this->mensaje .= $add;
     }
 }
